@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +24,24 @@ namespace EX2
         public MainWindow()
         {
             InitializeComponent();
+            // Example for injecting 15 buttons into the stackPanel
+            int num = 15;
+            for (int i = 0; i < num; i++)
+            {
+                System.Windows.Controls.Button button = new Button();
+                {
+                    button.Content = i.ToString();
+                    button.Name = "Button" + i.ToString();
+                    button.Click += new RoutedEventHandler(stackButton_Click); // set the click button to stackButton_Click
+                }
+                sp.Children.Add(button);
+            }
+        }
+        // default function to handle all stackPanel button clicks.
+        private void stackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button b = (Button)sender;
+            Console.WriteLine(b.Content.ToString());
         }
 
         private void btnOpen_Click(object sender, RoutedEventArgs e)
