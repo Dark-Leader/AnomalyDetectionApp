@@ -1,4 +1,4 @@
-﻿<Window x:Class="EX2.MainWindow"
+<Window x:Class="EX2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,69 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-		<Button x:Name="btnOpen"  Content="Open" HorizontalAlignment="Left" Height="84" Margin="40,285,0,0" VerticalAlignment="Top" Width="170" Click="btnOpen_Click"/>
-		<Grid Width="180" Height="220" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="40 " >
-			<ScrollViewer>
-				<StackPanel>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-					<TextBlock Text="This is a test"/>
-				</StackPanel>
-			</ScrollViewer>
-		</Grid>
+        <Button x:Name="btnOpen"  Content="Open" HorizontalAlignment="Left" Height="84" Margin="40,285,0,0" VerticalAlignment="Top" Width="170" Click="btnOpen_Click"/>
+        <UniformGrid x:Name="grid" Width="180" Height="220" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="40 " >
+            <ScrollViewer>
+                <StackPanel x:Name="sp">
+                   <!--this is how we insert the buttons in later from the MainWindow.xaml.cs file - we named the stackPanel sp and used it in the c# file-->
+                 
+                    
+                </StackPanel>
+            </ScrollViewer>
+        </UniformGrid>
 
 
-	</Grid>
+    </Grid>
 </Window>
