@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ex1;
 using Microsoft.Win32;
 
 namespace EX2
@@ -21,11 +22,14 @@ namespace EX2
     /// </summary>
     public partial class MainWindow : Window
     {
+        private timeElapsed tm;
         public MainWindow()
         {
             InitializeComponent();
             // Example for injecting 15 buttons into the stackPanel
-            int num = 15;
+            tm = new timeElapsed();
+            this.DataContext = tm;
+            int num = 15; // need to get num of buttons from model.
             for (int i = 0; i < num; i++)
             {
                 System.Windows.Controls.Button button = new Button();
@@ -62,6 +66,11 @@ namespace EX2
                 fileNames = fileNames.Substring(1);
                 Console.WriteLine(fileNames);
             }
+        }
+        // TODO: send the model and the flightgear simulator the current value of the slider.
+        private void SliderValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            return;
         }
     }
 }
