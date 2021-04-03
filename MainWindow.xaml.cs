@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ex1;
+//using ex1;
 using Microsoft.Win32;
 
 namespace EX2
@@ -22,13 +22,13 @@ namespace EX2
     /// </summary>
     public partial class MainWindow : Window
     {
-        private timeElapsed tm;
+        //private timeElapsed tm;
         public MainWindow()
         {
             InitializeComponent();
             // Example for injecting 15 buttons into the stackPanel
-            tm = new timeElapsed();
-            this.DataContext = tm;
+            //tm = new timeElapsed();
+            //this.DataContext = tm;
             int num = 15; // need to get num of buttons from model.
             for (int i = 0; i < num; i++)
             {
