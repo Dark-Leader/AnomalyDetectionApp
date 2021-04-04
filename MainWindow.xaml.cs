@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 //using ex1;
 using Microsoft.Win32;
+using System.Threading;
 
 // project ex2
 // done 3/4/2021
@@ -31,6 +32,15 @@ namespace EX2
             // Example for injecting 15 buttons into the stackPanel
             //tm = new timeElapsed();
             //this.DataContext = tm;
+
+            // opens flight gear
+            string csvData = "D:\\Learn It\\2nd year\\advanced programming2\\project\\reg_flight.csv";
+            FlightSimulator fs = new FlightSimulator(csvData);
+            Thread t = new Thread(new ThreadStart(fs.play));
+            t.Start();
+
+            //
+
             int num = 15; // need to get num of buttons from model.
             for (int i = 0; i < num; i++)
             {
