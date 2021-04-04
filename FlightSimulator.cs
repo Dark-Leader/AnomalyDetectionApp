@@ -19,41 +19,7 @@ namespace EX2
     class FlightSimulator
     {
         private string csvData;
-        /*
-        class FlightGear
-        {
-            // path to the application file
-            private string fileName;
-
-
-            // command line arguments to pass to the application
-            private string arguments = "--generic=socket,in,10,127.0.0.1,5400,tcp,playback_small --fdm=null";
-
-            /*
-            public FlightGear(string fileName, string settings)
-            {
-                this.fileName = fileName;
-
-                // ADD path to settings and add it to data/protocol in fg and to args
-                //arguments = arguments + settings + " --fdm=null";
-                
-            }
-
-            public void start()
-            {
-                // opens the application
-
-                ProcessStartInfo startInfo = new ProcessStartInfo(fileName);
-
-                startInfo.WorkingDirectory = "D:\\Applications\\FlightGear 2020.3.6\\bin";
-
-                startInfo.Arguments = arguments;
-
-                Process.Start(startInfo);
-
-            }
-        }
-            */
+        
 
 
         public FlightSimulator(string data)
@@ -63,8 +29,8 @@ namespace EX2
 
             this.csvData = data;
 
-            // FlightGear fg = new FlightGear(pathToApp, pathToSettings);
-            // fg.start();             
+            //FlightGear fg = new FlightGear(pathToApp, pathToSettings);
+            //fg.start();             
         }
 
         public void play()
