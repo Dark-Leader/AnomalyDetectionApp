@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 //using ex1;
 using Microsoft.Win32;
 
+// project ex2
+// done 3/4/2021
 namespace EX2
 {
     /// <summary>
