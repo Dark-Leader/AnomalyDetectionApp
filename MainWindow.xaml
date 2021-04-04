@@ -27,25 +27,29 @@
             <Button x:Name="btnOpenFlightGear" HorizontalAlignment="Left" Height="50" Margin="65,10,0,0" VerticalAlignment="Top" Width="60" Click="btnOpen_Click">
                 <TextBlock Text="Open Flight Gear" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
-            <Button x:Name="Start" HorizontalAlignment="Left" Height="50" Margin="150,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
-                <!--<Image x:Name="startImg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="Resources/play.png"/> -->
+            <Button x:Name="Min" HorizontalAlignment="Left" Margin="130,10,0,30" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+                <Image x:Name="Slowerimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="50" Source="resources/min.png" RenderTransformOrigin="0.696,1.152" Margin="0"/>
             </Button>
-            <Button x:Name="Stop" HorizontalAlignment="Left" Height="50" Margin="260,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
-                <!--<Image x:Name="stopimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="Resources/stop.png" /> -->
+
+            <Button x:Name="Stop" HorizontalAlignment="Left" Height="50" Margin="240,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+                <Image x:Name="stopimg" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="40" Source="resources/stop.png" RenderTransformOrigin="1.503,0.682" />
             </Button>
-            <Button x:Name="Faster" HorizontalAlignment="Left" Height="50" Margin="205,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
-                <!--<Image x:Name="Fasterimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="50" Source="Resources/faster.png" Margin="210,15,0,0"/> -->
+            <Button x:Name="Max" HorizontalAlignment="Left" Height="50" Margin="460,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+                <Image x:Name="Fasterimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="50" Source="resources/max.png"/>
             </Button>
-            <Button x:Name="Fast" HorizontalAlignment="Left" Height="50" Margin="425,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
-                <!--<Image x:Name="Fastimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="Resources/fast.png" RenderTransformOrigin="0.696,1.152" Margin="435,15,0,0"/> -->
+            <Button x:Name="Inc" HorizontalAlignment="Left" Height="50" Margin="405,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+                <Image x:Name="Fastimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/inc.png" RenderTransformOrigin="0.696,1.152"/>
             </Button>
-            <Button x:Name="Slow" HorizontalAlignment="Left" Height="50" Margin="370,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
-                <!--<Image x:Name="Slowimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="Resources/slow.png" RenderTransformOrigin="2.087,1.511" Margin="380,15,0,0"/> -->
+            <Button x:Name="Dec" HorizontalAlignment="Left" Height="50" Margin="185,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+                <Image x:Name="Slowimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/dec.png" RenderTransformOrigin="2.087,1.511"/>
             </Button>
-            <Button x:Name="Slower" HorizontalAlignment="Left" Height="50" Margin="315,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
-                <!--<Image x:Name="Slowerimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="Resources/slower.png" RenderTransformOrigin="0.696,1.152" Margin="325,15,0,0"/> -->
+            <Button x:Name="Start" HorizontalAlignment="Left" Height="50" Margin="295,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+                <Image x:Name="startImg" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="40" Source="resources/start.png"/>
             </Button>
-            <Slider x:Name="SliderValue" HorizontalAlignment="Left" Margin="0,65,0,0" VerticalAlignment="Top" Width="710" Height="24" ValueChanged="SliderValue_ValueChanged"
+            <Button x:Name="Restart" HorizontalAlignment="Left" Margin="350,10,0,30" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+                <Image x:Name="restartImg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/restart.png" RenderTransformOrigin="0.696,1.152" Margin="0"/>
+            </Button>
+            <Slider x:Name="SliderValue" HorizontalAlignment="Left" Margin="0,65,0,0" VerticalAlignment="Top" Width="800" Height="24" ValueChanged="SliderValue_ValueChanged"
                     TickFrequency="1" IsSnapToTickEnabled="True"
                     />
             <TextBlock HorizontalAlignment="Left" Height="34" Margin="525,21,0,0" TextWrapping="Wrap" Text="Play speed" VerticalAlignment="Top" Width="102" FontSize="20"/>

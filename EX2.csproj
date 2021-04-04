@@ -98,5 +98,14 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\dec.png" />
+    <Resource Include="resources\inc.png" />
+    <Resource Include="resources\max.png" />
+    <Resource Include="resources\min.png" />
+    <Resource Include="resources\restart.png" />
+    <Resource Include="resources\start.png" />
+    <Resource Include="resources\stop.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
