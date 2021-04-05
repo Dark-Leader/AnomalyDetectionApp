@@ -12,28 +12,27 @@ namespace EX2
     /// <summary>
     /// A program for client socket
     /// </summary>
-    class Client
+    class Client : ITelnetClient
     {
-        private int serverPort;
+        
         private TcpClient sender;
-        private NetworkStream ns;
+        private NetworkStream stream;
+        public Boolean connectionEstablished { get; private set; }
 
-        /// <summary>
-        /// Initializes a new instance of client which needs to connect to a server in the specified ip and port.
-        /// </summary>
-        /// <param name="ip">The ip of the server.</param>
-        /// <param name="port">The port that the server listens to</param>
-        public Client(string ip, int port)
+        public Client()
         {
-           
-            int serverPort = port; // port = 5400
-
             sender = new TcpClient();
+            connectionEstablished = false;
+        }
+
+        public void connect(string ip, int port)
+        {
             try
             {
-                sender.Connect(IPAddress.Parse(ip), serverPort);
+                sender.Connect(IPAddress.Parse(ip), port);
                 Console.WriteLine("Connection established");
-                ns = sender.GetStream();
+                stream = sender.GetStream();
+                connectionEstablished = true;
             }
             catch (SocketException e)
             {
@@ -44,12 +43,29 @@ namespace EX2
             {
                 Console.WriteLine("SocketException: {0}", e);
             }
-
         }
 
-        public void sendData(string data)
+
+        public void write(string data)
         {
-            // TODO send to server/
+            Console.WriteLine(data);
+            if (stream.CanWrite)
+            {
+                byte[] buffer = Encoding.ASCII.GetBytes(data);
+                stream.Write(buffer, 0, buffer.Length);
+                throw new NotImplementedException();
+            }
+            else
+            {
+                Console.WriteLine("You cannot write data to this stream.");
+            }
         }
+
+        public void disconnect()
+        {
+            stream.Close();
+            sender.Close();
+        }
+
     }
 }
