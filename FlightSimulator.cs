@@ -8,18 +8,16 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
-
-
-
-
+using System.ComponentModel;
 
 namespace EX2
 {
-    class FlightSimulator
+    class FlightSimulator : IFlightSimulator
     {
-        private string csvData;
-        
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private string csvData;
 
         public FlightSimulator(string data)
         {

@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IFlightSimulator.cs" />
     <Compile Include="ITelnetClient.cs" />
     <Compile Include="viewModel.cs" />
     <Page Include="MainWindow.xaml">
