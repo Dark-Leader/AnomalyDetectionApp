@@ -16,7 +16,7 @@ namespace EX2
         {
             InitializeComponent();
             // Example for injecting 15 buttons into the stackPanel
-            vm = new viewModel();
+            vm = new viewModel(new FlightSimulator("hello"));
             this.DataContext = vm;
             foreach (string var in this.vm.Variables)
             {

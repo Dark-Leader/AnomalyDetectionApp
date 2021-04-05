@@ -13,22 +13,26 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 
 namespace EX2
 {
-    public partial class viewModel
+    public partial class viewModel : INotifyPropertyChanged
     {
         //private List<ChartData> points = new List<ChartData>();
+        public event PropertyChangedEventHandler PropertyChanged;
         private List<String> variables = new List<String>();
         private string time;
-        private double playback_speed;
+        private string playback_speed;
+        private FlightSimulator model;
 
 
         private string open_file;// works for both csv file and .exe file.
         private string stackButton_string;
-        public viewModel()
+        public viewModel(FlightSimulator sim)
         {
+            this.model = sim;
             this.variables.Add("speed");
             this.variables.Add("height");
             this.variables.Add("throttle");
@@ -45,8 +49,16 @@ namespace EX2
             this.variables.Add("width");
             this.variables.Add("HAHAHAHAHHAHA");
             this.time = "00:00:00";
-            this.playback_speed = 1.0;
+            this.playback_speed = "1.0";
 
+        }
+        
+        public void NotifyPropertyChanged (string propName)
+        {
+            if (PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
         }
         public string Open_file
         {
@@ -107,7 +119,7 @@ namespace EX2
             }
         }
 
-        public double Playback_speed
+        public string Playback_speed
         {
             get
             {

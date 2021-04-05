@@ -12,7 +12,7 @@ using System.ComponentModel;
 
 namespace EX2
 {
-    class FlightSimulator : IFlightSimulator
+    public class FlightSimulator : IFlightSimulator
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
