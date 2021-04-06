@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.DataVisualization.Charting;
 using Microsoft.Win32;
 
 
@@ -26,6 +28,7 @@ namespace EX2
                 button.Click += new RoutedEventHandler(stackButton_Click);
                 sp.Children.Add(button);
             }
+            LoadLineChartData();
 
 
         }
@@ -78,5 +81,21 @@ namespace EX2
             }
 
         }
+
+        private void McChart_Load(object sender, RoutedEventArgs e)
+        {
+            LoadLineChartData();
+        }
+        private void LoadLineChartData()
+        {
+            ((LineSeries)McChart.Series[0]).ItemsSource =
+                new KeyValuePair<float, float>[]{
+        new KeyValuePair<float, float>(1, 200),
+        new KeyValuePair<float, float>(1.4f, 300),
+        new KeyValuePair<float, float>(2,180),
+        new KeyValuePair<float, float>(4.2f, 87.7f),
+        new KeyValuePair<float, float>(4.5f,79) };
+        }
+
     }
 }

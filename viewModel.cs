@@ -26,10 +26,11 @@ namespace EX2
         private string time;
         private string playback_speed;
         private FlightSimulator model;
-
+        private List<Point> points = new List<Point>();
 
         private string open_file;// works for both csv file and .exe file.
         private string stackButton_string;
+        
         public viewModel(FlightSimulator sim)
         {
             this.model = sim;
@@ -50,7 +51,9 @@ namespace EX2
             this.variables.Add("HAHAHAHAHHAHA");
             this.time = "00:00:00";
             this.playback_speed = "1.0";
-
+            this.points.Add(new Point(3,6));
+            this.points.Add(new Point(1, 2));
+            this.points.Add(new Point(2, 4));
         }
         
         public void NotifyPropertyChanged (string propName)
