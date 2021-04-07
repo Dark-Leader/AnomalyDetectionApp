@@ -3,22 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"    
-        xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"  
+        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         x:Class="EX2.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="850">
 
-    
-    
-    
+
+
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="61*"/>
             <ColumnDefinition Width="11*"/>
         </Grid.ColumnDefinitions>
         <Grid Width="180" Height="220" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="40,40,0,0" >
-            <ScrollViewer>
+            <ScrollViewer Margin="0,0,0,-53">
                 <StackPanel x:Name="sp">
                     <!--this is how we insert the buttons in later from the MainWindow.xaml.cs file - we named the stackPanel sp and used it in the c# file-->
                 </StackPanel>
@@ -62,21 +62,31 @@
             <TextBlock x:Name="elapsedTime" HorizontalAlignment="Left" Height="34" Margin="699,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" FontSize="20" Text="{Binding Time}"/>
             <TextBlock x:Name="play_speed" HorizontalAlignment="Left" Height="34" Margin="640,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="40" FontSize="20" Text="{Binding Playback_speed}"/>
         </Grid>
-
-        <Grid x:Name="selectedValue" Width="397" Height="220" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="241,40,0,0">
-
-            <DVC:Chart Canvas.Top="80" Canvas.Left="10" x:Name="McChart"  Width="400" Height="250" 
-Background="LightSteelBlue"> 
-                <DVC:Chart.Series>
-                    <DVC:LineSeries Title="Monthly Count" IndependentValueBinding="{Binding Path=Key}"  
-DependentValueBinding="{Binding Path=Value}">
-                    </DVC:LineSeries>
-                </DVC:Chart.Series>
+        <Grid Width="200" Height="131" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="241,40,0,0">
+            <DVC:Chart x:Name="selectedFeature" VerticalAlignment="Top" RenderTransformOrigin="0.524,0.249" Margin="-12,-45,-10,-25" Height="201" BorderBrush="Transparent" BorderThickness="0">
+                <DVC:Chart.LegendStyle>
+                    <Style TargetType="Control">
+                        <Setter Property="Width" Value="0"/>
+                        <Setter Property="Height" Value="0"/>
+                    </Style>
+                </DVC:Chart.LegendStyle>
+                <DVC:LineSeries Width="200" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522,-0.172" HorizontalAlignment="Left"/>
             </DVC:Chart>
-
         </Grid>
-        <Grid x:Name="correlatedFeature" Width="148" Height="115" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="394,40,0,0"/>
-        <Grid x:Name="reg" Width="301" Height="162" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="241,160,0,0"/>
+        <Grid  Width="200" Height="131" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="446,40,0,0">
+            <DVC:Chart x:Name="correlatedFeature" VerticalAlignment="Top" RenderTransformOrigin="0.524,0.249" Margin="-12,-45,-10,-25" Height="201" BorderBrush="Transparent" BorderThickness="0">
+                <DVC:Chart.LegendStyle>
+                    <Style TargetType="Control">
+                        <Setter Property="Width" Value="0"/>
+                        <Setter Property="Height" Value="0"/>
+                    </Style>
+                </DVC:Chart.LegendStyle>
+                <DVC:LineSeries Width="200" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522,-0.172" HorizontalAlignment="Left"/>
+            </DVC:Chart>
+        </Grid>
+        <Grid x:Name="reg" Width="405" Height="146" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="241,176,0,0"/>
+
+
 
 
     </Grid>

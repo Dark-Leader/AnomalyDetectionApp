@@ -26,7 +26,8 @@ namespace EX2
         private string time;
         private string playback_speed;
         private FlightSimulator model;
-        private List<Point> points = new List<Point>();
+        private List<KeyValuePair<float, float>> VM_selectedFeature = new List<KeyValuePair<float, float>>();
+        private List<KeyValuePair<float, float>> VM_correlatedFeature;
 
         private string open_file;// works for both csv file and .exe file.
         private string stackButton_string;
@@ -51,9 +52,23 @@ namespace EX2
             this.variables.Add("HAHAHAHAHHAHA");
             this.time = "00:00:00";
             this.playback_speed = "1.0";
-            this.points.Add(new Point(3,6));
-            this.points.Add(new Point(1, 2));
-            this.points.Add(new Point(2, 4));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(7, 15));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(8, 23));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(40, 50));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(3, 80));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(11, 15));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(5, 20));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(26, 31));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(9, 70));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(17, 4));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(6, 12));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(15, 19));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(43, 14));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(35, 18));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
+            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
+            this.VM_correlatedFeature = new List<KeyValuePair<float, float>>(this.VM_selectedFeature);
         }
         
         public void NotifyPropertyChanged (string propName)
@@ -74,6 +89,33 @@ namespace EX2
                 if (value != open_file)
                 {
                     open_file = value;                 
+                }
+            }
+        }
+
+        public List<KeyValuePair<float, float>> SelectedFeature { 
+            get
+            {
+                return VM_selectedFeature;
+            } set
+            {
+                if (value != VM_selectedFeature) {
+                    VM_selectedFeature = value;
+                }
+            }
+        }
+
+        public List<KeyValuePair<float, float>> CorrelatedFeature
+        {
+            get
+            {
+                return VM_correlatedFeature;
+            }
+            set
+            {
+                if (value != VM_correlatedFeature)
+                {
+                    VM_correlatedFeature = value;
                 }
             }
         }

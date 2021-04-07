@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.DataVisualization.Charting;
 using Microsoft.Win32;
-
+using System.Windows.Controls.DataVisualization.Charting;
 
 namespace EX2
 {
@@ -14,6 +13,7 @@ namespace EX2
     public partial class MainWindow : Window
     {
         private viewModel vm;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -66,9 +66,6 @@ namespace EX2
                 Console.WriteLine(fileNames);
                 this.vm.Open_file = fileNames;
             }
-
-
-
         }
 
         // TODO: send the model and the flightgear simulator the current value of the slider.
@@ -82,19 +79,10 @@ namespace EX2
 
         }
 
-        private void McChart_Load(object sender, RoutedEventArgs e)
-        {
-            LoadLineChartData();
-        }
         private void LoadLineChartData()
         {
-            ((LineSeries)McChart.Series[0]).ItemsSource =
-                new KeyValuePair<float, float>[]{
-        new KeyValuePair<float, float>(1, 200),
-        new KeyValuePair<float, float>(1.4f, 300),
-        new KeyValuePair<float, float>(2,180),
-        new KeyValuePair<float, float>(4.2f, 87.7f),
-        new KeyValuePair<float, float>(4.5f,79) };
+            selectedFeature.DataContext = this.vm.SelectedFeature;
+            correlatedFeature.DataContext = this.vm.CorrelatedFeature;
         }
 
     }
