@@ -23,8 +23,8 @@ namespace EX2
         //private List<ChartData> points = new List<ChartData>();
         public event PropertyChangedEventHandler PropertyChanged;
         private List<String> variables = new List<String>();
-        private string time;
-        private string playback_speed;
+        private string VM_time;
+        private string VM_playback_speed;
         private FlightSimulator model;
         private List<KeyValuePair<float, float>> VM_selectedFeature = new List<KeyValuePair<float, float>>();
         private List<KeyValuePair<float, float>> VM_correlatedFeature;
@@ -35,6 +35,7 @@ namespace EX2
         public viewModel(FlightSimulator sim)
         {
             this.model = sim;
+            //temp buttons
             this.variables.Add("speed");
             this.variables.Add("height");
             this.variables.Add("throttle");
@@ -50,8 +51,10 @@ namespace EX2
             this.variables.Add("throttle");
             this.variables.Add("width");
             this.variables.Add("HAHAHAHAHHAHA");
-            this.time = "00:00:00";
-            this.playback_speed = "1.0";
+            this.VM_time = "00:00:00";
+            this.VM_playback_speed = "1.0";
+
+            // temp graphs data
             this.VM_selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
             this.VM_selectedFeature.Add(new KeyValuePair<float, float>(7, 15));
             this.VM_selectedFeature.Add(new KeyValuePair<float, float>(8, 23));
@@ -163,13 +166,13 @@ namespace EX2
         {
             get
             {
-                return time;
+                return VM_time;
             }
             set
             {
-                if (value != time)
+                if (value != VM_time)
                 {
-                    time = value;
+                    VM_time = value;
                 }
             }
         }
@@ -178,13 +181,13 @@ namespace EX2
         {
             get
             {
-                return playback_speed;
+                return VM_playback_speed;
             }
             set
             {
-                if (value != playback_speed)
+                if (value != VM_playback_speed)
                 {
-                    playback_speed = value;
+                    VM_playback_speed = value;
                 }
             }
         }
