@@ -14,20 +14,29 @@ namespace EX2
 {
     public class FlightSimulator : IFlightSimulator
     {
-
+        private string FGPath;
         public event PropertyChangedEventHandler PropertyChanged;
 
         private string csvData;
 
-        public FlightSimulator(string data)
+        public FlightSimulator()
         {
             string pathToApp = "D:\\Applications\\FlightGear 2020.3.6\\bin\\fgfs.exe";
             string pathToSettings = "D:\\Learn It\\2nd year\advanced programming2\\project\\playback_small.xml";
 
-            this.csvData = data;
 
             //FlightGear fg = new FlightGear(pathToApp, pathToSettings);
             //fg.start();             
+        }
+
+        public void setCSVFile(string name)
+        {
+            this.csvData = name;
+        }
+
+        public void setFGPath(string name)
+        {
+            this.FGPath = name;
         }
 
         public void play()

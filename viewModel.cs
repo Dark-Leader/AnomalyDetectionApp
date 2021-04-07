@@ -71,6 +71,16 @@ namespace EX2
             this.VM_correlatedFeature = new List<KeyValuePair<float, float>>(this.VM_selectedFeature);
         }
         
+        public void update_CSVFileName(string name)
+        {
+            this.model.setCSVFile(name);
+        }
+
+        public void update_OpenFlightGear(string name)
+        {
+            this.model.setFGPath(name);
+        }
+
         public void NotifyPropertyChanged (string propName)
         {
             if (PropertyChanged != null)

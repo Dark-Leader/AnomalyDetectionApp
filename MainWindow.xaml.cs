@@ -18,7 +18,7 @@ namespace EX2
         {
             InitializeComponent();
             // Example for injecting 15 buttons into the stackPanel
-            vm = new viewModel(new FlightSimulator("hello"));
+            vm = new viewModel(new FlightSimulator());
             this.DataContext = vm;
             foreach (string var in this.vm.Variables)
             {
@@ -65,6 +65,14 @@ namespace EX2
                 fileNames = fileNames.Substring(1);
                 Console.WriteLine(fileNames);
                 this.vm.Open_file = fileNames;
+                Button clicked = (Button)sender;
+                if (clicked.Name == "btnOpenCSV")
+                {
+                    this.vm.update_CSVFileName(fileNames);
+                } else
+                {
+                    this.vm.update_OpenFlightGear(fileNames);
+                }
             }
         }
 
