@@ -29,8 +29,8 @@ namespace EX2
 
         public FlightSimulator()
         {
-            
-            
+
+
             parseXML();
             string pathToApp = "D:\\Applications\\FlightGear 2020.3.6\\bin\\fgfs.exe";
             string pathToSettings = "D:\\Learn It\\2nd year\advanced programming2\\project\\playback_small.xml";

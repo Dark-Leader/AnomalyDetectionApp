@@ -35,7 +35,7 @@ namespace EX2
         /// opens the flight gear application
         /// </summary>
         public void start()
-        { 
+        {
             ProcessStartInfo startInfo = new ProcessStartInfo(fileName);
 
             startInfo.WorkingDirectory = "D:\\Applications\\FlightGear 2020.3.6\\bin";
