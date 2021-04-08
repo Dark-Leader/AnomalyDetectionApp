@@ -118,6 +118,8 @@
     <Resource Include="resources\start.png" />
     <Resource Include="resources\stop.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="resources\playback_small.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
