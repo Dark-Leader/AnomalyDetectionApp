@@ -36,8 +36,20 @@ namespace EX2
             var destination = Path.Combine(destinationDirectory, Path.GetFileName(fileToCopy));
             //Console.WriteLine(Path.GetFileName(fileToCopy));
 
-            File.Copy(fileToCopy, destination);
-            // TODO add path to settings and add it to data/protocol in fg and to args
+
+            try
+            {
+                // Will not overwrite if the destination file already exists.
+                File.Copy(fileToCopy, destination);
+            }
+
+            // Catch exception if the file was already copied.
+            catch (IOException copyError)
+            {
+                Console.WriteLine(copyError.Message);
+            }
+            
+            
             //arguments = arguments + settings + " --fdm=null";
 
         }

@@ -25,13 +25,20 @@ namespace EX2
         private string playbackSpeed;
         public event PropertyChangedEventHandler PropertyChanged;
 
+
+        private string pathToXML;
+
         private string csvData;
 
         public FlightSimulator()
         {
 
+            pathToXML = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+            pathToXML = Directory.GetParent(pathToXML).FullName;
+            pathToXML = Directory.GetParent(pathToXML).FullName;
+            pathToXML += "\\resources\\playback_small.xml";
 
-            //parseXML();
+            parseXML();
             string pathToApp = "D:\\Applications\\FlightGear 2020.3.6\\bin\\fgfs.exe";
             string pathToSettings = "D:\\Learn It\\2nd year\advanced programming2\\project\\playback_small.xml";
             this.selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
@@ -165,7 +172,7 @@ namespace EX2
         public void setFGPath(string name)
         {
             this.FGPath = name;
-            FlightGear fg = new FlightGear(name, "D:\\MyData\\Documents\\GitHub\\ex1\\resources\\playback_small.xml");
+            FlightGear fg = new FlightGear(name, pathToXML);
         }
 
         public void play()
@@ -240,10 +247,13 @@ namespace EX2
 
             try
             {
+                /*
                 string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
                 filePath = Directory.GetParent(filePath).FullName;
                 filePath = Directory.GetParent(filePath).FullName;
                 reader = XmlReader.Create(filePath + "\\resources\\playback_small.xml", settings);
+                */
+                reader = XmlReader.Create(pathToXML, settings);
                 if (reader.ReadToFollowing("output"))
                 {
                     reader.Read();
