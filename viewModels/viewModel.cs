@@ -38,60 +38,27 @@ namespace EX2
             {
                 this.notifyPropertyChanged("VM_" + e.PropertyName);
             };
-            this.model.parseXML();
-            //temp buttons
-            /*
-            this.variables.Add("speed");
-            this.variables.Add("height");
-            this.variables.Add("throttle");
-            this.variables.Add("width");
-            this.variables.Add("HAHAHAHAHHAHA");
-            this.variables.Add("speed");
-            this.variables.Add("height");
-            this.variables.Add("throttle");
-            this.variables.Add("width");
-            this.variables.Add("HAHAHAHAHHAHA");
-            this.variables.Add("speed");
-            this.variables.Add("height");
-            this.variables.Add("throttle");
-            this.variables.Add("width");
-            this.variables.Add("HAHAHAHAHHAHA");
-            this.VM_time = "00:00:00";
-            this.VM_playback_speed = "1.0";
-            */
-
-            // temp graphs data
-            /*
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(7, 15));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(8, 23));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(40, 50));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(3, 80));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(11, 15));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(5, 20));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(26, 31));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(9, 70));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(17, 4));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(6, 12));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(15, 19));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(43, 14));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(35, 18));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
-            this.VM_selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
-            this.VM_correlatedFeature = new List<KeyValuePair<float, float>>(this.VM_selectedFeature);
-            */
         }
-        
+        /// <summary>
+        /// send CSV file name to model.
+        /// </summary>
+        /// <param name="name"></param>
         public void update_CSVFileName(string name)
         {
             this.model.setCSVFile(name);
         }
-
+        /// <summary>
+        /// send FlightGear exe path to model.
+        /// </summary>
+        /// <param name="name"></param>
         public void update_OpenFlightGear(string name)
         {
             this.model.setFGPath(name);
         }
-
+        /// <summary>
+        /// gotten update from model, send the update to view.
+        /// </summary>
+        /// <param name="propName"></param>
         public void notifyPropertyChanged (string propName)
         {
             if (PropertyChanged != null)
@@ -99,14 +66,18 @@ namespace EX2
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-
+        /// <summary>
+        /// vector of points of the feature selected by the user.
+        /// </summary>
         public List<KeyValuePair<float, float>> VM_SelectedFeature { 
             get
             {
                 return this.model.SelectedFeature;
             } 
         }
-
+        /// <summary>
+        /// vector of points of the correlated feature to the selected feature.
+        /// </summary>
         public List<KeyValuePair<float, float>> VM_CorrelatedFeature
         {
             get
@@ -114,7 +85,9 @@ namespace EX2
                 return this.model.CorrelatedFeature;
             }
         }
-
+        /// <summary>
+        /// vector of strings holding all column names in csv/xml file.
+        /// </summary>
         public List<String> Variables
         {
             get
@@ -122,6 +95,9 @@ namespace EX2
                 return this.model.Variables;
             }
         }
+        /// <summary>
+        /// current time passed in 'XX:XX:XX' format.
+        /// </summary>
         public string Time
         {
             get
@@ -129,7 +105,9 @@ namespace EX2
                 return this.model.Time;
             }
         }
-
+        /// <summary>
+        /// current video play speed - current pace we send data to flight gear / number of element being added to the graphs per second.
+        /// </summary>
         public string Playback_speed
         {
             get

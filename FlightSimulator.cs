@@ -37,8 +37,9 @@ namespace EX2
             pathToXML = Directory.GetParent(pathToXML).FullName;
             pathToXML = Directory.GetParent(pathToXML).FullName;
             pathToXML += "\\resources\\playback_small.xml";
+            parseXML();
 
-            
+
             string pathToApp = "D:\\Applications\\FlightGear 2020.3.6\\bin\\fgfs.exe";
             string pathToSettings = "D:\\Learn It\\2nd year\advanced programming2\\project\\playback_small.xml";
             this.selectedFeature.Add(new KeyValuePair<float, float>(1, 60));

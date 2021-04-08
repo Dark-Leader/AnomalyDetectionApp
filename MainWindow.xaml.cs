@@ -17,15 +17,21 @@ namespace EX2
         public MainWindow()
         {
             InitializeComponent();
-            // Example for injecting 15 buttons into the stackPanel
+
             vm = new viewModel(new FlightSimulator());
+            // create the buttons in the left side of the window.
             create_buttons();
             this.DataContext = vm;
+            // load the graphs.
             LoadLineChartData();
 
 
         }
-        // default function to handle all stackPanel button clicks.
+        /// <summary>
+        /// default function for all variables. if a user selects a variable we update the viewModel about it.
+        /// </summary>
+        /// <param name="sender"> button clicked </param>
+        /// <param name="e"></param>
         private void stackButton_Click(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
@@ -33,13 +39,16 @@ namespace EX2
 
         }
 
+        /// <summary>
+        /// add buttons to the left stack of variables.
+        /// </summary>
         private void create_buttons()
         {
 
-            
             foreach (string var in this.vm.Variables)
                 
             {
+                // create button and add it to the stack frame.
                 Button button = new Button();
                 button.Content = var;
                 string name = var.Replace("-", "_");
@@ -53,7 +62,7 @@ namespace EX2
         /// <summary>
         /// opens file explorer and allows the user to choose a file and then sends the viewmodel said file name.
         /// </summary>
-        /// <param name="sender">  </param>
+        /// <param name="sender"> button selected </param>
         /// <param name="e"></param>
         private void btnOpen_Click(object sender, RoutedEventArgs e)
         {
@@ -82,17 +91,24 @@ namespace EX2
             }
         }
 
-        // TODO: send the model and the flightgear simulator the current value of the slider.
-        //Slider.
+        /// <summary>
+        /// user selected a new time to skip to. need to send update to viewModel of the selected time.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SliderValue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded)
             {
+                // this.vm.updateTime(SliderValue);
                 Console.WriteLine(SliderValue);
             }
 
         }
 
+        /// <summary>
+        /// load in all the graphs in the view.
+        /// </summary>
         private void LoadLineChartData()
         {
             selectedFeature.DataContext = this.vm.VM_SelectedFeature;
