@@ -275,6 +275,7 @@ namespace EX2
 
             finally
             {
+                //variables = attributes_list;
                 attributes = attributes_list.ToArray();
                 if (reader != null)
                     reader.Close();

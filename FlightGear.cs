@@ -24,17 +24,18 @@ namespace EX2
 
         public FlightGear(string fileName, string settings)
         {
-
-            this.fileName = fileName;
             client = new Client();
+
+            var pathToProtocol = Directory.GetParent(fileName).FullName;
+            pathToProtocol = Directory.GetParent(pathToProtocol).FullName;
+            this.fileName = fileName;
+            
             string fileToCopy = settings;
-            int index = fileName.LastIndexOf("6") + 2;
-            string destinationDirectory = fileName.Remove(index) + "data\\Protocol\\";
-            Console.WriteLine(destinationDirectory);
+        
+            pathToProtocol += "\\data\\Protocol\\";
 
 
-            var destination = Path.Combine(destinationDirectory, Path.GetFileName(fileToCopy));
-            //Console.WriteLine(Path.GetFileName(fileToCopy));
+            var destination = Path.Combine(pathToProtocol, Path.GetFileName(fileToCopy));
 
 
             try
