@@ -65,7 +65,7 @@
     </ApplicationDefinition>
     <Compile Include="IFlightSimulator.cs" />
     <Compile Include="ITelnetClient.cs" />
-    <Compile Include="viewModel.cs" />
+    <Compile Include="viewModels\viewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -118,5 +118,6 @@
     <Resource Include="resources\start.png" />
     <Resource Include="resources\stop.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -22,20 +22,24 @@ namespace EX2
     {
         //private List<ChartData> points = new List<ChartData>();
         public event PropertyChangedEventHandler PropertyChanged;
-        private List<String> variables = new List<String>();
-        private string VM_time;
-        private string VM_playback_speed;
+        //private List<String> variables;
+        //private string VM_time;
+        //private string VM_playback_speed;
         private FlightSimulator model;
-        private List<KeyValuePair<float, float>> VM_selectedFeature = new List<KeyValuePair<float, float>>();
-        private List<KeyValuePair<float, float>> VM_correlatedFeature;
+        //private List<KeyValuePair<float, float>> VM_selectedFeature;
+        //private List<KeyValuePair<float, float>> VM_correlatedFeature;
 
-        private string open_file;// works for both csv file and .exe file.
-        private string stackButton_string;
+        // works for both csv file and .exe file.
         
         public viewModel(FlightSimulator sim)
         {
             this.model = sim;
+            this.model.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
+            {
+                this.notifyPropertyChanged("VM_" + e.PropertyName);
+            };
             //temp buttons
+            /*
             this.variables.Add("speed");
             this.variables.Add("height");
             this.variables.Add("throttle");
@@ -53,8 +57,10 @@ namespace EX2
             this.variables.Add("HAHAHAHAHHAHA");
             this.VM_time = "00:00:00";
             this.VM_playback_speed = "1.0";
+            */
 
             // temp graphs data
+            /*
             this.VM_selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
             this.VM_selectedFeature.Add(new KeyValuePair<float, float>(7, 15));
             this.VM_selectedFeature.Add(new KeyValuePair<float, float>(8, 23));
@@ -72,6 +78,7 @@ namespace EX2
             this.VM_selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
             this.VM_selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.VM_correlatedFeature = new List<KeyValuePair<float, float>>(this.VM_selectedFeature);
+            */
         }
         
         public void update_CSVFileName(string name)
@@ -84,96 +91,41 @@ namespace EX2
             this.model.setFGPath(name);
         }
 
-        public void NotifyPropertyChanged (string propName)
+        public void notifyPropertyChanged (string propName)
         {
             if (PropertyChanged != null)
             {
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-        public string Open_file
+
+        public List<KeyValuePair<float, float>> VM_SelectedFeature { 
+            get
+            {
+                return this.model.SelectedFeature;
+            } 
+        }
+
+        public List<KeyValuePair<float, float>> VM_CorrelatedFeature
         {
             get
             {
-                return open_file;
-            }
-            set
-            {
-                if (value != open_file)
-                {
-                    open_file = value;                 
-                }
+                return this.model.CorrelatedFeature;
             }
         }
 
-        public List<KeyValuePair<float, float>> SelectedFeature { 
-            get
-            {
-                return VM_selectedFeature;
-            } set
-            {
-                if (value != VM_selectedFeature) {
-                    VM_selectedFeature = value;
-                }
-            }
-        }
-
-        public List<KeyValuePair<float, float>> CorrelatedFeature
+        public List<String> Variables
         {
             get
             {
-                return VM_correlatedFeature;
-            }
-            set
-            {
-                if (value != VM_correlatedFeature)
-                {
-                    VM_correlatedFeature = value;
-                }
-            }
-        }
-
-        public string StackButton_string
-        {
-            get
-            {
-                return stackButton_string;
-            }
-            set
-            {
-                if (value != stackButton_string)
-                {
-                    stackButton_string = value;
-                }
-            }
-        }
-
-     public List<String> Variables
-        {
-            get
-            {
-                return variables;
-            }
-            set
-            {
-                if (value != variables)
-                {
-                    variables = value;
-                }
+                return this.model.Variables;
             }
         }
         public string Time
         {
             get
             {
-                return VM_time;
-            }
-            set
-            {
-                if (value != VM_time)
-                {
-                    VM_time = value;
-                }
+                return this.model.Time;
             }
         }
 
@@ -181,19 +133,9 @@ namespace EX2
         {
             get
             {
-                return VM_playback_speed;
-            }
-            set
-            {
-                if (value != VM_playback_speed)
-                {
-                    VM_playback_speed = value;
-                }
+                return this.model.Playback_speed;
             }
         }
-
-
-
 
     }
 }

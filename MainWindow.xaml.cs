@@ -37,13 +37,11 @@ namespace EX2
         {
             Button b = (Button)sender;
             Console.WriteLine(b.Name);
-            //this.vm.StackButton_string = b.Name;
-
 
         }
 
         /// <summary>
-        /// 
+        /// opens file explorer and allows the user to choose a file and then sends the viewmodel said file name.
         /// </summary>
         /// <param name="sender">  </param>
         /// <param name="e"></param>
@@ -63,8 +61,6 @@ namespace EX2
                     fileNames += ";" + fileName;
                 }
                 fileNames = fileNames.Substring(1);
-                Console.WriteLine(fileNames);
-                this.vm.Open_file = fileNames;
                 Button clicked = (Button)sender;
                 if (clicked.Name == "btnOpenCSV")
                 {
@@ -89,8 +85,8 @@ namespace EX2
 
         private void LoadLineChartData()
         {
-            selectedFeature.DataContext = this.vm.SelectedFeature;
-            correlatedFeature.DataContext = this.vm.CorrelatedFeature;
+            selectedFeature.DataContext = this.vm.VM_SelectedFeature;
+            correlatedFeature.DataContext = this.vm.VM_CorrelatedFeature;
         }
 
     }
