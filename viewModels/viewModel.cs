@@ -38,6 +38,7 @@ namespace EX2
             {
                 this.notifyPropertyChanged("VM_" + e.PropertyName);
             };
+            this.model.parseXML();
             //temp buttons
             /*
             this.variables.Add("speed");

@@ -19,15 +19,8 @@ namespace EX2
             InitializeComponent();
             // Example for injecting 15 buttons into the stackPanel
             vm = new viewModel(new FlightSimulator());
+            create_buttons();
             this.DataContext = vm;
-            foreach (string var in this.vm.Variables)
-            {
-                Button button = new Button();
-                button.Content = var;
-                button.Name = "Button_" + var;
-                button.Click += new RoutedEventHandler(stackButton_Click);
-                sp.Children.Add(button);
-            }
             LoadLineChartData();
 
 
@@ -36,8 +29,25 @@ namespace EX2
         private void stackButton_Click(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
-            Console.WriteLine(b.Name);
+            Console.WriteLine(b.Content);
 
+        }
+
+        private void create_buttons()
+        {
+
+            
+            foreach (string var in this.vm.Variables)
+                
+            {
+                Button button = new Button();
+                button.Content = var;
+                string name = var.Replace("-", "_");
+                button.Name = name;
+                button.Click += new RoutedEventHandler(stackButton_Click);
+                sp.Children.Add(button);
+            }
+            
         }
 
         /// <summary>

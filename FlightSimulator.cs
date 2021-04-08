@@ -38,7 +38,7 @@ namespace EX2
             pathToXML = Directory.GetParent(pathToXML).FullName;
             pathToXML += "\\resources\\playback_small.xml";
 
-            parseXML();
+            
             string pathToApp = "D:\\Applications\\FlightGear 2020.3.6\\bin\\fgfs.exe";
             string pathToSettings = "D:\\Learn It\\2nd year\advanced programming2\\project\\playback_small.xml";
             this.selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
@@ -58,7 +58,7 @@ namespace EX2
             this.selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
             this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
-
+            /*
             this.variables.Add("speed");
             this.variables.Add("height");
             this.variables.Add("throttle");
@@ -74,6 +74,7 @@ namespace EX2
             this.variables.Add("throttle");
             this.variables.Add("width");
             this.variables.Add("HAHAHAHAHHAHA");
+            */
 
             //FlightGear fg = new FlightGear(pathToApp, "D:\\MyData\\Documents\\GitHub\\ex1\resources\\playback_small.xml");
             //fg.start();             
@@ -237,7 +238,7 @@ namespace EX2
         /// <summary>
         /// This methods gets the feautures stated in the XML file 
         /// </summary>
-        private void parseXML()
+        public void parseXML()
         {
             List<string> attributes_list = new List<string>();
 
@@ -245,8 +246,7 @@ namespace EX2
             settings.IgnoreWhitespace = true;
             XmlReader reader = null;
 
-            try
-            {
+
                 /*
                 string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
                 filePath = Directory.GetParent(filePath).FullName;
@@ -271,15 +271,12 @@ namespace EX2
                         reader.Read();
                     }
                 }
-            }
-
-            finally
-            {
-                //variables = attributes_list;
+         
+                this.Variables = attributes_list;
                 attributes = attributes_list.ToArray();
                 if (reader != null)
                     reader.Close();
-            }
+            
         }
 
 
