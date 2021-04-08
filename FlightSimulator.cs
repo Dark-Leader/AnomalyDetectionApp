@@ -239,7 +239,10 @@ namespace EX2
 
             try
             {
-                reader = XmlReader.Create("D:\\MyData\\Documents\\GitHub\\ex1\\resources\\playback_small.xml", settings);
+                string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+                filePath = Directory.GetParent(filePath).FullName;
+                filePath = Directory.GetParent(filePath).FullName;
+                reader = XmlReader.Create(filePath + "\\resources\\playback_small.xml", settings);
                 if (reader.ReadToFollowing("output"))
                 {
                     reader.Read();

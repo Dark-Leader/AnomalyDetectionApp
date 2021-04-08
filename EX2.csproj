@@ -119,7 +119,9 @@
     <Resource Include="resources\stop.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="resources\playback_small.xml" />
+    <Resource Include="resources\playback_small.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
