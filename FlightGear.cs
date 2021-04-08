@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.IO;
 
 namespace EX2
 {
@@ -23,9 +24,19 @@ namespace EX2
 
         public FlightGear(string fileName, string settings)
         {
+
             this.fileName = fileName;
             client = new Client();
+            string fileToCopy = settings;
+            int index = fileName.LastIndexOf("6") + 2;
+            string destinationDirectory = fileName.Remove(index) + "data\\Protocol\\";
+            Console.WriteLine(destinationDirectory);
 
+
+            var destination = Path.Combine(destinationDirectory, Path.GetFileName(fileToCopy));
+            //Console.WriteLine(Path.GetFileName(fileToCopy));
+
+            File.Copy(fileToCopy, destination);
             // TODO add path to settings and add it to data/protocol in fg and to args
             //arguments = arguments + settings + " --fdm=null";
 

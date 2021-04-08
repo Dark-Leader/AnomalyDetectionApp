@@ -68,7 +68,7 @@ namespace EX2
             this.variables.Add("width");
             this.variables.Add("HAHAHAHAHHAHA");
 
-            //FlightGear fg = new FlightGear(pathToApp, pathToSettings);
+            //FlightGear fg = new FlightGear(pathToApp, "D:\\MyData\\Documents\\GitHub\\ex1\resources\\playback_small.xml");
             //fg.start();             
         }
 
@@ -165,6 +165,7 @@ namespace EX2
         public void setFGPath(string name)
         {
             this.FGPath = name;
+            FlightGear fg = new FlightGear(name, "D:\\MyData\\Documents\\GitHub\\ex1\\resources\\playback_small.xml");
         }
 
         public void play()
