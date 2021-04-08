@@ -9,11 +9,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.ComponentModel;
+using System.Xml;
 
 namespace EX2
 {
     public class FlightSimulator : IFlightSimulator
     {
+        private string[] attributes;
+
         private string FGPath;
         private List<KeyValuePair<float, float>> selectedFeature = new List<KeyValuePair<float, float>>();
         private List<KeyValuePair<float, float>> correlatedFeature;
@@ -26,6 +29,9 @@ namespace EX2
 
         public FlightSimulator()
         {
+            
+            
+            parseXML();
             string pathToApp = "D:\\Applications\\FlightGear 2020.3.6\\bin\\fgfs.exe";
             string pathToSettings = "D:\\Learn It\\2nd year\advanced programming2\\project\\playback_small.xml";
             this.selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
@@ -71,7 +77,7 @@ namespace EX2
             get
             {
                 return this.time;
-            } 
+            }
             set
             {
                 if (value != time)
@@ -103,7 +109,7 @@ namespace EX2
             get
             {
                 return this.variables;
-            } 
+            }
             set
             {
                 if (value != this.variables)
@@ -219,5 +225,48 @@ namespace EX2
                 Console.WriteLine("SocketException: {0}", e);
             }
         }
+
+        /// <summary>
+        /// This methods gets the feautures stated in the XML file 
+        /// </summary>
+        private void parseXML()
+        {
+            List<string> attributes_list = new List<string>();
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.IgnoreWhitespace = true;
+            XmlReader reader = null;
+
+            try
+            {
+                reader = XmlReader.Create("D:\\MyData\\Documents\\GitHub\\ex1\\resources\\playback_small.xml", settings);
+                if (reader.ReadToFollowing("output"))
+                {
+                    reader.Read();
+                    while (reader.Name != "output")
+                    {
+                        if (reader.IsStartElement())
+                        {
+
+                            if (reader.Name == "chunk")
+                            {
+                                reader.Read();
+                                attributes_list.Add(reader.ReadString());
+                            }
+                        }
+                        reader.Read();
+                    }
+                }
+            }
+
+            finally
+            {
+                attributes = attributes_list.ToArray();
+                if (reader != null)
+                    reader.Close();
+            }
+        }
+
+
     }
 }
