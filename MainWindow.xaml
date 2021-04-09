@@ -19,7 +19,7 @@
         </Grid.ColumnDefinitions>
         <Grid Width="180" Height="374" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23,40,0,0" >
             <ScrollViewer Margin="-10,0,10,0">
-                <StackPanel x:Name="sp">
+                <StackPanel x:Name="sp" RenderTransformOrigin="0.5,0.5" Width="162">
                     <!-- All the variables go in here -->
                 </StackPanel>
             </ScrollViewer>
@@ -69,8 +69,8 @@
                     />
             <TextBlock HorizontalAlignment="Left" Height="34" Margin="525,21,0,0" TextWrapping="Wrap" Text="Play speed" VerticalAlignment="Top" Width="102" FontSize="20"/>
             <!-- display current time and playback speed in view -->
-            <TextBlock x:Name="elapsedTime" HorizontalAlignment="Left" Height="34" Margin="699,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" FontSize="20" Text="{Binding Time}"/>
-            <TextBlock x:Name="play_speed" HorizontalAlignment="Left" Height="34" Margin="640,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="40" FontSize="20" Text="{Binding Playback_speed}"/>
+            <TextBlock x:Name="elapsedTime" HorizontalAlignment="Left" Height="34" Margin="699,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" FontSize="20" Text="{Binding VM_Time}"/>
+            <TextBlock x:Name="play_speed" HorizontalAlignment="Left" Height="34" Margin="640,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="40" FontSize="20" Text="{Binding VM_Playback_speed}"/>
         </Grid>
         <Grid Width="200" Height="131" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="203,40,0,0">
             <!-- display selected feature graph -->

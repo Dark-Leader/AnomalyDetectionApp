@@ -20,16 +20,8 @@ namespace EX2
 {
     public partial class viewModel : INotifyPropertyChanged
     {
-        //private List<ChartData> points = new List<ChartData>();
         public event PropertyChangedEventHandler PropertyChanged;
-        //private List<String> variables;
-        //private string VM_time;
-        //private string VM_playback_speed;
         private FlightSimulator model;
-        //private List<KeyValuePair<float, float>> VM_selectedFeature;
-        //private List<KeyValuePair<float, float>> VM_correlatedFeature;
-
-        // works for both csv file and .exe file.
         
         public viewModel(FlightSimulator sim)
         {
@@ -98,7 +90,7 @@ namespace EX2
         /// <summary>
         /// current time passed in 'XX:XX:XX' format.
         /// </summary>
-        public string Time
+        public string VM_Time
         {
             get
             {
@@ -108,13 +100,26 @@ namespace EX2
         /// <summary>
         /// current video play speed - current pace we send data to flight gear / number of element being added to the graphs per second.
         /// </summary>
-        public string Playback_speed
+        public string VM_Playback_speed
         {
             get
             {
                 return this.model.Playback_speed;
             }
         }
-
+        public void bottom_control_clicked(string buttonName)
+        {
+            model.bottom_control_clicked(buttonName);
+        }
+        /// <summary>
+        /// user moved the time slider - update model with new time.
+        /// </summary>
+        /// <param name="value"></param>
+        
+        public void updateTime(double value)
+        {
+            this.model.updateTime(value);
+        }
+        
     }
 }

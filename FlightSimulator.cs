@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.ComponentModel;
 using System.Xml;
+using System.Globalization;
 
 namespace EX2
 {
@@ -38,7 +39,8 @@ namespace EX2
             pathToXML = Directory.GetParent(pathToXML).FullName;
             pathToXML += "\\resources\\playback_small.xml";
             parseXML();
-
+            playbackSpeed = "1.0";
+            time = "00:00:00";
 
             string pathToApp = "D:\\Applications\\FlightGear 2020.3.6\\bin\\fgfs.exe";
             string pathToSettings = "D:\\Learn It\\2nd year\advanced programming2\\project\\playback_small.xml";
@@ -59,23 +61,6 @@ namespace EX2
             this.selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
             this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
-            /*
-            this.variables.Add("speed");
-            this.variables.Add("height");
-            this.variables.Add("throttle");
-            this.variables.Add("width");
-            this.variables.Add("HAHAHAHAHHAHA");
-            this.variables.Add("speed");
-            this.variables.Add("height");
-            this.variables.Add("throttle");
-            this.variables.Add("width");
-            this.variables.Add("HAHAHAHAHHAHA");
-            this.variables.Add("speed");
-            this.variables.Add("height");
-            this.variables.Add("throttle");
-            this.variables.Add("width");
-            this.variables.Add("HAHAHAHAHHAHA");
-            */
 
             //FlightGear fg = new FlightGear(pathToApp, "D:\\MyData\\Documents\\GitHub\\ex1\resources\\playback_small.xml");
             //fg.start();             
@@ -92,7 +77,7 @@ namespace EX2
                 if (value != time)
                 {
                     this.time = value;
-                    notifyPropertyChanged("time");
+                    notifyPropertyChanged("Time");
                 }
             }
         }
@@ -108,7 +93,7 @@ namespace EX2
                 if (value != playbackSpeed)
                 {
                     this.playbackSpeed = value;
-                    notifyPropertyChanged("playbackSpeed");
+                    notifyPropertyChanged("Playback_speed");
                 }
             }
         }
@@ -124,14 +109,69 @@ namespace EX2
                 if (value != this.variables)
                 {
                     this.variables = value;
-                    notifyPropertyChanged("variables");
+                    notifyPropertyChanged("Variables");
                 }
+            }
+        }
+        /// <summary>
+        /// user moved the time slider.
+        /// </summary>
+        /// <param name="value"></param>
+        public void updateTime(double value)
+        {
+            return;
+        }
+
+        public void bottom_control_clicked(string name)
+        {
+            switch (name)
+            {
+                case "Start": // user clicked play button.
+                    break;
+                case "Stop": // user clicked pause button.
+                    break;
+                case "Inc": // user clicked increment playback speed button.
+                    increaseSpeed();
+                    break;
+                case "Dec": // user clicked decrease playback speed button.
+                    decreaseSpeed();
+                    break;
+                case "Max": // user clicked change playback speed to maximum button.
+                    break;
+                case "Min": // user clicked change playback speed to minimum button.
+                    break;
+                case "Restart": // user clicked the restart playback of video button.
+                    break;
+
+                default:
+                    return;
+            } 
+        }
+
+        private void decreaseSpeed()
+        {
+            double current = double.Parse(Playback_speed, CultureInfo.InvariantCulture);
+            if (current > 0.25)
+            {
+                double newSpeed = current - 0.25;
+                Playback_speed = newSpeed.ToString(CultureInfo.InvariantCulture);
+            }
+        }
+
+        private void increaseSpeed()
+        {
+            double current = double.Parse(Playback_speed, CultureInfo.InvariantCulture);
+            if (current < 2)
+            {
+                double newSpeed = current + 0.25;
+                Playback_speed = newSpeed.ToString(CultureInfo.InvariantCulture);
             }
         }
 
         protected void notifyPropertyChanged(string propName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propName));
         }
 
         public List<KeyValuePair<float, float>> SelectedFeature
@@ -145,7 +185,7 @@ namespace EX2
                 if (value != selectedFeature)
                 {
                     selectedFeature = value;
-                    notifyPropertyChanged("selectedFeature");
+                    notifyPropertyChanged("SelectedFeature");
                 }
             }
         }
@@ -161,7 +201,7 @@ namespace EX2
                 if (value != selectedFeature)
                 {
                     correlatedFeature = value;
-                    notifyPropertyChanged("correlatedFeature");
+                    notifyPropertyChanged("CorrelatedFeature");
                 }
             }
         }

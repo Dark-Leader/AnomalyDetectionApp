@@ -35,8 +35,8 @@ namespace EX2
         private void stackButton_Click(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
-            Console.WriteLine(b.Content);
-
+            Console.WriteLine(b.Name);
+            vm.bottom_control_clicked(b.Name.ToString());
         }
 
         /// <summary>
@@ -44,7 +44,6 @@ namespace EX2
         /// </summary>
         private void create_buttons()
         {
-
             foreach (string var in this.vm.Variables)
                 
             {
@@ -100,7 +99,7 @@ namespace EX2
         {
             if (IsLoaded)
             {
-                // this.vm.updateTime(SliderValue);
+                //vm.updateTime(SliderValue.Value); // not ready on model side yet.
                 Console.WriteLine(SliderValue);
             }
 
