@@ -90,7 +90,6 @@ namespace EX2
             this.selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
             this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
-           
         }
 
         public string Time
@@ -449,7 +448,7 @@ namespace EX2
 
 
             // TODO read from XML the speed and save it as a property. 
-
+            string att;
             reader = XmlReader.Create(pathToXML, settings);
             if (reader.ReadToFollowing("output"))
             {
@@ -462,7 +461,12 @@ namespace EX2
                         if (reader.Name == "chunk")
                         {
                             reader.Read();
-                            attributes_list.Add(reader.ReadString());
+                            att = reader.ReadString();
+                            if (attributes_list.Contains(att) == true)
+                            {
+                                att += "1";
+                            }
+                            attributes_list.Add(att);
                         }
                     }
                     reader.Read();
