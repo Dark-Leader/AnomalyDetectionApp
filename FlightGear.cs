@@ -16,23 +16,28 @@ namespace EX2
         // path to the application file
         private string fileName;
 
+        //path to the main directory
+        private string workingDirectory;
+
+        /*
         // socket that is connected to the application
         private Client client;
+        */
 
         // command line arguments to pass to the application
         private string arguments = "--generic=socket,in,10,127.0.0.1,5400,tcp,playback_small --fdm=null";
 
         public FlightGear(string fileName, string settings)
         {
-            client = new Client();
+            //client = new Client();
 
-            var pathToProtocol = Directory.GetParent(fileName).FullName;
-            pathToProtocol = Directory.GetParent(pathToProtocol).FullName;
+            workingDirectory = Directory.GetParent(fileName).FullName;
+            workingDirectory = Directory.GetParent(workingDirectory).FullName;
             this.fileName = fileName;
             
             string fileToCopy = settings;
         
-            pathToProtocol += "\\data\\Protocol\\";
+            var pathToProtocol = workingDirectory + "\\data\\Protocol\\";
 
 
             var destination = Path.Combine(pathToProtocol, Path.GetFileName(fileToCopy));
@@ -62,20 +67,23 @@ namespace EX2
         {
             ProcessStartInfo startInfo = new ProcessStartInfo(fileName);
 
-            startInfo.WorkingDirectory = "D:\\Applications\\FlightGear 2020.3.6\\bin";
+            startInfo.WorkingDirectory = this.workingDirectory+"\\bin";
 
             startInfo.Arguments = arguments;
 
             Process.Start(startInfo);
         }
 
+        /*
         public void sendData(string data)
         {
+            
             if (!client.connectionEstablished)
             {
                 client.connect("127.0.0.1", 5400);
             }
-            client.write(data);
-        }
+            
+            client.write(data+ "\\r\\n");
+        }*/
     }
 }

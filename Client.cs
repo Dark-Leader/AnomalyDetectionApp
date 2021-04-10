@@ -31,7 +31,7 @@ namespace EX2
             {
                 sender.Connect(IPAddress.Parse(ip), port);
                 Console.WriteLine("Connection established");
-                stream = sender.GetStream();
+                this.stream = sender.GetStream();
                 connectionEstablished = true;
             }
             catch (SocketException e)
@@ -48,17 +48,31 @@ namespace EX2
 
         public void write(string data)
         {
-            Console.WriteLine(data);
-            if (stream.CanWrite)
+            try
             {
-                byte[] buffer = Encoding.ASCII.GetBytes(data);
-                stream.Write(buffer, 0, buffer.Length);
-                throw new NotImplementedException();
+                if (stream.CanWrite)
+                {
+                    byte[] buffer = Encoding.ASCII.GetBytes(data);
+                    stream.Write(buffer, 0, buffer.Length);
+                    Console.WriteLine("The data being sent:");
+                    Console.WriteLine(data);
+
+                }
+                else
+                {
+                    Console.WriteLine("You cannot write data to this stream.");
+                }
             }
-            else
+            catch (SocketException e)
             {
-                Console.WriteLine("You cannot write data to this stream.");
+                // An error occurred when accessing the socket.
+                Console.WriteLine("SocketException: {0}", e);
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("SocketException: {0}", e);
+            }
+
         }
 
         public void disconnect()

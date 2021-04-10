@@ -28,7 +28,26 @@ namespace EX2
         private List<string> variables = new List<string>();
         private string time = "00:00:00";
         private string playbackSpeed;
+
+
+        // A time period expressed in milliSeconds units 
+        private int ticks;
+
+        Thread playingThread;
+
+        private bool stop;
         private float linesPerSecond = 10;
+        private FlightGear fg;
+
+        // socket that is connected to the application
+        private Client client;
+
+        // This is a temp feauture untill we have the TS. Holds the data in CSV 
+        private List<string> dataByLines = new List<string>();
+
+        // The last line sent to fg
+        private int currentLinePlaying;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
 
@@ -46,7 +65,13 @@ namespace EX2
             parseXML();
 
             playbackSpeed = "1.0";
-           
+            stop = false;
+            // starting to play the data 10 lines in a second
+            ticks = 100;
+            currentLinePlaying = 0;
+
+            client = new Client();
+
             this.selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
             this.selectedFeature.Add(new KeyValuePair<float, float>(7, 15));
             this.selectedFeature.Add(new KeyValuePair<float, float>(8, 23));
@@ -128,7 +153,9 @@ namespace EX2
         {
             switch (name)
             {
-                case "Start": // user clicked play button.
+                case "Play": // user clicked play button.
+                    this.playingThread = new Thread(new ThreadStart(this.play));
+                    this.playingThread.Start();
                     break;
                 case "Stop": // user clicked pause button.
                     break;
@@ -231,21 +258,50 @@ namespace EX2
             }
         }
 
+        public bool Stop
+        {
+            get
+            {
+                return stop;
+            }
+            set
+            {
+                if (this.stop != value ){
+                    this.stop = value;
+                }
+            }
+        }
+
         public void setCSVFile(string name)
         {
             this.csvData = name;
+            readCSV(this.csvData);
         }
 
         public void setFGPath(string name)
         {
             this.FGPath = name;
-            FlightGear fg = new FlightGear(name, pathToXML);
+            this.fg = new FlightGear(name, pathToXML);
+            this.fg.start();
+            
         }
 
         public void play()
         {
+            /*
+            while (!this.stop)
+            {
+                this.fg.sendData(getLine(this.currentLinePlaying));
+                currentLinePlaying++;
+                Console.WriteLine("The line index current is:");
+                Console.WriteLine(currentLinePlaying);
+
+                Thread.Sleep(ticks);
+            }*/
             try
             {
+                this.client.connect("127.0.0.1", 5400);
+                /*  
                 IPAddress ip = IPAddress.Parse("127.0.0.1");
                 int port = 5400;
                 TcpClient client = new TcpClient();
@@ -254,7 +310,7 @@ namespace EX2
                 Console.WriteLine("Connection established");
                 NetworkStream ns = client.GetStream();
 
-
+                */
                 Console.WriteLine("Connected");
 
                 using (StreamReader rd = new StreamReader(this.csvData))
@@ -264,7 +320,12 @@ namespace EX2
                     while ((line = rd.ReadLine()) != null)
                     {
                         line += "\r\n";
+                        this.client.write(line);
+                        Thread.Sleep(ticks);
+                        
                         Console.WriteLine(line);
+
+                        /*
                         if (ns.CanWrite)
                         {
                             byte[] buffer = Encoding.ASCII.GetBytes(line);
@@ -273,17 +334,17 @@ namespace EX2
                         }
                         else
                         {
-                            Console.WriteLine("You cannot write data to this stream.");
-                            /*
-                            tcpClient.Close();
+                            Console.WriteLine("You cannot write data to this stream.");*/
+                        /*
+                        tcpClient.Close();
 
-                            // Closing the tcpClient instance does not close the network stream.
-                            netStream.Close();
-                            return;
-                            */
-                        }
+                        // Closing the tcpClient instance does not close the network stream.
+                        netStream.Close();
+                        return;
+                        */
                     }
                 }
+                
             }
             catch (ArgumentNullException e)
             {
@@ -296,6 +357,37 @@ namespace EX2
             catch (Exception e)
             {
                 Console.WriteLine("SocketException: {0}", e);
+            }
+        }
+
+        /// <summary>
+        /// Temp function untill we have ts, gets the specific line 
+        /// </summary>
+        /// <param name="lineNumber">the line number to get</param>
+        /// <returns></returns>
+        public String getLine(int lineNumber)
+        {
+            if (lineNumber < this.dataByLines.Count)
+            {
+                return this.dataByLines[lineNumber];
+            }
+            return "error in getLine";
+        }
+
+        /// <summary>
+        /// Temp function untill we have ts, gets the specific line 
+        /// </summary>
+        /// <param name="csvPath"></param>
+        private void readCSV(string csvPath)
+        {
+            using (StreamReader rd = new StreamReader(this.csvData))
+            {
+                String line;
+
+                while ((line = rd.ReadLine()) != null)
+                {
+                    this.dataByLines.Add(line);
+                }
             }
         }
 

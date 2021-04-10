@@ -51,7 +51,7 @@
                 <Image x:Name="Slowimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/dec.png" RenderTransformOrigin="2.087,1.511"/>
             </Button>
             <!-- start the playback button -->
-            <Button x:Name="Start" HorizontalAlignment="Left" Height="50" Margin="295,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
+            <Button x:Name="Play" HorizontalAlignment="Left" Height="50" Margin="295,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
                 <Image x:Name="startImg" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="40" Source="resources/start.png"/>
             </Button>
             <!-- restart playback from beggining button -->
