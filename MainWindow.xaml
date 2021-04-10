@@ -9,20 +9,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="850">
 
-
-
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="61*"/>
             <ColumnDefinition Width="11*"/>
         </Grid.ColumnDefinitions>
         <Grid Width="180" Height="374" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23,40,0,0" >
-            <ScrollViewer Margin="-10,0,10,0">
-                <StackPanel x:Name="sp" RenderTransformOrigin="0.5,0.5" Width="162">
-                    <!-- All the variables go in here -->
-                </StackPanel>
-            </ScrollViewer>
+            <WrapPanel Margin="0,0,10,0">
+                <ListBox x:Name="sp" SelectionMode="Single" SelectionChanged="listBox_SelectionChanged"/>
+            </WrapPanel>
         </Grid>
 
 
@@ -36,31 +31,31 @@
                 <TextBlock Text="Open Flight Gear" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
             <!-- Change playback speed to the minimun speed button -->
-            <Button x:Name="Min" HorizontalAlignment="Left" Margin="130,10,0,30" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+            <Button x:Name="Min" HorizontalAlignment="Left" Margin="130,10,0,30" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
                 <Image x:Name="Slowerimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="50" Source="resources/min.png" RenderTransformOrigin="0.696,1.152" Margin="0"/>
             </Button>
             <!-- stop the playback button -->
-            <Button x:Name="Stop" HorizontalAlignment="Left" Height="50" Margin="240,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+            <Button x:Name="Stop" HorizontalAlignment="Left" Height="50" Margin="240,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
                 <Image x:Name="stopimg" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="40" Source="resources/stop.png" RenderTransformOrigin="1.503,0.682" />
             </Button>
             <!-- Change playback speed to the maximum speed button -->
-            <Button x:Name="Max" HorizontalAlignment="Left" Height="50" Margin="460,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+            <Button x:Name="Max" HorizontalAlignment="Left" Height="50" Margin="460,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
                 <Image x:Name="Fasterimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="50" Source="resources/max.png"/>
             </Button>
             <!-- increase playback speed speed button -->
-            <Button x:Name="Inc" HorizontalAlignment="Left" Height="50" Margin="405,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+            <Button x:Name="Inc" HorizontalAlignment="Left" Height="50" Margin="405,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
                 <Image x:Name="Fastimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/inc.png" RenderTransformOrigin="0.696,1.152"/>
             </Button>
             <!-- decrease playback speed speed button -->
-            <Button x:Name="Dec" HorizontalAlignment="Left" Height="50" Margin="185,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+            <Button x:Name="Dec" HorizontalAlignment="Left" Height="50" Margin="185,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
                 <Image x:Name="Slowimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/dec.png" RenderTransformOrigin="2.087,1.511"/>
             </Button>
             <!-- start the playback button -->
-            <Button x:Name="Start" HorizontalAlignment="Left" Height="50" Margin="295,10,0,0" VerticalAlignment="Top" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+            <Button x:Name="Start" HorizontalAlignment="Left" Height="50" Margin="295,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
                 <Image x:Name="startImg" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="40" Source="resources/start.png"/>
             </Button>
             <!-- restart playback from beggining button -->
-            <Button x:Name="Restart" HorizontalAlignment="Left" Margin="350,10,0,30" Width="50" Click="stackButton_Click" RenderTransformOrigin="3.738,0.615">
+            <Button x:Name="Restart" HorizontalAlignment="Left" Margin="350,10,0,30" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
                 <Image x:Name="restartImg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/restart.png" RenderTransformOrigin="0.696,1.152" Margin="0"/>
             </Button>
             <!-- Slider for current time in video -->

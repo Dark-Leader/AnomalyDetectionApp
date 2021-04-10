@@ -32,11 +32,21 @@ namespace EX2
         /// </summary>
         /// <param name="sender"> button clicked </param>
         /// <param name="e"></param>
-        private void stackButton_Click(object sender, RoutedEventArgs e)
+        private void bottom_buttons_Click(object sender, RoutedEventArgs e)
         {
             Button b = (Button)sender;
             Console.WriteLine(b.Name);
             vm.bottom_control_clicked(b.Name.ToString());
+        }
+        /// <summary>
+        /// User selected a variable to focus on -> update the vm about the selection.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBoxItem selected = (ListBoxItem)sp.SelectedItem;
+            vm.variableSelected(selected.Content.ToString());
         }
 
         /// <summary>
@@ -47,13 +57,9 @@ namespace EX2
             foreach (string var in this.vm.Variables)
                 
             {
-                // create button and add it to the stack frame.
-                Button button = new Button();
-                button.Content = var;
-                string name = var.Replace("-", "_");
-                button.Name = name;
-                button.Click += new RoutedEventHandler(stackButton_Click);
-                sp.Children.Add(button);
+                ListBoxItem item = new ListBoxItem();
+                item.Content = var;
+                sp.Items.Add(item);
             }
             
         }

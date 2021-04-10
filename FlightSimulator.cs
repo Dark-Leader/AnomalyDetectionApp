@@ -137,8 +137,10 @@ namespace EX2
                     decreaseSpeed();
                     break;
                 case "Max": // user clicked change playback speed to maximum button.
+                    maxSpeed();
                     break;
                 case "Min": // user clicked change playback speed to minimum button.
+                    minSpeed();
                     break;
                 case "Restart": // user clicked the restart playback of video button.
                     break;
@@ -147,31 +149,48 @@ namespace EX2
                     return;
             } 
         }
-
+        /// <summary>
+        /// deacrease playback speed by 2 rows per frame.
+        /// </summary>
         private void decreaseSpeed()
         {
             double current = double.Parse(Playback_speed, CultureInfo.InvariantCulture);
-            if (current > 0.25)
+            if (current > 0.2)
             {
-                double newSpeed = current - 0.25;
+                double newSpeed = current - 0.2;
                 Playback_speed = newSpeed.ToString(CultureInfo.InvariantCulture);
             }
         }
-
+        /// <summary>
+        /// set playback speed to 20 rows per frame.
+        /// </summary>
+        private void maxSpeed()
+        {
+            Playback_speed = "2.0";
+        }
+        /// <summary>
+        /// set playback speed to 2 rows per frame.
+        /// </summary>
+        private void minSpeed()
+        {
+            Playback_speed = "0.20";
+        }
+        /// <summary>
+        /// increase playback speed by 2 rows per frame.
+        /// </summary>
         private void increaseSpeed()
         {
             double current = double.Parse(Playback_speed, CultureInfo.InvariantCulture);
             if (current < 2)
             {
-                double newSpeed = current + 0.25;
+                double newSpeed = current + 0.2;
                 Playback_speed = newSpeed.ToString(CultureInfo.InvariantCulture);
             }
         }
 
         protected void notifyPropertyChanged(string propName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
         public List<KeyValuePair<float, float>> SelectedFeature
@@ -318,6 +337,15 @@ namespace EX2
                 if (reader != null)
                     reader.Close();
             
+        }
+        /// <summary>
+        /// User selected new variable to focus on.
+        /// </summary>
+        /// <param name="name"></param>
+        public void variableSelected(string name)
+        {
+            Console.WriteLine(name);
+            return;
         }
 
 

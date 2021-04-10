@@ -26,7 +26,7 @@ namespace EX2
         public viewModel(FlightSimulator sim)
         {
             this.model = sim;
-            this.model.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
+            this.model.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) // whenever the model updates one of its properties, we get an update
             {
                 this.notifyPropertyChanged("VM_" + e.PropertyName);
             };
@@ -53,10 +53,7 @@ namespace EX2
         /// <param name="propName"></param>
         public void notifyPropertyChanged (string propName)
         {
-            if (PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
         /// <summary>
         /// vector of points of the feature selected by the user.
@@ -119,6 +116,11 @@ namespace EX2
         public void updateTime(double value)
         {
             this.model.updateTime(value);
+        }
+
+        public void variableSelected(string name)
+        {
+            model.variableSelected(name);
         }
         
     }
