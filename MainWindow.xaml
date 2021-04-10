@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"  
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:meter="clr-namespace:DllMeter;assembly=DllMeter" xmlns:ex2="clr-namespace:EX2"
-    x:Class="EX2.MainWindow"
+        x:Class="EX2.MainWindow"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="1000">
     <Grid>
@@ -79,34 +79,37 @@
             </Grid>
         </Grid>
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="10">
-            <StackPanel Orientation="Horizontal"  Height="60">
-                <Button x:Name="btnOpenCSV" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0">
-                    <TextBlock Text="Open CSV file" TextWrapping="Wrap" TextAlignment="Center"/>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="49,0,0,0">
+            <StackPanel Orientation="Horizontal"  Height="60" Margin="-54,0,0,0">
+                <Button x:Name="Open_train_csv" Width="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Click="btnOpen_Click">
+                    <TextBlock Text="Open Train CSV" TextWrapping="Wrap" TextAlignment="Center"/>
                 </Button>
-                <Button x:Name="btnOpenFlightGear" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}"  Margin="10, 0, 0, 0">
+                <Button x:Name="Open_test_csv" Width="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Click="btnOpen_Click">
+                    <TextBlock Text="Open Test CSV" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button x:Name="Open_flight_gear" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}"  Margin="10, 0, 0, 0" Click="btnOpen_Click">
                     <TextBlock Text="Open Flight Gear" TextWrapping="Wrap" TextAlignment="Center"/>
                 </Button>
-               
-                <Button x:Name="Min" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.5">
+
+                <Button x:Name="Slower" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.5" Click="change_speed">
                     <Image x:Name="Slowerimg" Source="resources/min.png" Margin="0"/>
                 </Button>
-                <Button x:Name="Stop" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="False">
+                <Button x:Name="Stop" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="False" Click="change_speed">
                     <Image x:Name="stopimg" VerticalAlignment="Top" Width="40" Source="resources/stop.png"  />
                 </Button>
-                <Button x:Name="Max" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.5">
+                <Button x:Name="Faster" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.5" Click="change_speed">
                     <Image x:Name="Fasterimg" Source="resources/max.png"/>
                 </Button>
-                <Button x:Name="Inc" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.1">
+                <Button x:Name="Fast" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.1" Click="change_speed">
                     <Image x:Name="Fastimg" Source="resources/inc.png"/>
                 </Button>
-                <Button x:Name="Dec" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.1">
+                <Button x:Name="Slow" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.1" Click="change_speed">
                     <Image x:Name="Slowimg" Source="resources/dec.png"/>
                 </Button>
-                <Button x:Name="Start" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="True">
+                <Button x:Name="Start" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="True" Click="change_speed">
                     <Image x:Name="startImg" Source="resources/start.png"/>
                 </Button>
-                <Button x:Name="Restart" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding StopCommand}">
+                <Button x:Name="Restart" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding StopCommand}" Click="change_speed">
                     <Image x:Name="restartImg" Source="resources/restart.png"/>
                 </Button>
 
@@ -120,15 +123,15 @@
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="20" Text="{Binding CurrentTime}"/>
                 </StackPanel>
 
-
             </StackPanel>
-            <Slider x:Name="SliderValue" Margin="10" Height="24" TickFrequency="1" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding SliderMaximum}" Value="{Binding CurrentFrame}"/>
+
+            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" TickFrequency="1" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding SliderMaximum}" Value="{Binding CurrentFrame}"/>
         </StackPanel>
-       
+
 
         <Grid x:Name="BottomControls" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="1">
-            
-            
+
+
         </Grid>
     </Grid>
 </Window>

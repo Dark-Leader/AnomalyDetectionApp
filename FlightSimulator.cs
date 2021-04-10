@@ -27,7 +27,7 @@ namespace EX2
         private List<KeyValuePair<float, float>> correlatedFeature;
         private List<string> variables = new List<string>();
         private string time = "00:00:00";
-        private string playbackSpeed;
+        private int playbackSpeed = 10;
 
 
         // A time period expressed in milliSeconds units 
@@ -37,7 +37,6 @@ namespace EX2
 
         private bool stop;
 
-        private float linesPerSecond = 10;
         private FlightGear fg;
 
         // socket that is connected to the application
@@ -65,8 +64,8 @@ namespace EX2
             pathToXML += "\\resources\\playback_small.xml";
             parseXML();
 
-            playbackSpeed = "1.0";
-            stop = false;
+            playbackSpeed = 10;
+            stop = true;
             // starting to play the data 10 lines in a second
             ticks = 100;
             currentLinePlaying = 0;
@@ -109,21 +108,23 @@ namespace EX2
             }
         }
 
-        public string Playback_speed
+        public int Playback_speed
         {
             get
             {
                 return this.playbackSpeed;
             }
-            private set
+            set
             {
                 if (value != playbackSpeed)
                 {
                     this.playbackSpeed = value;
-                    notifyPropertyChanged("Playback_speed");
+                    // notifyPropertyChanged("Playback_speed");
                 }
             }
         }
+
+        public int CurrentLinePlaying { get; private set; }
 
         public List<string> Variables
         {
@@ -149,78 +150,6 @@ namespace EX2
             return;
         }
 
-
-        public void bottom_control_clicked(string name)
-        {
-            switch (name)
-            {
-                case "Play": // user clicked play button.
-                    //this.playingThread = new Thread(new ThreadStart(this.play));
-                    //this.playingThread.Start();
-                    break;
-                case "Stop": // user clicked pause button.
-                    break;
-                case "Inc": // user clicked increment playback speed button.
-                    increaseSpeed();
-                    break;
-                case "Dec": // user clicked decrease playback speed button.
-                    decreaseSpeed();
-                    break;
-                case "Max": // user clicked change playback speed to maximum button.
-                    maxSpeed();
-                    break;
-                case "Min": // user clicked change playback speed to minimum button.
-                    minSpeed();
-                    break;
-                case "Restart": // user clicked the restart playback of video button.
-                    break;
-
-                default:
-                    return;
-            } 
-        }
-
-        /// <summary>
-        /// deacrease playback speed by 2 rows per frame.
-        /// </summary>
-        private void decreaseSpeed()
-        {
-            double current = double.Parse(Playback_speed, CultureInfo.InvariantCulture);
-            if (current > 0.2)
-            {
-                double newSpeed = current - 0.2;
-                Playback_speed = newSpeed.ToString(CultureInfo.InvariantCulture);
-            }
-        }
-
-        /// <summary>
-        /// set playback speed to 20 rows per frame.
-        /// </summary>
-        private void maxSpeed()
-        {
-            Playback_speed = "2.0";
-        }
-
-        /// <summary>
-        /// set playback speed to 2 rows per frame.
-        /// </summary>
-        private void minSpeed()
-        {
-            Playback_speed = "0.20";
-        }
-
-        /// <summary>
-        /// increase playback speed by 2 rows per frame.
-        /// </summary>
-        private void increaseSpeed()
-        {
-            double current = double.Parse(Playback_speed, CultureInfo.InvariantCulture);
-            if (current < 2)
-            {
-                double newSpeed = current + 0.2;
-                Playback_speed = newSpeed.ToString(CultureInfo.InvariantCulture);
-            }
-        }
 
         protected void notifyPropertyChanged(string propName)
         {
@@ -257,6 +186,15 @@ namespace EX2
                     notifyPropertyChanged("CorrelatedFeature");
                 }
             }
+        }
+        /// <summary>
+        /// User pressed restart button.
+        /// </summary>
+        public void restart()
+        {
+            Playback_speed = 10;
+            CurrentLinePlaying = 0;
+            // need to check that the thread is still running and maybe restart the flight gear app.
         }
 
         public bool Stop

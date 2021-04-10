@@ -95,24 +95,6 @@ namespace EX2
                 return this.model.Time;
             }
         }
-        /// <summary>
-        /// current video play speed - current pace we send data to flight gear / number of element being added to the graphs per second.
-        /// </summary>
-        public string VM_Playback_speed
-        {
-            get
-            {
-                return this.model.Playback_speed;
-            }
-        }
-        public void bottom_control_clicked(string buttonName)
-        {
-            model.bottom_control_clicked(buttonName);
-        }
-        /// <summary>
-        /// user moved the time slider - update model with new time.
-        /// </summary>
-        /// <param name="value"></param>
         
         public void updateTime(double value)
         {
