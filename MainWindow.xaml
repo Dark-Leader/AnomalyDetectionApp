@@ -4,106 +4,131 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"  
-        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
-        x:Class="EX2.MainWindow"
+        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:meter="clr-namespace:DllMeter;assembly=DllMeter" xmlns:ex2="clr-namespace:EX2"
+    x:Class="EX2.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="850">
-
+        Title="MainWindow" Height="450" Width="1000">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="61*"/>
-            <ColumnDefinition Width="11*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Width="180" Height="374" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23,40,0,0" >
-            <WrapPanel Margin="0,0,10,0">
-                <ListBox x:Name="sp" SelectionMode="Single" SelectionChanged="listBox_SelectionChanged"/>
-            </WrapPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70*"/>
+            <RowDefinition Height="30*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="20" x:Name="VisualGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15*"/>
+                <ColumnDefinition Width="85*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox ItemsSource="{Binding FrameStackProperties}" SelectedItem="{Binding SelectedProperty, Mode=OneWayToSource}" Margin="10" SelectedIndex="0"/>
+            <!--<Label Content="{Binding CurrentDataTest, Mode=OneWay, FallbackValue=TestData}" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1"/>-->
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Row="0" Grid.Column="0" Source="{Binding TopGraphImageSource}"/>
+                <Image Grid.Row="0" Grid.Column="1" Source="{Binding TopGraphImageSource2}"/>
+                <Image Grid.Row="1" Grid.Column="0" Source="{Binding BottomGraphImageSource}" Grid.ColumnSpan="2"/>
+                <Grid Grid.Row="0" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="15*"/>
+                        <ColumnDefinition Width="85*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="85*"/>
+                        <RowDefinition Height="15*"/>
+                    </Grid.RowDefinitions>
+
+                    <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="1">
+                        <ex2:JoystickControl AxisX="{Binding AileronProperty, FallbackValue=0, Mode=OneWay}" AxisY="{Binding ElevatorPropery, FallbackValue=0, Mode=OneWay}"/>
+                    </Viewbox>
+
+                    <Slider Grid.Column="0" Grid.Row="0" Orientation="Vertical" Minimum="{Binding ThrottleMin, Mode=OneWay}" Maximum="{Binding ThrottleMax, Mode=OneWay}" Value="{Binding Throttle, Mode=OneWay}"/>
+                    <Slider Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Minimum="{Binding RudderMin, Mode=OneWay}" Maximum="{Binding RudderMax, Mode=OneWay}" Value="{Binding Rudder, Mode=OneWay}"/>
+                </Grid>
+
+                <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="3">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Lime" ClipToBounds="False"
+                              SM_Foreground1="Red" SM_Description="Altimeter" SM_Minimum="{Binding AltimeterMin}" SM_Maximum="{Binding AltimeterMax}" SM_MeterValue="{Binding Altimeter}"/>
+                </Viewbox>
+                <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="4">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Violet" ClipToBounds="False" 
+                              SM_Foreground1="Red" SM_Description="Airspeed" SM_Minimum="{Binding AirspeedMin}" SM_Maximum="{Binding AirspeedMax}" SM_MeterValue="{Binding Airspeed}"/>
+                </Viewbox>
+                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="2">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Green" ClipToBounds="False" 
+                              SM_Foreground1="Red" SM_Description="FlightDirection" SM_Minimum="{Binding FlightDirectionMin}" SM_Maximum="{Binding FlightDirectionMax}" SM_MeterValue="{Binding FlightDirection}"/>
+                </Viewbox>
+                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="3">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Brown" ClipToBounds="False" 
+                              SM_Foreground1="Red" SM_Description="Pitch" SM_Minimum="{Binding PitchMin}" SM_Maximum="{Binding PitchMax}" SM_MeterValue="{Binding Pitch}"/>
+                </Viewbox>
+                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="4">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Blue" ClipToBounds="False" 
+                              SM_Foreground1="Red" SM_Description="Yaw" SM_Minimum="{Binding YawMin}" SM_Maximum="{Binding YawMax}" SM_MeterValue="{Binding Yaw}"/>
+                </Viewbox>
+            </Grid>
         </Grid>
 
+        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="10">
+            <StackPanel Orientation="Horizontal"  Height="60">
+                <Button x:Name="btnOpenCSV" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0">
+                    <TextBlock Text="Open CSV file" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+                <Button x:Name="btnOpenFlightGear" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}"  Margin="10, 0, 0, 0">
+                    <TextBlock Text="Open Flight Gear" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
+               
+                <Button x:Name="Min" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.5">
+                    <Image x:Name="Slowerimg" Source="resources/min.png" Margin="0"/>
+                </Button>
+                <Button x:Name="Stop" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="False">
+                    <Image x:Name="stopimg" VerticalAlignment="Top" Width="40" Source="resources/stop.png"  />
+                </Button>
+                <Button x:Name="Max" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.5">
+                    <Image x:Name="Fasterimg" Source="resources/max.png"/>
+                </Button>
+                <Button x:Name="Inc" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.1">
+                    <Image x:Name="Fastimg" Source="resources/inc.png"/>
+                </Button>
+                <Button x:Name="Dec" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.1">
+                    <Image x:Name="Slowimg" Source="resources/dec.png"/>
+                </Button>
+                <Button x:Name="Start" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="True">
+                    <Image x:Name="startImg" Source="resources/start.png"/>
+                </Button>
+                <Button x:Name="Restart" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding StopCommand}">
+                    <Image x:Name="restartImg" Source="resources/restart.png"/>
+                </Button>
 
-        <Grid x:Name="BottomControls" Width="809" Height="90" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="23,419,0,0" Grid.ColumnSpan="2">
-            <!-- Open CSV file button -->
-            <Button x:Name="btnOpenCSV" HorizontalAlignment="Left" Height="50" Margin="0,10,0,0" VerticalAlignment="Top" Width="60" Click="btnOpen_Click">
-                <TextBlock Text="Open CSV file" TextWrapping="Wrap" TextAlignment="Center"/>
-            </Button>
-            <!-- Open Flight Gear button -->
-            <Button x:Name="btnOpenFlightGear" HorizontalAlignment="Left" Height="50" Margin="65,10,0,0" VerticalAlignment="Top" Width="60" Click="btnOpen_Click">
-                <TextBlock Text="Open Flight Gear" TextWrapping="Wrap" TextAlignment="Center"/>
-            </Button>
-            <!-- Change playback speed to the minimun speed button -->
-            <Button x:Name="Min" HorizontalAlignment="Left" Margin="130,10,0,30" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
-                <Image x:Name="Slowerimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="50" Source="resources/min.png" RenderTransformOrigin="0.696,1.152" Margin="0"/>
-            </Button>
-            <!-- stop the playback button -->
-            <Button x:Name="Stop" HorizontalAlignment="Left" Height="50" Margin="240,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
-                <Image x:Name="stopimg" HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="40" Source="resources/stop.png" RenderTransformOrigin="1.503,0.682" />
-            </Button>
-            <!-- Change playback speed to the maximum speed button -->
-            <Button x:Name="Max" HorizontalAlignment="Left" Height="50" Margin="460,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
-                <Image x:Name="Fasterimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="50" Source="resources/max.png"/>
-            </Button>
-            <!-- increase playback speed speed button -->
-            <Button x:Name="Inc" HorizontalAlignment="Left" Height="50" Margin="405,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
-                <Image x:Name="Fastimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/inc.png" RenderTransformOrigin="0.696,1.152"/>
-            </Button>
-            <!-- decrease playback speed speed button -->
-            <Button x:Name="Dec" HorizontalAlignment="Left" Height="50" Margin="185,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
-                <Image x:Name="Slowimg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/dec.png" RenderTransformOrigin="2.087,1.511"/>
-            </Button>
-            <!-- start the playback button -->
-            <Button x:Name="Play" HorizontalAlignment="Left" Height="50" Margin="295,10,0,0" VerticalAlignment="Top" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
-                <Image x:Name="startImg" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="40" Source="resources/start.png"/>
-            </Button>
-            <!-- restart playback from beggining button -->
-            <Button x:Name="Restart" HorizontalAlignment="Left" Margin="350,10,0,30" Width="50" Click="bottom_buttons_Click" RenderTransformOrigin="3.738,0.615">
-                <Image x:Name="restartImg" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="40" Source="resources/restart.png" RenderTransformOrigin="0.696,1.152" Margin="0"/>
-            </Button>
-            <!-- Slider for current time in video -->
-            <Slider x:Name="SliderValue" HorizontalAlignment="Left" Margin="0,65,0,0" VerticalAlignment="Top" Width="800" Height="24" ValueChanged="SliderValue_ValueChanged"
-                    TickFrequency="1" IsSnapToTickEnabled="True"
-                    />
-            <TextBlock HorizontalAlignment="Left" Height="34" Margin="525,21,0,0" TextWrapping="Wrap" Text="Play speed" VerticalAlignment="Top" Width="102" FontSize="20"/>
-            <!-- display current time and playback speed in view -->
-            <TextBlock x:Name="elapsedTime" HorizontalAlignment="Left" Height="34" Margin="699,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" FontSize="20" Text="{Binding VM_Time}"/>
-            <TextBlock x:Name="play_speed" HorizontalAlignment="Left" Height="34" Margin="640,21,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="40" FontSize="20" Text="{Binding VM_Playback_speed}"/>
+                <StackPanel Orientation="Vertical" Margin="10, 0, 0, 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" Text="Play speed:"/>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" Text="{Binding CurrentFrameRate, Mode=OneWay, FallbackValue=0}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Margin="10, 0, 0, 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" Text="Time:"/>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="20" Text="{Binding CurrentTime}"/>
+                </StackPanel>
+
+
+            </StackPanel>
+            <Slider x:Name="SliderValue" Margin="10" Height="24" TickFrequency="1" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding SliderMaximum}" Value="{Binding CurrentFrame}"/>
+        </StackPanel>
+       
+
+        <Grid x:Name="BottomControls" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="1">
+            
+            
         </Grid>
-        <Grid Width="200" Height="131" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="203,40,0,0">
-            <!-- display selected feature graph -->
-            <DVC:Chart x:Name="selectedFeature" VerticalAlignment="Top" RenderTransformOrigin="0.524,0.249" Margin="-12,-46,-11,-67" Height="244" BorderBrush="Transparent" BorderThickness="0">
-                <DVC:Chart.LegendStyle>
-                    <Style TargetType="Control">
-                        <Setter Property="Width" Value="0"/>
-                        <Setter Property="Height" Value="0"/>
-                    </Style>
-                </DVC:Chart.LegendStyle>
-                <DVC:LineSeries Width="200" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522,-0.172" HorizontalAlignment="Left" Margin="0,0,0,1"/>
-            </DVC:Chart>
-        </Grid>
-        <Grid x:Name="CorrelatedFeature"  Width="200" Height="169" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="408,40,0,0">
-            <!-- display correlated feature graph -->
-            <DVC:Chart x:Name="correlatedFeature" RenderTransformOrigin="0.524,0.249" Margin="-11,-46,-11,-28" BorderBrush="Transparent" BorderThickness="0" Height="243" VerticalAlignment="Top">
-                <DVC:Chart.LegendStyle>
-                    <Style TargetType="{x:Type Control}">
-                        <Setter Property="Width" Value="0"/>
-                        <Setter Property="Height" Value="0"/>
-                    </Style>
-                </DVC:Chart.LegendStyle>
-                <DVC:LineSeries Width="201" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.5,0.172" HorizontalAlignment="Left" Margin="0,0,0,4"/>
-            </DVC:Chart>
-        </Grid>
-        <Grid x:Name="reg" Width="405" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="203,214,0,0"/>
-            <!-- display linear regression graph or min circle graph -->
-        <Grid x:Name="Gauges" Width="224" Height="200" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="613,214,0,0" Grid.ColumnSpan="2">
-            <!-- display gauges -->
-        </Grid>
-
-        <Grid x:Name="Joystick" VerticalAlignment="Top" HorizontalAlignment="Left" Width="224" Height="174" Margin="613,40,0,0" Grid.ColumnSpan="2">
-            <!-- display joystick -->
-        </Grid>
-
-
-
-
-
     </Grid>
 </Window>

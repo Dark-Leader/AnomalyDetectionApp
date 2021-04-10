@@ -36,6 +36,7 @@ namespace EX2
         Thread playingThread;
 
         private bool stop;
+
         private float linesPerSecond = 10;
         private FlightGear fg;
 
