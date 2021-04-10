@@ -19,11 +19,16 @@ namespace EX2
         private string[] attributes;
 
         private string FGPath;
+
+        // how many lines are there in the received flight data csv
+        private int totalLines;
+
         private List<KeyValuePair<float, float>> selectedFeature = new List<KeyValuePair<float, float>>();
         private List<KeyValuePair<float, float>> correlatedFeature;
         private List<string> variables = new List<string>();
-        private string time;
+        private string time = "00:00:00";
         private string playbackSpeed;
+        private float linesPerSecond = 10;
         public event PropertyChangedEventHandler PropertyChanged;
 
 
@@ -39,11 +44,9 @@ namespace EX2
             pathToXML = Directory.GetParent(pathToXML).FullName;
             pathToXML += "\\resources\\playback_small.xml";
             parseXML();
-            playbackSpeed = "1.0";
-            time = "00:00:00";
 
-            string pathToApp = "D:\\Applications\\FlightGear 2020.3.6\\bin\\fgfs.exe";
-            string pathToSettings = "D:\\Learn It\\2nd year\advanced programming2\\project\\playback_small.xml";
+            playbackSpeed = "1.0";
+           
             this.selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
             this.selectedFeature.Add(new KeyValuePair<float, float>(7, 15));
             this.selectedFeature.Add(new KeyValuePair<float, float>(8, 23));
@@ -61,9 +64,7 @@ namespace EX2
             this.selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
             this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
-
-            //FlightGear fg = new FlightGear(pathToApp, "D:\\MyData\\Documents\\GitHub\\ex1\resources\\playback_small.xml");
-            //fg.start();             
+           
         }
 
         public string Time
@@ -88,7 +89,7 @@ namespace EX2
             {
                 return this.playbackSpeed;
             }
-            set
+            private set
             {
                 if (value != playbackSpeed)
                 {
@@ -122,6 +123,7 @@ namespace EX2
             return;
         }
 
+
         public void bottom_control_clicked(string name)
         {
             switch (name)
@@ -149,6 +151,7 @@ namespace EX2
                     return;
             } 
         }
+
         /// <summary>
         /// deacrease playback speed by 2 rows per frame.
         /// </summary>
@@ -161,6 +164,7 @@ namespace EX2
                 Playback_speed = newSpeed.ToString(CultureInfo.InvariantCulture);
             }
         }
+
         /// <summary>
         /// set playback speed to 20 rows per frame.
         /// </summary>
@@ -168,6 +172,7 @@ namespace EX2
         {
             Playback_speed = "2.0";
         }
+
         /// <summary>
         /// set playback speed to 2 rows per frame.
         /// </summary>
@@ -175,6 +180,7 @@ namespace EX2
         {
             Playback_speed = "0.20";
         }
+
         /// <summary>
         /// increase playback speed by 2 rows per frame.
         /// </summary>
@@ -276,10 +282,8 @@ namespace EX2
                             return;
                             */
                         }
-
                     }
                 }
-
             }
             catch (ArgumentNullException e)
             {
@@ -306,37 +310,43 @@ namespace EX2
             settings.IgnoreWhitespace = true;
             XmlReader reader = null;
 
+            /*
+               string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+               filePath = Directory.GetParent(filePath).FullName;
+               filePath = Directory.GetParent(filePath).FullName;
+               reader = XmlReader.Create(filePath + "\\resources\\playback_small.xml", settings);
+               */
 
-                /*
-                string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
-                filePath = Directory.GetParent(filePath).FullName;
-                filePath = Directory.GetParent(filePath).FullName;
-                reader = XmlReader.Create(filePath + "\\resources\\playback_small.xml", settings);
-                */
-                reader = XmlReader.Create(pathToXML, settings);
-                if (reader.ReadToFollowing("output"))
+
+            // TODO read from XML the speed and save it as a property. 
+
+            reader = XmlReader.Create(pathToXML, settings);
+            if (reader.ReadToFollowing("output"))
+            {
+                reader.Read();
+                while (reader.Name != "output")
                 {
-                    reader.Read();
-                    while (reader.Name != "output")
+                    if (reader.IsStartElement())
                     {
-                        if (reader.IsStartElement())
-                        {
 
-                            if (reader.Name == "chunk")
-                            {
-                                reader.Read();
-                                attributes_list.Add(reader.ReadString());
-                            }
+                        if (reader.Name == "chunk")
+                        {
+                            reader.Read();
+                            attributes_list.Add(reader.ReadString());
                         }
-                        reader.Read();
                     }
+                    reader.Read();
                 }
-         
-                this.Variables = attributes_list;
-                attributes = attributes_list.ToArray();
-                if (reader != null)
-                    reader.Close();
-            
+            }
+
+            this.Variables = attributes_list;
+            attributes = attributes_list.ToArray();
+            if (reader != null)
+                reader.Close();
+
+
+
+
         }
         /// <summary>
         /// User selected new variable to focus on.
