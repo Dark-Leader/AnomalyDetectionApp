@@ -37,7 +37,8 @@ namespace EX2
         /// <param name="name"></param>
         public void update_CSVFileName(string name)
         {
-            this.model.setCSVFile(name);
+            //this.model.setCSVFile(name);
+            this.model.AnomalyFlightCSV = name;
         }
         /// <summary>
         /// send FlightGear exe path to model.
