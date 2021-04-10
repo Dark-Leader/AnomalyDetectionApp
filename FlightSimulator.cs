@@ -155,8 +155,8 @@ namespace EX2
             switch (name)
             {
                 case "Play": // user clicked play button.
-                    this.playingThread = new Thread(new ThreadStart(this.play));
-                    this.playingThread.Start();
+                    //this.playingThread = new Thread(new ThreadStart(this.play));
+                    //this.playingThread.Start();
                     break;
                 case "Stop": // user clicked pause button.
                     break;
@@ -273,17 +273,54 @@ namespace EX2
             }
         }
 
+        // Holds the path to regular flight CSV file
+        private string regFlightCSV;
+
+        public string RegFlightCSV
+        {
+            get
+            {
+                return regFlightCSV;
+            }
+            set
+            {
+                if (this.regFlightCSV != value)
+                {
+                    this.regFlightCSV = value;
+                }
+            }
+        }
+
+        // Holds the path to regular flight CSV file
+        private string anomalyFlightCSV;
+
+        public string AnomalyFlightCSV
+        {
+            get
+            {
+                return anomalyFlightCSV;
+            }
+            set
+            {
+                if (this.anomalyFlightCSV != value)
+                {
+                    this.anomalyFlightCSV = value;
+                }
+            }
+        }
+
+        /*
         public void setCSVFile(string name)
         {
             this.csvData = name;
             readCSV(this.csvData);
         }
-
+        */
         public void setFGPath(string name)
         {
             this.FGPath = name;
             this.fg = new FlightGear(name, pathToXML);
-            this.fg.start();
+            //this.fg.start();
             
         }
 
