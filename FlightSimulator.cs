@@ -55,6 +55,7 @@ namespace EX2
        
         private string[] attributes;
         private IntPtr TS; //TimeSeries
+        IntPtr DW;
         private string FGPath;
 
         // how many lines are there in the received flight data csv
@@ -127,11 +128,11 @@ namespace EX2
             this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
             /*test code for creating a TimeSeries*/
-            String Reg_ts_path = "C:\\Users\\USER\\source\\repos\\DllTest\\reg_flight.csv"; //with NO features(for beggining of programm)
+            //String Reg_ts_path = "C:\\Users\\USER\\source\\repos\\DllTest\\reg_flight.csv"; //with NO features(for beggining of programm)
 
-            TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
-            IntPtr DW = CreateWrappedData(TS, "aileron");
-            FvectorToList(DW);
+            //TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
+            //IntPtr DW = CreateWrappedData(TS, "aileron");
+            //FvectorToList(DW);
             
 
         }
@@ -283,6 +284,7 @@ namespace EX2
                 if (this.regFlightCSV != value)
                 {
                     this.regFlightCSV = value;
+                    TS = Create_Regular_TS(RegFlightCSV, attributes, attributes.Length);
                 }
             }
         }
