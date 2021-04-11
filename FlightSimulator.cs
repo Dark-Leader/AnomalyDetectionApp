@@ -11,13 +11,50 @@ using System.IO;
 using System.ComponentModel;
 using System.Xml;
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace EX2
 {
     public class FlightSimulator : IFlightSimulator
     {
-        private string[] attributes;
 
+        /// /////////////////////////////////external functions for TimeSeries//////////////////////////////
+
+        /*TS*/
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]//working
+        public static extern IntPtr Create_Anomalies_TS(String fileName);
+
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)] //working
+        public static extern IntPtr Create_Regular_TS(String fileName, String[] atts, int size);
+
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)] //working
+        public static extern IntPtr Extern_getRowSize(IntPtr ts);
+
+        /*Data-Wrapper*/
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)] //working
+        public static extern IntPtr CreateWrappedData(IntPtr ts, String s);
+
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)] //working
+        public static extern int Data_Wrapper_size(IntPtr DW);
+
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]//working
+        public static extern float Data_Wrapper_getter(IntPtr DW, int i);
+
+
+        /*Attributes-Wrapper*/
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreateWrappedAttributes(IntPtr ts);
+
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int Attributes_Wrapper_size(IntPtr AW);
+
+        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern String Attributes_Wrapper_getter(IntPtr AW);
+
+        ///////////////////////////////////////////real content of class////////////////////////////////////
+       
+        private string[] attributes;
+        private IntPtr TS; //TimeSeries
         private string FGPath;
 
         // how many lines are there in the received flight data csv
@@ -90,6 +127,14 @@ namespace EX2
             this.selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
             this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
+            /*test code for creating a TimeSeries*/
+            String Reg_ts_path = "C:\\Users\\USER\\source\\repos\\DllTest\\reg_flight.csv"; //with NO features(for beggining of programm)
+
+            TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
+            IntPtr DW = CreateWrappedData(TS, "aileron");
+            FvectorToList(DW);
+            
+
         }
 
         public string Time
@@ -139,6 +184,20 @@ namespace EX2
                 }
             }
         }
+
+        /*FvectorToList func.
+         creates a list out of a given float-vector wrapper*/
+        static public List<float> FvectorToList(IntPtr DW)
+        {
+            List<float> list = new List<float>();
+            int size = Data_Wrapper_size(DW);
+            for (int i = 0; i < size; i++)
+            {
+                list.Add(Data_Wrapper_getter(DW, i));
+            }
+            return list;
+        }
+
         /// <summary>
         /// user moved the time slider.
         /// </summary>
