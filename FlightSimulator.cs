@@ -74,6 +74,7 @@ namespace EX2
         Thread playingThread;
 
         private bool stop;
+        private bool pause;
 
         private FlightGear fg;
 
@@ -103,7 +104,8 @@ namespace EX2
             parseXML();
 
             playbackSpeed = 10;
-            stop = true;
+            stop = false;
+            pause = false;
             // starting to play the data 10 lines in a second
             ticks = 100;
             currentLinePlaying = 0;
@@ -164,6 +166,7 @@ namespace EX2
                 if (value != playbackSpeed)
                 {
                     this.playbackSpeed = value;
+                    this.ticks = playbackSpeed * 10;
                     // notifyPropertyChanged("Playback_speed");
                 }
             }
@@ -256,6 +259,9 @@ namespace EX2
             // need to check that the thread is still running and maybe restart the flight gear app.
         }
 
+        /// <summary>
+        /// Meaning the playback needs to stop completely and next time restart
+        /// </summary>
         public bool Stop
         {
             get
@@ -266,6 +272,25 @@ namespace EX2
             {
                 if (this.stop != value ){
                     this.stop = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Meaning the playback needs to pause but afterwards play from the same spot
+        /// </summary>
+        public bool Pause
+        {
+            get
+            {
+                return pause;
+            }
+            set
+            {
+                if (value)
+                {
+                    this.pause = value;
+                    this.ticks = Timeout.Infinite;
                 }
             }
         }
@@ -284,7 +309,8 @@ namespace EX2
                 if (this.regFlightCSV != value)
                 {
                     this.regFlightCSV = value;
-                    TS = Create_Regular_TS(RegFlightCSV, attributes, attributes.Length);
+                    //TS = Create_Regular_TS(RegFlightCSV, attributes, attributes.Length);
+                    readCSV(this.regFlightCSV);
                 }
             }
         }
@@ -318,69 +344,67 @@ namespace EX2
         {
             this.FGPath = name;
             this.fg = new FlightGear(name, pathToXML);
-            //this.fg.start();
+            this.fg.openApplication();
             
         }
 
         public void play()
         {
-            /*
-            while (!this.stop)
+            Console.WriteLine("in the play method in fs");
+            if (!pause && !stop)
             {
-                this.fg.sendData(getLine(this.currentLinePlaying));
-                currentLinePlaying++;
-                Console.WriteLine("The line index current is:");
-                Console.WriteLine(currentLinePlaying);
+                // meaning it's the 1st time we play data to fg
+                // so we need to establish connection
+                this.client.connect("127.0.0.1", 5400);
+                Console.WriteLine("Connected");
+            }
+            else if (pause)
+            {
+                // Meaning the playingThread is sleeping infinite time and we need to resume it
+                pause = false;
+                this.ticks = playbackSpeed * 10;
+                this.playingThread.Interrupt();
+                return;
+            }
+            else if (stop)
+            {
+                Console.WriteLine("in the play method in the if stop = true");
+                stop = false;
+                currentLinePlaying = 0;
+            }
 
-                Thread.Sleep(ticks);
-            }*/
+            
+            //  we now initialize a new thread 
+            this.playingThread = new Thread(new ThreadStart(this.playback));
+            this.playingThread.Start();
+        }
+
+        private void playback()
+        {
             try
             {
-                this.client.connect("127.0.0.1", 5400);
-                /*  
-                IPAddress ip = IPAddress.Parse("127.0.0.1");
-                int port = 5400;
-                TcpClient client = new TcpClient();
-
-                client.Connect(ip, port);
-                Console.WriteLine("Connection established");
-                NetworkStream ns = client.GetStream();
-
-                */
-                Console.WriteLine("Connected");
-
-                using (StreamReader rd = new StreamReader(this.csvData))
+                String line;
+                while (!this.stop)
                 {
-                    String line;
-
-                    while ((line = rd.ReadLine()) != null)
+                    try
                     {
+                        line = getLine(this.currentLinePlaying);
                         line += "\r\n";
                         this.client.write(line);
-                        Thread.Sleep(ticks);
-                        
                         Console.WriteLine(line);
+                        currentLinePlaying++;
+                        Console.WriteLine("The line index current is:");
+                        Console.WriteLine(currentLinePlaying);
 
-                        /*
-                        if (ns.CanWrite)
-                        {
-                            byte[] buffer = Encoding.ASCII.GetBytes(line);
-                            ns.Write(buffer, 0, buffer.Length);
-                            Thread.Sleep(100);
-                        }
-                        else
-                        {
-                            Console.WriteLine("You cannot write data to this stream.");*/
-                        /*
-                        tcpClient.Close();
-
-                        // Closing the tcpClient instance does not close the network stream.
-                        netStream.Close();
-                        return;
-                        */
+                        Thread.Sleep(ticks);
+                    }
+                    catch (ThreadInterruptedException e)
+                    {
+                        // meaning the thread noe needs to continue after it's been paused
+                        continue;
                     }
                 }
-                
+                Console.WriteLine("The thread has stopped!");
             }
             catch (ArgumentNullException e)
             {
@@ -414,9 +438,10 @@ namespace EX2
         /// Temp function untill we have ts, gets the specific line 
         /// </summary>
         /// <param name="csvPath"></param>
-        private void readCSV(string csvPath)
+        private void readCSV(string path)
         {
-            using (StreamReader rd = new StreamReader(this.csvData))
+            Console.WriteLine("readsthe CSV and saves lines");
+            using (StreamReader rd = new StreamReader(path))
             {
                 String line;
 
@@ -477,9 +502,6 @@ namespace EX2
             if (reader != null)
                 reader.Close();
 
-
-
-
         }
         /// <summary>
         /// User selected new variable to focus on.
@@ -490,7 +512,5 @@ namespace EX2
             Console.WriteLine(name);
             return;
         }
-
-
     }
 }

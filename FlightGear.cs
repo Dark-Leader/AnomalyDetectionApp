@@ -63,7 +63,7 @@ namespace EX2
         /// <summary>
         /// opens the flight gear application
         /// </summary>
-        public void start()
+        public void openApplication()
         {
             ProcessStartInfo startInfo = new ProcessStartInfo(fileName);
 

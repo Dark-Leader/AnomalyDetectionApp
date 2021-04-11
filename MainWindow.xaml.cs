@@ -86,7 +86,7 @@ namespace EX2
                     vm.stop();
                     break;
                 case "Start":
-                    vm.stop();
+                    vm.play();
                     break;
                 case "Restart":
                     vm.restart();

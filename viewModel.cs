@@ -462,14 +462,28 @@ namespace EX2
             sim.Playback_speed += value;
         }
 
+        /// <summary>
+        /// This button plays the playback
+        /// </summary>
+        public void play()
+        {
+            sim.play();
+        }
+
+        /// <summary>
+        /// This button pauses the playback
+        /// </summary>
         public void stop()
         {
-            sim.Stop = !sim.Stop;
+            sim.Pause = true;
         }
-        
+
+        /// <summary>
+        /// This button stops the playback and next time it will play from the start
+        /// </summary>
         public void restart()
-        {
-            sim.restart();
+        {            
+            sim.Stop = true;
         }
 
     }
