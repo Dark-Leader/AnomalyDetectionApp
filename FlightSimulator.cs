@@ -68,7 +68,7 @@ namespace EX2
         private int playbackSpeed = 10;
 
 
-        // A time period expressed in milliSeconds units 
+        // A time period expressed in milliSeconds units used for playingThread.sleep(ticks)
         private int ticks;
 
         Thread playingThread;
@@ -165,8 +165,24 @@ namespace EX2
             {
                 if (value != playbackSpeed)
                 {
-                    this.playbackSpeed = value;
-                    this.ticks = playbackSpeed * 10;
+                    if (value < 1)
+                    {
+                        // The minimal playbackSpeed is 1 row per second
+                        this.playbackSpeed = 1;
+                    }
+                    else if (30 < value )
+                    {
+                        // The maximal playbackSpeed is 30 row per second
+                        this.playbackSpeed = 30;
+                    }
+                    else
+                    {
+                        // set it to the given value
+                        this.playbackSpeed = value;
+                    }
+
+                    // calculate the new ticks
+                    this.ticks = 1000 / playbackSpeed;
                     // notifyPropertyChanged("Playback_speed");
                 }
             }
@@ -355,14 +371,14 @@ namespace EX2
             {
                 // meaning it's the 1st time we play data to fg
                 // so we need to establish connection
-                this.client.connect("127.0.0.1", 5400);
+                //this.client.connect("127.0.0.1", 5400);
                 Console.WriteLine("Connected");
             }
             else if (pause)
             {
                 // Meaning the playingThread is sleeping infinite time and we need to resume it
                 pause = false;
-                this.ticks = playbackSpeed * 10;
+                this.ticks = 1000 / playbackSpeed;
                 this.playingThread.Interrupt();
                 return;
             }
@@ -379,6 +395,9 @@ namespace EX2
             this.playingThread.Start();
         }
 
+        /// <summary>
+        /// This is the function that runs in a different thread and sends data to fg
+        /// </summary>
         private void playback()
         {
             try
@@ -388,6 +407,7 @@ namespace EX2
                 {
                     try
                     {
+                        /* This is working just want to test if the speed changes correctly
                         line = getLine(this.currentLinePlaying);
                         line += "\r\n";
                         this.client.write(line);
@@ -396,6 +416,18 @@ namespace EX2
                         Console.WriteLine("The line index current is:");
                         Console.WriteLine(currentLinePlaying);
 
+                        Thread.Sleep(ticks);
+                        */
+                        line = getLine(this.currentLinePlaying);
+                        line += "\r\n";
+                        Console.WriteLine(line);
+                        currentLinePlaying++;
+                        Console.WriteLine("The current line index is:");
+                        Console.WriteLine(currentLinePlaying);
+                        Console.WriteLine("The playback speed is:");
+                        Console.WriteLine(playbackSpeed);
+                        Console.WriteLine("The ticks:");
+                        Console.WriteLine(ticks);
                         Thread.Sleep(ticks);
                     }
                     catch (ThreadInterruptedException e)
