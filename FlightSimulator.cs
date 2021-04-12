@@ -444,6 +444,7 @@ namespace EX2
             {
                 // Meaning the playingThread is sleeping infinite time and we need to resume it
                 pause = false;
+                stop = false;
                 this.ticks = 1000 / playbackSpeed;
                 this.playingThread.Interrupt();
                 return;
@@ -452,9 +453,9 @@ namespace EX2
             {
                 Console.WriteLine("in the play method in the if stop = true");
                 stop = false;
+                pause = false;
                 currentLinePlaying = 0;
             }
-
             
             //  we now initialize a new thread 
             this.playingThread = new Thread(new ThreadStart(this.playback));
