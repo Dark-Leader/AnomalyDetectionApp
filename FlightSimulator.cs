@@ -134,10 +134,11 @@ namespace EX2
 
             TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
             List<float> list = getVectorByName(TS, "aileron");
-            foreach(var x in list)
-            {
-                
-            }
+            //foreach(var x in list)
+            //{
+            //    Console.WriteLine(x);
+            //}
+            //Console.WriteLine(3);
             //IntPtr DW = CreateWrappedData(TS, "aileron");
             //FvectorToList(DW);
             
