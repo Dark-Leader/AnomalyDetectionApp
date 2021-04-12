@@ -54,7 +54,20 @@ namespace EX2
         ///////////////////////////////////////////real content of class////////////////////////////////////
        
         private string[] attributes;
-        private IntPtr TS; //TimeSeries
+
+        //TimeSeries for the regular flight
+        private IntPtr TS_regFlight;
+
+        //TimeSeries for the anomaly flight
+        private IntPtr TS_anomalyFlight;
+
+        // Will hold all the data of the regular flight csv. attributes are the keys
+        private Dictionary<string, List<float>> regFlightDict;
+
+        // Will hold all the data of the anomaly flight csv. attributes are the keys
+        private Dictionary<string, List<float>> anomalyFlightDict;
+
+
         IntPtr DW;
         private string FGPath;
 
@@ -129,11 +142,15 @@ namespace EX2
             this.selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
             this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
-            /*test code for creating a TimeSeries*/
-            String Reg_ts_path = "C:\\Users\\USER\\source\\repos\\DllTest\\reg_flight.csv"; //with NO features(for beggining of programm)
 
-            TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
-            List<float> list = getVectorByName(TS, "aileron");
+
+
+            /*test code for creating a TimeSeries*/
+            //String Reg_ts_path = "C:\\Users\\USER\\source\\repos\\DllTest\\reg_flight.csv"; //with NO features(for beggining of programm)
+
+            //TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
+            //List<float> list = getVectorByName(TS, "aileron");
+
             //foreach(var x in list)
             //{
             //    Console.WriteLine(x);
@@ -345,8 +362,14 @@ namespace EX2
                 if (this.regFlightCSV != value)
                 {
                     this.regFlightCSV = value;
-                    //TS = Create_Regular_TS(RegFlightCSV, attributes, attributes.Length);
-                    readCSV(this.regFlightCSV);
+                    TS_regFlight = Create_Regular_TS(this.regFlightCSV, attributes, attributes.Length);
+                    regFlightDict = new Dictionary<string, List<float>>();
+                    foreach (var item in attributes)
+                    {
+                        regFlightDict.Add(item, getVectorByName(TS_regFlight, item));
+                    }
+
+                    //readCSV(this.regFlightCSV);
                 }
             }
         }
@@ -365,6 +388,13 @@ namespace EX2
                 if (this.anomalyFlightCSV != value)
                 {
                     this.anomalyFlightCSV = value;
+
+                    TS_anomalyFlight = Create_Anomalies_TS(anomalyFlightCSV);
+                    anomalyFlightDict = new Dictionary<string, List<float>>();
+                    foreach (var item in attributes)
+                    {
+                        anomalyFlightDict.Add(item, getVectorByName(TS_anomalyFlight, item));
+                    }
                 }
             }
         }
