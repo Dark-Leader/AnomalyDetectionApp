@@ -20,8 +20,19 @@ using System.Globalization;
 
 namespace EX2
 {
-    public partial class ViewModel : BindableBase
+    public partial class ViewModel : INotifyPropertyChanged
     {
+
+
+
+        //INotifyPropertyChanged 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         System.Timers.Timer playTimer = new System.Timers.Timer();
         //responsible for the amount of lines read per second.

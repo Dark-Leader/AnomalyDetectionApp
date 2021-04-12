@@ -369,6 +369,7 @@ namespace EX2
                         regFlightDict.Add(item, getVectorByName(TS_regFlight, item));
                     }
 
+                    Console.WriteLine("yay");
                     //readCSV(this.regFlightCSV);
                 }
             }

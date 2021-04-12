@@ -101,7 +101,6 @@
       <DependentUpon>JoystickControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="LinqExtensions.cs" />
-    <Compile Include="MVVM\BindableBase.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="ViewModel.cs" />
     <Page Include="JoystickControl.xaml">
