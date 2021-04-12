@@ -20,8 +20,19 @@ using System.Globalization;
 
 namespace EX2
 {
-    public partial class ViewModel : BindableBase
+    public partial class ViewModel : INotifyPropertyChanged
     {
+
+
+
+        //INotifyPropertyChanged 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         System.Timers.Timer playTimer = new System.Timers.Timer();
         //responsible for the amount of lines read per second.
@@ -460,7 +471,7 @@ namespace EX2
         }
         public void set_test_csv(string name)
         {
-            sim.AnomalyFlightCSV = name;
+            // sim.AnomalyFlightCSV = name; PRODUCES RUNTIME ERROR !!!
         }
 
         public void set_flight_gear(string name)
