@@ -130,9 +130,14 @@ namespace EX2
             this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
             this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
             /*test code for creating a TimeSeries*/
-            //String Reg_ts_path = "C:\\Users\\USER\\source\\repos\\DllTest\\reg_flight.csv"; //with NO features(for beggining of programm)
+            String Reg_ts_path = "C:\\Users\\USER\\source\\repos\\DllTest\\reg_flight.csv"; //with NO features(for beggining of programm)
 
-            //TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
+            TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
+            List<float> list = getVectorByName(TS, "aileron");
+            foreach(var x in list)
+            {
+                
+            }
             //IntPtr DW = CreateWrappedData(TS, "aileron");
             //FvectorToList(DW);
             
@@ -218,6 +223,20 @@ namespace EX2
             }
             return list;
         }
+
+
+        /// <summary>
+        /// getVectorByName func. given a feeature, return it's values 
+        /// </summary>
+        /// <param name="TS"></pointer to TimeSeries>
+        /// <param name="name"><name of a feature>
+        /// <returns></returns>
+        static public List<float> getVectorByName(IntPtr TS, String name)
+        {
+            IntPtr DW = CreateWrappedData(TS, name); //create wrapper
+            return FvectorToList(DW); //create a vector with it and send it away
+        }
+
 
         /// <summary>
         /// user moved the time slider.
