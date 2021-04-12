@@ -52,7 +52,7 @@ namespace EX2
         public static extern String Attributes_Wrapper_getter(IntPtr AW);
 
         ///////////////////////////////////////////real content of class////////////////////////////////////
-       
+
         private string[] attributes;
 
         //TimeSeries for the regular flight
@@ -158,8 +158,23 @@ namespace EX2
             //Console.WriteLine(3);
             //IntPtr DW = CreateWrappedData(TS, "aileron");
             //FvectorToList(DW);
-            
 
+
+        }
+
+        public Dictionary<string, List<float>> RegFlightDict {
+            get
+            {
+                return regFlightDict;
+            }
+        }
+
+        public Dictionary<string, List<float>> AnomalyFlightDict
+        {
+            get
+            {
+                return anomalyFlightDict;
+            }
         }
 
         public string Time
@@ -255,7 +270,7 @@ namespace EX2
             return FvectorToList(DW); //create a vector with it and send it away
         }
 
-
+        
         /// <summary>
         /// user moved the time slider.
         /// </summary>
@@ -375,7 +390,7 @@ namespace EX2
         }
 
         // Holds the path to regular flight CSV file
-        private string anomalyFlightCSV;
+        private String anomalyFlightCSV;
 
         public string AnomalyFlightCSV
         {

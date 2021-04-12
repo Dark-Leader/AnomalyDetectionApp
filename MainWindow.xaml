@@ -52,29 +52,29 @@
                         <ex2:JoystickControl AxisX="{Binding AileronProperty, FallbackValue=0, Mode=OneWay}" AxisY="{Binding ElevatorPropery, FallbackValue=0, Mode=OneWay}"/>
                     </Viewbox>
 
-                    <Slider Grid.Column="0" Grid.Row="0" Orientation="Vertical" Minimum="{Binding ThrottleMin, Mode=OneWay}" Maximum="{Binding ThrottleMax, Mode=OneWay}" Value="{Binding Throttle, Mode=OneWay}"/>
-                    <Slider Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Minimum="{Binding RudderMin, Mode=OneWay}" Maximum="{Binding RudderMax, Mode=OneWay}" Value="{Binding Rudder, Mode=OneWay}"/>
+                    <Slider Grid.Column="0" Grid.Row="0" Orientation="Vertical" Minimum="0" Maximum="1" Value="{Binding Throttle, Mode=OneWay}"/>
+                    <Slider Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Minimum="-1" Maximum="1" Value="{Binding Rudder, Mode=OneWay}"/>
                 </Grid>
 
                 <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="3">
                     <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Lime" ClipToBounds="False"
-                              SM_Foreground1="Red" SM_Description="Altimeter" SM_Minimum="{Binding AltimeterMin}" SM_Maximum="{Binding AltimeterMax}" SM_MeterValue="{Binding Altimeter}"/>
+                              SM_Foreground1="Red" SM_Description="Altimeter" SM_Minimum="-100" SM_Maximum="1000" SM_MeterValue="{Binding Altimeter}"/>
                 </Viewbox>
                 <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="4">
                     <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Violet" ClipToBounds="False" 
-                              SM_Foreground1="Red" SM_Description="Airspeed" SM_Minimum="{Binding AirspeedMin}" SM_Maximum="{Binding AirspeedMax}" SM_MeterValue="{Binding Airspeed}"/>
+                              SM_Foreground1="Red" SM_Description="Airspeed" SM_Minimum="0" SM_Maximum="200" SM_MeterValue="{Binding Airspeed}"/>
                 </Viewbox>
                 <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="2">
                     <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Green" ClipToBounds="False" 
-                              SM_Foreground1="Red" SM_Description="FlightDirection" SM_Minimum="{Binding FlightDirectionMin}" SM_Maximum="{Binding FlightDirectionMax}" SM_MeterValue="{Binding FlightDirection}"/>
+                              SM_Foreground1="Red" SM_Description="FlightDirection" SM_Minimum="0" SM_Maximum="360" SM_MeterValue="{Binding FlightDirection}"/>
                 </Viewbox>
                 <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="3">
                     <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Brown" ClipToBounds="False" 
-                              SM_Foreground1="Red" SM_Description="Pitch" SM_Minimum="{Binding PitchMin}" SM_Maximum="{Binding PitchMax}" SM_MeterValue="{Binding Pitch}"/>
+                              SM_Foreground1="Red" SM_Description="Pitch" SM_Minimum="-90" SM_Maximum="90" SM_MeterValue="{Binding Pitch}"/>
                 </Viewbox>
                 <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="4">
                     <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Blue" ClipToBounds="False" 
-                              SM_Foreground1="Red" SM_Description="Yaw" SM_Minimum="{Binding YawMin}" SM_Maximum="{Binding YawMax}" SM_MeterValue="{Binding Yaw}"/>
+                              SM_Foreground1="Red" SM_Description="Yaw" SM_Minimum="-180" SM_Maximum="180" SM_MeterValue="{Binding Yaw}"/>
                 </Viewbox>
             </Grid>
         </Grid>
@@ -125,7 +125,7 @@
 
             </StackPanel>
 
-            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" TickFrequency="1" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding SliderMaximum}" Value="{Binding CurrentFrame}"/>
+            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" TickFrequency="1" IsSnapToTickEnabled="True" Minimum="0" Maximum="2300" Value="{Binding CurrentFrame}"/>
         </StackPanel>
 
 
