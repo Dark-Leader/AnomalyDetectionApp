@@ -87,6 +87,14 @@ namespace EX2
             }
         }
 
+        public string CorrelatedFeature
+        {
+            get
+            {
+                return sim.getCorrelatedFeature((string)selectedItem);
+            } 
+        }
+
         private int currentFrame;
         public int CurrentFrame
         {
@@ -183,7 +191,7 @@ namespace EX2
             get
             {
                 var ds = CurrentDataSet;
-                return new DrawingImage(GetGraphGroup(ds, false, 10, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CurrentDataSet.Min()), Math.Abs(CurrentDataSet.Max()))) : 1));
+                return new DrawingImage(GetGraphGroup(ds, false, 10, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CurrentDataSet.Min()), Math.Abs(CurrentDataSet.Max())) * 2) : 1));
             }
         }
 
@@ -194,7 +202,7 @@ namespace EX2
             {
                 var ds = CurrentDataSet;
 
-                return new DrawingImage(GetGraphGroup(ds, false, 10, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CurrentDataSet.Min()), Math.Abs(CurrentDataSet.Max()))) : 1));
+                return new DrawingImage(GetGraphGroup(ds, false, 10, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CurrentDataSet.Min()), Math.Abs(CurrentDataSet.Max())) * 2) : 1));
             }
         }
         //bottom graph.
@@ -204,7 +212,7 @@ namespace EX2
             {
                 var ds = CurrentDataSet;
 
-                return new DrawingImage(GetGraphGroup(ds, true, 20, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CurrentDataSet.Min()), Math.Abs(CurrentDataSet.Max()))) : 1));
+                return new DrawingImage(GetFinalGraph(ds, ds, 40, 20, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CurrentDataSet.Min()), Math.Abs(CurrentDataSet.Max())) * 2) : 1));
             }
         }
 
@@ -337,6 +345,100 @@ namespace EX2
         {
             playTimer.Interval = 1000 / CurrentFrameRate;
         }
+
+        private DrawingGroup GetFinalGraph(float[] x, float[] y, int width = 10, int height = 10, int maximum = 5)
+        {
+            DrawingGroup aDrawingGroup = new DrawingGroup();
+            int Np = x.Length - 1;
+            for (int DrawingStage = 0; DrawingStage < 10; DrawingStage++)
+            {
+                GeometryDrawing drw = new GeometryDrawing();
+                GeometryGroup gg = new GeometryGroup();
+
+
+                //Background
+                if (DrawingStage == 1)
+                {
+                    drw.Brush = Brushes.Beige;
+                    drw.Pen = new Pen(Brushes.LightGray, 0.01);
+
+                    RectangleGeometry myRectGeometry = new RectangleGeometry();
+                    myRectGeometry.Rect = new Rect(0, 0, width, height);
+                    gg.Children.Add(myRectGeometry);
+                }
+
+                if (DrawingStage == 3)
+                {
+                    drw.Brush = Brushes.Black;
+                    drw.Pen = new Pen(Brushes.Red, 0.05);
+
+                    gg = new GeometryGroup();
+                    for (int i = 0; i < Np; i++)
+                    {
+                        EllipseGeometry el = new EllipseGeometry(new Point((double)(x[i]) % width , height / 2 - y[i] / ((double)maximum * 2 / height)), 0.01 * Math.Min(width, height), 0.01 * Math.Min(width, height));
+                        gg.Children.Add(el);
+                    }
+
+                }
+
+                //Cutting
+                if (DrawingStage == 5)
+                {
+                    drw.Brush = Brushes.Transparent;
+                    drw.Pen = new Pen(Brushes.White, 0.2);
+
+                    RectangleGeometry myRectGeometry = new RectangleGeometry();
+                    myRectGeometry.Rect = new Rect(-0.1 * width, -0.1 * height, 1.2 * width, 1.2 * height);
+                    gg.Children.Add(myRectGeometry);
+                }
+
+                //border-מסגרת.
+                if (DrawingStage == 6)
+                {
+                    drw.Brush = Brushes.Transparent;
+                    drw.Pen = new Pen(Brushes.LightGray, 0.01);
+
+                    RectangleGeometry myRectGeometry = new RectangleGeometry();
+                    myRectGeometry.Rect = new Rect(0 * width, 0 * height, 1 * width, 1 * height);
+                    gg.Children.Add(myRectGeometry);
+                }
+
+
+                //labels
+                if (DrawingStage == 7)
+                {
+                    drw.Brush = Brushes.LightGray;
+                    drw.Pen = new Pen(Brushes.Gray, 0.003);
+
+                    for (int i = 0; i < 11; i++)
+                    {
+                        // Create a formatted text string.
+#pragma warning disable CS0618 
+                        FormattedText formattedText = new FormattedText(
+                            ((double)(maximum - i * 0.1 * maximum * 2)).ToString(),
+                            CultureInfo.GetCultureInfo("en-us"),
+                            FlowDirection.LeftToRight,
+                            new Typeface("Verdana"),
+                            0.05 * height,
+                            Brushes.Black);
+#pragma warning restore CS0618 
+
+                        // Set the font weight to Bold for the formatted text.
+                        formattedText.SetFontWeight(FontWeights.Bold);
+
+                        // Build a geometry out of the formatted text.
+                        Geometry geometry = formattedText.BuildGeometry(new Point(-0.1 * width, i * 0.1 * height - 0.03 * height));
+                        gg.Children.Add(geometry);
+                    }
+                }
+
+                drw.Geometry = gg;
+                aDrawingGroup.Children.Add(drw);
+            }
+
+            return aDrawingGroup;
+        }
+
         private DrawingGroup GetGraphGroup(float[] Data, bool dots, int width = 10, int height = 10, int maximum = 5)
         {
             DrawingGroup aDrawingGroup = new DrawingGroup();
@@ -378,7 +480,7 @@ namespace EX2
                     else
                     {
                         drw.Brush = Brushes.Black;
-                        drw.Pen = new Pen(Brushes.Black, 0.05);
+                        drw.Pen = new Pen(Brushes.Red, 0.05);
 
                         gg = new GeometryGroup();
                         for (int i = 0; i < Np; i++)
@@ -458,7 +560,6 @@ namespace EX2
             } set
             {
                 sliderMax = (model?.Count - 1 - BUFFER_SIZE) ?? 0;
-                Console.WriteLine(sliderMax);
             }
         }
 

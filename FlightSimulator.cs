@@ -225,6 +225,15 @@ namespace EX2
                 }
             }
         }
+        /// <summary>
+        /// Returns the correalted feature of the feature provided.
+        /// </summary>
+        /// <param name="feature"></param>
+        /// <returns></returns>
+        public string getCorrelatedFeature(string feature)
+        {
+            return null;
+        }
 
         public int CurrentLinePlaying { 
             get
