@@ -12,6 +12,9 @@ using System.ComponentModel;
 using System.Xml;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Timers;
+
+
 
 namespace EX2
 {
@@ -59,7 +62,7 @@ namespace EX2
 
         ///////////////////////////////////////////real content of class////////////////////////////////////
 
-        private string[] attributes;
+        private string[] attributesArray;
 
         //TimeSeries for the regular flight
         private IntPtr TS_regFlight;
@@ -77,7 +80,10 @@ namespace EX2
         private Dictionary<string, List<float>> anomalyFlightDict;
 
 
-        
+        // List of attributes as read from XML
+        List<string> attributesList;
+
+        IntPtr DW;
         private string FGPath;
 
         // how many lines are there in the received flight data csv
@@ -86,9 +92,11 @@ namespace EX2
         private List<KeyValuePair<float, float>> selectedFeature = new List<KeyValuePair<float, float>>();
         private List<KeyValuePair<float, float>> correlatedFeature;
         private List<string> variables = new List<string>();
-        private string time = "00:00:00";
         private int playbackSpeed = 10;
 
+        private TimeSpan time;
+
+        private System.Timers.Timer playTimer = new System.Timers.Timer();
 
         // A time period expressed in milliSeconds units used for playingThread.sleep(ticks)
         private int ticks;
@@ -130,27 +138,11 @@ namespace EX2
             pause = false;
             // starting to play the data 10 lines in a second
             ticks = 100;
+            playTimer.Interval = 100;
             currentLinePlaying = 0;
 
             client = new Client();
 
-            this.selectedFeature.Add(new KeyValuePair<float, float>(1, 60));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(7, 15));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(8, 23));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(40, 50));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(3, 80));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(11, 15));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(5, 20));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(26, 31));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(9, 70));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(17, 4));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(6, 12));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(15, 19));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(43, 14));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(35, 18));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(24, 41));
-            this.selectedFeature.Add(new KeyValuePair<float, float>(28, 500));
-            this.correlatedFeature = new List<KeyValuePair<float, float>>(this.selectedFeature);
 
             //test code for AnomalyDetector
 
@@ -178,6 +170,23 @@ namespace EX2
             //IntPtr Anomalies_TS = Create_Regular_TS(Ano_ts_path, attributes, attributes.Length);
             //Detect(AD, Anomalies_TS);
 
+            playTimer.Elapsed += (s, e) =>
+            {
+                if (playTimer.Enabled)
+                {
+                    OnTimedEvent(s, e);
+                }
+            };
+        }
+
+
+        public void NotifyPropertyChanged(string propName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+            //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
         public Dictionary<string, List<float>> RegFlightDict {
@@ -192,22 +201,6 @@ namespace EX2
             get
             {
                 return anomalyFlightDict;
-            }
-        }
-
-        public string Time
-        {
-            get
-            {
-                return this.time;
-            }
-            set
-            {
-                if (value != time)
-                {
-                    this.time = value;
-                    notifyPropertyChanged("Time");
-                }
             }
         }
 
@@ -239,26 +232,21 @@ namespace EX2
 
                     // calculate the new ticks
                     this.ticks = 1000 / playbackSpeed;
-                    // notifyPropertyChanged("Playback_speed");
+                    playTimer.Interval = this.ticks;
+                    NotifyPropertyChanged("Playback_speed");
                 }
             }
         }
 
+        /*
         public int CurrentLinePlaying { get; private set; }
+        */
 
-        public List<string> Variables
+        public List<string> AttributesList
         {
             get
             {
-                return this.variables;
-            }
-            set
-            {
-                if (value != this.variables)
-                {
-                    this.variables = value;
-                    notifyPropertyChanged("Variables");
-                }
+                return this.attributesList;
             }
         }
 
@@ -289,34 +277,16 @@ namespace EX2
         }
 
         
-        /// <summary>
-        /// user moved the time slider.
-        /// </summary>
-        /// <param name="value"></param>
-        public void updateTime(double value)
-        {
-            return;
-        }
-
-
-        protected void notifyPropertyChanged(string propName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
-
-        public List<KeyValuePair<float, float>> SelectedFeature
+        public TimeSpan Time
         {
             get
             {
-                return selectedFeature;
+                return time;
             }
-            set
+            private set
             {
-                if (value != selectedFeature)
-                {
-                    selectedFeature = value;
-                    notifyPropertyChanged("SelectedFeature");
-                }
+                time = value;
+                NotifyPropertyChanged("Time");
             }
         }
 
@@ -331,54 +301,62 @@ namespace EX2
                 if (value != selectedFeature)
                 {
                     correlatedFeature = value;
-                    notifyPropertyChanged("CorrelatedFeature");
+                    //notifyPropertyChanged("CorrelatedFeature");
                 }
             }
         }
         /// <summary>
-        /// User pressed restart button.
+        /// Happens each time the playTimer "ticks" 
         /// </summary>
-        public void restart()
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            Playback_speed = 10;
-            CurrentLinePlaying = 0;
-            // need to check that the thread is still running and maybe restart the flight gear app.
+
+            Time = TimeSpan.FromMilliseconds(currentLinePlaying * 100);
+            Console.WriteLine(this.time);
         }
 
         /// <summary>
-        /// Meaning the playback needs to stop completely and next time restart
+        /// Returns an array of the last 10 values of the specified feauture
         /// </summary>
-        public bool Stop
+        /// <param name="feauture">The feature to get data of</param>
+        /// <returns>An array of floats in size 10 or less</returns>
+        public float[] GetDataOfTheLastSecondByFeature(string feauture)
         {
-            get
+            if (anomalyFlightDict != null)
             {
-                return stop;
-            }
-            set
-            {
-                if (this.stop != value ){
-                    this.stop = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Meaning the playback needs to pause but afterwards play from the same spot
-        /// </summary>
-        public bool Pause
-        {
-            get
-            {
-                return pause;
-            }
-            set
-            {
-                if (value)
+                int lastData = currentLinePlaying - 10;
+                if (lastData > 0)
                 {
-                    this.pause = value;
-                    this.ticks = Timeout.Infinite;
+                    return anomalyFlightDict[feauture].GetRange(lastData, 10).ToArray();
                 }
+                return anomalyFlightDict[feauture].GetRange(0, currentLinePlaying).ToArray();
             }
+            return new float[0];
+        }
+
+        public float GetLastDataOfFeature(string feauture)
+        {
+            if (anomalyFlightDict != null)
+            {
+                return anomalyFlightDict[feauture][currentLinePlaying];
+            }
+            return 0;
+        }
+
+        public void StopPlayback()
+        {
+            stop = true;
+            playTimer.Stop();
+            currentLinePlaying = 0;
+        }
+
+        public void PausePlayback()
+        {
+            pause = true;
+            this.ticks = Timeout.Infinite;
+            playTimer.Stop();
         }
 
         // Holds the path to regular flight CSV file
@@ -395,14 +373,12 @@ namespace EX2
                 if (this.regFlightCSV != value)
                 {
                     this.regFlightCSV = value;
-                    TS_regFlight = Create_Regular_TS(this.regFlightCSV, attributes, attributes.Length);
+                    TS_regFlight = Create_Regular_TS(this.regFlightCSV, attributesArray, attributesArray.Length);
                     regFlightDict = new Dictionary<string, List<float>>();
-                    foreach (var item in attributes)
+                    foreach (var item in attributesArray)
                     {
                         regFlightDict.Add(item, getVectorByName(TS_regFlight, item));
                     }
-
-                    Console.WriteLine("yay");
                     //readCSV(this.regFlightCSV);
                 }
             }
@@ -423,9 +399,9 @@ namespace EX2
                 {
                     this.anomalyFlightCSV = value;
 
-                    TS_anomalyFlight = Create_Regular_TS(anomalyFlightCSV, attributes, attributes.Length);
-                    anomalyFlightDict = new Dictionary<String, List<float>>();
-                    foreach (var item in attributes)
+                    TS_anomalyFlight = Create_Regular_TS(this.anomalyFlightCSV, attributesArray, attributesArray.Length);
+                    anomalyFlightDict = new Dictionary<string, List<float>>();
+                    foreach (var item in attributesArray)
                     {
                         anomalyFlightDict.Add(item, getVectorByName(TS_anomalyFlight, item));
                     }
@@ -462,18 +438,20 @@ namespace EX2
             {
                 // Meaning the playingThread is sleeping infinite time and we need to resume it
                 pause = false;
+                stop = false;
                 this.ticks = 1000 / playbackSpeed;
                 this.playingThread.Interrupt();
+                playTimer.Start();
                 return;
             }
             else if (stop)
             {
                 Console.WriteLine("in the play method in the if stop = true");
                 stop = false;
-                currentLinePlaying = 0;
+                pause = false;
             }
 
-            
+            playTimer.Start();
             //  we now initialize a new thread 
             this.playingThread = new Thread(new ThreadStart(this.playback));
             this.playingThread.Start();
@@ -504,15 +482,14 @@ namespace EX2
                         */
                         line = getLine(this.currentLinePlaying);
                         line += "\r\n";
-                        Console.WriteLine(line);
-                        currentLinePlaying++;
-                        Console.WriteLine("The current line index is:");
-                        Console.WriteLine(currentLinePlaying);
-                        Console.WriteLine("The playback speed is:");
-                        Console.WriteLine(playbackSpeed);
-                        Console.WriteLine("The ticks:");
-                        Console.WriteLine(ticks);
+                                                
                         Thread.Sleep(ticks);
+
+                        currentLinePlaying++;
+                        if (currentLinePlaying == dataByLines.Count)
+                        {
+                            StopPlayback();
+                        }
                     }
                     catch (ThreadInterruptedException e)
                     {
@@ -551,6 +528,15 @@ namespace EX2
         }
 
         /// <summary>
+        /// Returns the number of samples received in the CSV aka - number of lines
+        /// </summary>
+        /// <returns>Number of samples in the CSV</returns>
+        public int NumberOfFlighSamples()
+        {
+            return dataByLines.Count;
+        }
+
+        /// <summary>
         /// Temp function untill we have ts, gets the specific line 
         /// </summary>
         /// <param name="csvPath"></param>
@@ -573,7 +559,7 @@ namespace EX2
         /// </summary>
         public void parseXML()
         {
-            List<string> attributes_list = new List<string>();
+            attributesList = new List<string>();
 
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.IgnoreWhitespace = true;
@@ -602,19 +588,19 @@ namespace EX2
                         {
                             reader.Read();
                             att = reader.ReadString();
-                            if (attributes_list.Contains(att) == true)
+                            if (attributesList.Contains(att) == true)
                             {
                                 att += "1";
                             }
-                            attributes_list.Add(att);
+                            attributesList.Add(att);
                         }
                     }
                     reader.Read();
                 }
             }
 
-            this.Variables = attributes_list;
-            attributes = attributes_list.ToArray();
+            
+            attributesArray = attributesList.ToArray();
             if (reader != null)
                 reader.Close();
 
