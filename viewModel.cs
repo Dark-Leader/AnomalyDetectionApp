@@ -22,9 +22,6 @@ namespace EX2
 {
     public partial class ViewModel : INotifyPropertyChanged
     {
-
-
-
         //INotifyPropertyChanged 
         public event PropertyChangedEventHandler PropertyChanged;
 
