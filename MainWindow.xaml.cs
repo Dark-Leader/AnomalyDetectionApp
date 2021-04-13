@@ -39,8 +39,8 @@ namespace EX2
         {
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.Multiselect = true;
-            openDialog.Filter = "Log Files|* .log|Textfiles|*.txt|All files|*.*";
-            openDialog.DefaultExt = ".log";
+            openDialog.Filter = "All files|*.*";
+            openDialog.DefaultExt = ".*";
             Nullable<bool> dialogOK = openDialog.ShowDialog();
             if (dialogOK == true)
             {

@@ -7,7 +7,7 @@
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:meter="clr-namespace:DllMeter;assembly=DllMeter" xmlns:ex2="clr-namespace:EX2"
         x:Class="EX2.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1000">
+        Title="MainWindow" Height="450" Width="1050">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70*"/>
@@ -37,7 +37,7 @@
 
                 <Image Grid.Row="0" Grid.Column="0" Source="{Binding TopGraphImageSource}"/>
                 <Image Grid.Row="0" Grid.Column="1" Source="{Binding TopGraphImageSource2}"/>
-                <Image Grid.Row="1" Grid.Column="0" Source="{Binding BottomGraphImageSource}" Grid.ColumnSpan="2"/>
+                <Image Grid.Row="1" Grid.Column="0" Source="{Binding BottomGraphImageSource}" Grid.ColumnSpan="2" Margin="0,0,36,0"/>
                 <Grid Grid.Row="0" Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="15*"/>
@@ -57,24 +57,28 @@
                 </Grid>
 
                 <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="3">
-                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Lime" ClipToBounds="False"
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Lime" ClipToBounds="False" Width="250"
                               SM_Foreground1="Red" SM_Description="Altimeter" SM_Minimum="-100" SM_Maximum="1000" SM_MeterValue="{Binding Altimeter}"/>
                 </Viewbox>
                 <Viewbox Stretch="Uniform" Grid.Row="0" Grid.Column="4">
-                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Violet" ClipToBounds="False" 
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Violet" ClipToBounds="False" Width="250"
                               SM_Foreground1="Red" SM_Description="Airspeed" SM_Minimum="0" SM_Maximum="200" SM_MeterValue="{Binding Airspeed}"/>
                 </Viewbox>
-                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="2">
-                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Green" ClipToBounds="False" 
+                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="104,5,67,-5">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Green" ClipToBounds="False" Width="250"
                               SM_Foreground1="Red" SM_Description="FlightDirection" SM_Minimum="0" SM_Maximum="360" SM_MeterValue="{Binding FlightDirection}"/>
                 </Viewbox>
-                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="3">
-                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Brown" ClipToBounds="False" 
+                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Margin="67,5,103,-5">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Brown" ClipToBounds="False" Width="250"
                               SM_Foreground1="Red" SM_Description="Pitch" SM_Minimum="-90" SM_Maximum="90" SM_MeterValue="{Binding Pitch}"/>
                 </Viewbox>
-                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="4">
-                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Blue" ClipToBounds="False" 
+                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="4" Margin="31,5,-31,-5">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Blue" ClipToBounds="False" Width="250"
                               SM_Foreground1="Red" SM_Description="Yaw" SM_Minimum="-180" SM_Maximum="180" SM_MeterValue="{Binding Yaw}"/>
+                </Viewbox>
+                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="1" Margin="134,4,31,-4" Grid.ColumnSpan="2">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Blue" ClipToBounds="False" Width="250"
+                              SM_Foreground1="Red" SM_Description="Roll" SM_Minimum="-90" SM_Maximum="90" SM_MeterValue="{Binding Roll}"/>
                 </Viewbox>
             </Grid>
         </Grid>

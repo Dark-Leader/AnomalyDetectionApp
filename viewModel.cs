@@ -123,6 +123,7 @@ namespace EX2
             OnPropertyChanged(nameof(FlightDirection));
             OnPropertyChanged(nameof(Pitch));
             OnPropertyChanged(nameof(Yaw));
+            OnPropertyChanged(nameof(Roll));
         }
         //the current 10 lines or whatever value we chose.
         public float[] CurrentDataSet
@@ -221,6 +222,8 @@ namespace EX2
         public double Altimeter => model["altimeter_indicated-altitude-ft"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double AltimeterMin = -100;
         public double AltimeterMax = 1000;
+
+        public double Roll => model["roll-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
 
         public double Airspeed => model["airspeed-indicator_indicated-speed-kt"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double AirspeedMin = 0;
