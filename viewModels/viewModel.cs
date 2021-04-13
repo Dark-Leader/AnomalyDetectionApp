@@ -56,6 +56,7 @@ namespace EX2
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
+        /*
         /// <summary>
         /// vector of points of the feature selected by the user.
         /// </summary>
@@ -64,7 +65,7 @@ namespace EX2
             {
                 return this.model.SelectedFeature;
             } 
-        }
+        }*/
         /// <summary>
         /// vector of points of the correlated feature to the selected feature.
         /// </summary>
@@ -75,6 +76,7 @@ namespace EX2
                 return this.model.CorrelatedFeature;
             }
         }
+        /*
         /// <summary>
         /// vector of strings holding all column names in csv/xml file.
         /// </summary>
@@ -85,6 +87,7 @@ namespace EX2
                 return this.model.Variables;
             }
         }
+
         /// <summary>
         /// current time passed in 'XX:XX:XX' format.
         /// </summary>
@@ -105,6 +108,6 @@ namespace EX2
         {
             model.variableSelected(name);
         }
-        
+        */
     }
 }

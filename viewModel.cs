@@ -23,6 +23,107 @@ namespace EX2
     public partial class ViewModel : INotifyPropertyChanged
     {
 
+        private FlightSimulator sim;
+
+        // Constructor
+        public ViewModel(FlightSimulator sim)
+        {
+            //Test version of model. Just for testing
+            this.sim = sim;
+
+            this.sim.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
+            {
+                OnPropertyChanged("VM_" + e.PropertyName);
+            };
+
+            //Model = new FrameStack(sim);
+
+            /*
+            ChangeSpeedCommand = new RelayCommand((s) =>
+            {
+                var deltaSpeedMultiplier = Convert.ToDouble(s, System.Globalization.CultureInfo.InvariantCulture);
+                //Change timer speed only on new frame start not to make "double resetting" if it is running now
+
+                if (playTimer.Enabled)
+                {
+                    ElapsedEventHandler dlg = null;
+                    dlg = (s1, e1) =>
+                    {
+                        SpeedMultiplier += deltaSpeedMultiplier;
+                        playTimer.Elapsed -= dlg;
+                    };
+                    playTimer.Elapsed += dlg;
+                }
+                else
+                {
+                    SpeedMultiplier += deltaSpeedMultiplier;
+                }
+
+            });
+
+            PauseCommand = new RelayCommand((s) =>
+            {
+                //not used at the moment.
+                if (SelectedProperty == null)
+                {
+                    MessageBox.Show("Chose the property in the listbox to show");
+                    return;
+                }
+
+                var newStateIsPlaying = Convert.ToBoolean(s);
+
+                if (newStateIsPlaying)
+                {
+                    if (CurrentFrame == SliderMaximum)
+                    {
+                        CurrentFrame = 0;
+                    }
+
+                    playTimer.Start();
+                }
+                else
+                {
+                    playTimer.Stop();
+                }
+            });
+
+            StopCommand = new RelayCommand((s) =>
+            {
+                playTimer.Stop();
+                CurrentFrame = 0;
+            });
+            */
+            //UpdateTimerInterval();
+
+            /*
+            playTimer.Elapsed += (s, e) =>
+            {
+                try
+                {
+                    //Executing this in main (UI) thread because otherwise it will not push UI to update
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        //If timer is still enabled (fixes behavior when elapsed task appears in threadpool earlier when stop-command)
+                        if (playTimer.Enabled)
+                        {
+                            if (CurrentFrame != SliderMaximum)
+                            {
+                                CurrentFrame++;
+                            }
+                            else
+                            {
+                                playTimer.Stop();
+                            }
+                        }
+                    });
+                }
+                catch
+                {
+
+                }
+            };
+            */
+        }
 
 
         //INotifyPropertyChanged 
@@ -38,39 +139,39 @@ namespace EX2
         //responsible for the amount of lines read per second.
         private const int BUFFER_SIZE = 10;
         private const int BASE_FRAMERATE_PER_SECOND = 10;
-        private FlightSimulator sim;
 
 
-
-        private FrameStack model;
-        private FrameStack Model 
-        { 
-            get
-            {
-                return model;
-            }
-            set
-            {
-                model = value;
-                OnPropertyChanged(nameof(Model));
-                OnPropertyChanged(nameof(FrameStackProperties));
-                OnPropertyChanged(nameof(SliderMaximum));
-            }
-        }
-
-        public List<string> FrameStackProperties
+        public List<string> VM_AttributesList
         {
             get
             {
-                return Model?.Properties ?? new List<string>();
+                return sim.AttributesList;
+                //return Model?.Properties ?? new List<string>();
             }
         }
+
+
         //resposible for the slider's value.
         public int SliderMaximum
         {
             get
             {
-                return (model?.Count - 1 - BUFFER_SIZE) ?? 0;
+                //return (model?.Count - 1 - BUFFER_SIZE) ?? 0;
+                return (sim?.NumberOfFlighSamples() - 1) ?? 0;
+            }
+        }
+
+        private int sliderposition;
+
+        public int SliderPosition
+        {
+            get
+            {
+                return sliderposition;
+            }
+            set
+            {
+                sliderposition = value;
             }
         }
 
@@ -85,22 +186,6 @@ namespace EX2
             {
                 selectedItem = (string)value;
                 OnPropertyChanged(nameof(SelectedProperty));
-                DataPropertyChanged();
-            }
-        }
-
-        private int currentFrame;
-        public int CurrentFrame
-        {
-            get
-            {
-                return currentFrame;
-            }
-            set
-            {
-                currentFrame = value;
-                OnPropertyChanged(nameof(CurrentFrame));
-                OnPropertyChanged(nameof(CurrentTime));
                 DataPropertyChanged();
             }
         }
@@ -123,7 +208,9 @@ namespace EX2
             OnPropertyChanged(nameof(FlightDirection));
             OnPropertyChanged(nameof(Pitch));
             OnPropertyChanged(nameof(Yaw));
+            OnPropertyChanged(nameof(Roll)); // Lola - TODO ADD
         }
+
         //the current 10 lines or whatever value we chose.
         public float[] CurrentDataSet
         {
@@ -131,7 +218,8 @@ namespace EX2
             {
                 try
                 {
-                    return model[(string)SelectedProperty].Skip(currentFrame + 1).Take(BUFFER_SIZE).ToArray();
+                    //return model[(string)SelectedProperty].Skip(currentFrame + 1).Take(BUFFER_SIZE).ToArray();
+                    return sim.GetDataOfTheLastSecondByFeature((string)SelectedProperty);
                 }
                 catch
                 {
@@ -140,44 +228,27 @@ namespace EX2
             }
         }
 
-        private double speedMultiplier = 1;
-        public double SpeedMultiplier
+        public double VM_Playback_speed
         {
             get
             {
-                return speedMultiplier;
-            }
-            set
-            {
-                if(Math.Round(value, 6) > 0)
-                {
-                    speedMultiplier = value;
-                    UpdateTimerInterval();
-                    OnPropertyChanged(nameof(SpeedMultiplier));
-                    OnPropertyChanged(nameof(CurrentFrameRate));
-                    OnPropertyChanged(nameof(CurrentTime));
-                }
+                return Convert.ToDouble(this.sim.Playback_speed) / 10;
             }
         }
 
-        public double CurrentFrameRate
+        public TimeSpan VM_Time
         {
             get
             {
-                return BASE_FRAMERATE_PER_SECOND * SpeedMultiplier;
-            }
-        }
-        //gives us the time of the current value if the time.
-        public TimeSpan CurrentTime
-        {
-            get
-            {
-                return TimeSpan.FromMilliseconds(CurrentFrame * playTimer.Interval);
+                Console.WriteLine("in the VM_TIME in VM updated;");
+                DataPropertyChanged();
+                return this.sim.Time;
+
             }
         }
 
         #region BindedProperties
- //top first graph on the left which shows the information. based on user pick. 
+        //top first graph on the left which shows the information. based on user pick. 
         public DrawingImage TopGraphImageSource
         {
             get
@@ -208,137 +279,63 @@ namespace EX2
             }
         }
 
-        public double AileronProperty => model["aileron"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
-        public double ElevatorPropery => model["elevator"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        //public double AileronProperty => model["aileron"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double AileronProperty => sim.GetLastDataOfFeature("aileron");
+        //public double ElevatorPropery => model["elevator"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double ElevatorPropery => sim.GetLastDataOfFeature("elevator");
+        //public double Throttle => model["throttle"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double Throttle => sim.GetLastDataOfFeature("throttle");
 
-        public double Throttle => model["throttle"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
-
-        public double Rudder => model["rudder"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        //public double Rudder => model["rudder"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double Rudder => sim.GetLastDataOfFeature("rudder");
         public double RudderMin = 0;
         public double RudderMax = 1;
 
-       
-        public double Altimeter => model["altimeter_indicated-altitude-ft"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
-        public double AltimeterMin = -100;
-        public double AltimeterMax = 1000;
 
-        public double Airspeed => model["airspeed-indicator_indicated-speed-kt"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
-        public double AirspeedMin = 0;
-        public double AirspeedMax => model["airspeed-indicator_indicated-speed-kt"].Max();
+        //public double Altimeter => model["altimeter_indicated-altitude-ft"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double Altimeter => sim.GetLastDataOfFeature("altimeter_indicated-altitude-ft");
+        public double AltimeterMin = -20;
+        public double AltimeterMax = 700;
 
-        public double FlightDirection => model["indicated-heading-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
-        public double FlightDirectionMin => model["indicated-heading-deg"].Min();
-        public double FlightDirectionMax => model["indicated-heading-deg"].Max();
+        //public double Airspeed => model["airspeed-indicator_indicated-speed-kt"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double Airspeed => sim.GetLastDataOfFeature("airspeed-indicator_indicated-speed-kt");
+        public double AirspeedMin = -1;
+        public double AirspeedMax => 100;
 
-        public double Pitch => model["pitch-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
-        public double PitchMin => model["pitch-deg"].Min();
-        public double PitchMax => model["pitch-deg"].Max();
+        //public double FlightDirection => model["indicated-heading-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double FlightDirection => sim.GetLastDataOfFeature("indicated-heading-deg");
+        public double FlightDirectionMin => 0;
+        public double FlightDirectionMax => 370;
 
-        public double Yaw => model["side-slip-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
-        public double YawMin => model["side-slip-deg"].Min();
-        public double YawMax => model["side-slip-deg"].Max();
+        //public double Pitch => model["pitch-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double Pitch => sim.GetLastDataOfFeature("pitch-deg");
+        public double PitchMin => -10;
+        public double PitchMax => 20;
+
+        //public double Yaw => model["side-slip-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
+        public double Yaw => sim.GetLastDataOfFeature("side-slip-deg");
+        public double YawMin => -30;
+        public double YawMax => 90;
+
+        public double Roll => sim.GetLastDataOfFeature("roll-deg");
+        public double RollMin => -40;
+        public double RollMax => 20;
 
         #endregion
 
-        public RelayCommand StopCommand { get; private set; } 
+        public RelayCommand StopCommand { get; private set; }
 
-        public RelayCommand PauseCommand { get; private set; } 
+        public RelayCommand PauseCommand { get; private set; }
 
         public RelayCommand ChangeSpeedCommand { get; private set; }
 
-        public ViewModel(FlightSimulator sim)
-        {
-            //Test version of model. Just for testing
-            this.sim = sim;
-            Model = new FrameStack(sim);
 
-            ChangeSpeedCommand = new RelayCommand((s) =>
-            {
-                var deltaSpeedMultiplier = Convert.ToDouble(s, System.Globalization.CultureInfo.InvariantCulture);
-                //Change timer speed only on new frame start not to make "double resetting" if it is running now
-
-                if(playTimer.Enabled)
-                {
-                    ElapsedEventHandler dlg = null;
-                    dlg = (s1, e1) =>
-                    {
-                        SpeedMultiplier += deltaSpeedMultiplier;
-                        playTimer.Elapsed -= dlg;
-                    };
-                    playTimer.Elapsed += dlg;
-                }
-                else
-                {
-                    SpeedMultiplier += deltaSpeedMultiplier;
-                }
-
-            });
-
-            PauseCommand = new RelayCommand((s) =>
-            {
-                //not used at the moment.
-                if(SelectedProperty == null)
-                {
-                    MessageBox.Show("Chose the property in the listbox to show");
-                    return;
-                }
-
-                var newStateIsPlaying = Convert.ToBoolean(s);
-
-                if(newStateIsPlaying)
-                {
-                    if (CurrentFrame == SliderMaximum)
-                    {
-                        CurrentFrame = 0;
-                    }
-
-                    playTimer.Start();
-                }
-                else
-                {
-                    playTimer.Stop();
-                }
-            });
-
-            StopCommand = new RelayCommand((s) =>
-            {
-                playTimer.Stop();
-                CurrentFrame = 0;
-            });
-
-            UpdateTimerInterval();
-            playTimer.Elapsed += (s, e) =>
-            {
-                try
-                {
-                    //Executing this in main (UI) thread because otherwise it will not push UI to update
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        //If timer is still enabled (fixes behavior when elapsed task appears in threadpool earlier when stop-command)
-                        if (playTimer.Enabled)
-                        {
-                            if (CurrentFrame != SliderMaximum)
-                            {
-                                CurrentFrame++;
-                            }
-                            else
-                            {
-                                playTimer.Stop();
-                            }
-                        }
-                    });
-                }
-                catch
-                {
-
-                }
-            };
-        }
-
+        /*
         private void UpdateTimerInterval()
         {
             playTimer.Interval = 1000 / CurrentFrameRate;
-        }
+        }*/
+
         private DrawingGroup GetGraphGroup(float[] Data, bool dots, int width = 10, int height = 10, int maximum = 5)
         {
             DrawingGroup aDrawingGroup = new DrawingGroup();
@@ -364,7 +361,7 @@ namespace EX2
 
                 if (DrawingStage == 3)
                 {
-                    if(!dots)
+                    if (!dots)
                     {
                         drw.Brush = Brushes.White;
                         drw.Pen = new Pen(Brushes.Black, 0.05);
@@ -451,27 +448,16 @@ namespace EX2
             return aDrawingGroup;
         }
 
-
         public void set_train_csv(string name)
         {
             sim.RegFlightCSV = name;
-            update_data();
+            //update_data();
 
         }
 
-        public void update_data()
+        public void set_test_csv(string name)
         {
-            Dictionary<string, List<float>> data = Model.Frames;
-            Dictionary<string, List<float>> frames = sim.RegFlightDict;
-            foreach (string var in sim.Variables)
-            {
-                data[var] = frames[var];
-            }
-
-        }
-        public void set_test_csv(String name)
-        {
-            sim.AnomalyFlightCSV = name; // PRODUCES RUNTIME ERROR !!!
+            sim.AnomalyFlightCSV = name; //PRODUCES RUNTIME ERROR !!!
         }
 
         public void set_flight_gear(string name)
@@ -482,7 +468,7 @@ namespace EX2
         public void change_speed(int value)
         {
             sim.Playback_speed += value;
-            
+
         }
 
         /// <summary>
@@ -498,77 +484,16 @@ namespace EX2
         /// </summary>
         public void stop()
         {
-            sim.Pause = true;
+            sim.PausePlayback();
         }
 
         /// <summary>
         /// This button stops the playback and next time it will play from the start
         /// </summary>
         public void restart()
-        {            
-            sim.Stop = true;
-        }
-
-    }
-
-
-
-    //general format of accepting information to be presented.
-    class FrameStack
-    {
-        private Dictionary<string, List<float>> frames;
-
-
-        public Dictionary<string, List<float>> Frames
         {
-            get
-            {
-                return frames;
-            }
-            set
-            {
-                Frames = value;
-            }
-        }
-        public List<string> Properties
-        {
-            get
-            {
-                return frames.Keys.ToList();
-            }
+            sim.StopPlayback();
         }
 
-        public List<float> this[string propertyName]
-        {
-            get
-            {
-                return frames[propertyName];
-            }
-        }
-
-        public int Count
-        {
-            get
-            {
-                return frames.First().Value.Count;
-            }
-        }
-
-        public FrameStack(FlightSimulator sim)
-        {
-            //altimeter,airspeed,flight direction,pitch,yaw,roll
-            //TEST DATA INJECTING
-            
-            frames = new Dictionary<string, List<float>>();
-            
-            foreach (string var in sim.Variables)
-            {
-                frames.Add(var, new List<float>());
-                for (int i = 0; i < 10; i++) {
-                    frames[var].Add(0);
-                }
-
-            }
-        }
     }
 }
