@@ -469,9 +469,9 @@ namespace EX2
             }
 
         }
-        public void set_test_csv(string name)
+        public void set_test_csv(String name)
         {
-            // sim.AnomalyFlightCSV = name; PRODUCES RUNTIME ERROR !!!
+            sim.AnomalyFlightCSV = name; // PRODUCES RUNTIME ERROR !!!
         }
 
         public void set_flight_gear(string name)
