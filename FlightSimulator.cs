@@ -288,7 +288,7 @@ namespace EX2
         /// <returns>An array of floats in size 10 or less</returns>
         public float[] GetDataOfTheLastSecondByFeature(string feauture)
         {
-            try
+            if (anomalyFlightDict != null)
             {
                 int lastData = currentLinePlaying - 10;
                 if (lastData > 0)
@@ -297,17 +297,16 @@ namespace EX2
                 }
                 return anomalyFlightDict[feauture].GetRange(0, currentLinePlaying).ToArray();
             }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Generic Exception Handler: {e}");
-                return new float[0];
-            }
-            //anomalyFlightDict
+            return new float[0];
         }
 
         public float GetLastDataOfFeature(string feauture)
         {
-            return anomalyFlightDict[feauture][currentLinePlaying];
+            if (anomalyFlightDict != null)
+            {
+                return anomalyFlightDict[feauture][currentLinePlaying];
+            }
+            return 0;
         }
 
         public void StopPlayback()
