@@ -124,7 +124,7 @@
 
                 <StackPanel Orientation="Vertical" Margin="10, 0, 0, 0">
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" Text="Time:"/>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="20" Text="{Binding VM_Time, Mode=OneWay}"/>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="20" Text="{Binding VM_Time, Mode=OneWay, StringFormat=hh\\:mm\\:ss}"/>
                 </StackPanel>
 
             </StackPanel>

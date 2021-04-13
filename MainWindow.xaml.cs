@@ -54,10 +54,12 @@ namespace EX2
                 if (b.Name == "Open_train_csv")
                 {
                     vm.set_train_csv(fileNames);
-                } else if (b.Name == "Open_test_csv")
+                }
+                else if (b.Name == "Open_test_csv")
                 {
                     vm.set_test_csv(fileNames);
-                } else
+                }
+                else
                 {
                     vm.set_flight_gear(fileNames);
                 }
@@ -66,7 +68,7 @@ namespace EX2
 
         private void change_speed(object sender, RoutedEventArgs e)
         {
-            
+
             Button b = (Button)sender;
             switch (b.Name)
             {

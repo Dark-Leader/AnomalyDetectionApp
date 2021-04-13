@@ -30,7 +30,7 @@ namespace EX2
         {
             //Test version of model. Just for testing
             this.sim = sim;
-            
+
             this.sim.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e)
             {
                 OnPropertyChanged("VM_" + e.PropertyName);
@@ -94,7 +94,7 @@ namespace EX2
             });
             */
             //UpdateTimerInterval();
-            
+
             /*
             playTimer.Elapsed += (s, e) =>
             {
@@ -139,8 +139,8 @@ namespace EX2
         //responsible for the amount of lines read per second.
         private const int BUFFER_SIZE = 10;
         private const int BASE_FRAMERATE_PER_SECOND = 10;
-        
-        
+
+
         public List<string> VM_AttributesList
         {
             get
@@ -218,9 +218,9 @@ namespace EX2
 
         public double VM_Playback_speed
         {
-            get 
+            get
             {
-                return Convert.ToDouble(this.sim.Playback_speed) / 10; 
+                return Convert.ToDouble(this.sim.Playback_speed) / 10;
             }
         }
 
@@ -236,7 +236,7 @@ namespace EX2
         }
 
         #region BindedProperties
- //top first graph on the left which shows the information. based on user pick. 
+        //top first graph on the left which shows the information. based on user pick. 
         public DrawingImage TopGraphImageSource
         {
             get
@@ -282,18 +282,18 @@ namespace EX2
 
         //public double Altimeter => model["altimeter_indicated-altitude-ft"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double Altimeter => sim.GetLastDataOfFeature("altimeter_indicated-altitude-ft");
-        public double AltimeterMin = -20;
-        public double AltimeterMax = 700;
+        public double AltimeterMin = -100;
+        public double AltimeterMax = 1000;
 
         //public double Airspeed => model["airspeed-indicator_indicated-speed-kt"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double Airspeed => sim.GetLastDataOfFeature("airspeed-indicator_indicated-speed-kt");
-        public double AirspeedMin = -1;
+        public double AirspeedMin = 0;
         public double AirspeedMax => 100;
 
         //public double FlightDirection => model["indicated-heading-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double FlightDirection => sim.GetLastDataOfFeature("indicated-heading-deg");
         public double FlightDirectionMin => 0;
-        public double FlightDirectionMax => 370;
+        public double FlightDirectionMax => 400;
 
         //public double Pitch => model["pitch-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double Pitch => sim.GetLastDataOfFeature("pitch-deg");
@@ -303,10 +303,10 @@ namespace EX2
         //public double Yaw => model["side-slip-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double Yaw => sim.GetLastDataOfFeature("side-slip-deg");
         public double YawMin => -30;
-        public double YawMax => 90;
+        public double YawMax => 100;
 
         public double Roll => sim.GetLastDataOfFeature("roll-deg");
-        public double RollMin => -40;
+        public double RollMin => -50;
         public double RollMax => 20;
 
         public int VM_CurrentLinePlaying
@@ -323,13 +323,13 @@ namespace EX2
 
         #endregion
 
-        public RelayCommand StopCommand { get; private set; } 
+        public RelayCommand StopCommand { get; private set; }
 
-        public RelayCommand PauseCommand { get; private set; } 
+        public RelayCommand PauseCommand { get; private set; }
 
         public RelayCommand ChangeSpeedCommand { get; private set; }
 
-        
+
         /*
         private void UpdateTimerInterval()
         {
@@ -361,7 +361,7 @@ namespace EX2
 
                 if (DrawingStage == 3)
                 {
-                    if(!dots)
+                    if (!dots)
                     {
                         drw.Brush = Brushes.White;
                         drw.Pen = new Pen(Brushes.Black, 0.05);
@@ -459,7 +459,7 @@ namespace EX2
 
         public void set_test_csv(string name)
         {
-             sim.AnomalyFlightCSV = name; //PRODUCES RUNTIME ERROR !!!
+            sim.AnomalyFlightCSV = name; //PRODUCES RUNTIME ERROR !!!
         }
 
         public void set_flight_gear(string name)
@@ -470,7 +470,7 @@ namespace EX2
         public void change_speed(int value)
         {
             sim.Playback_speed += value;
-            
+
         }
 
         /// <summary>

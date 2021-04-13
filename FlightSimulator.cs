@@ -24,35 +24,41 @@ namespace EX2
         /// /////////////////////////////////external functions for TimeSeries//////////////////////////////
 
         /*TS*/
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]//working
-        public static extern IntPtr Create_Anomalies_TS(String fileName);
 
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)] //working
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //Creating pointer to anomalies TimeSeries
         public static extern IntPtr Create_Regular_TS(String fileName, String[] atts, int size);
 
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)] //working
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //creating a pointer for the RowSize
         public static extern IntPtr Extern_getRowSize(IntPtr ts);
 
         /*Data-Wrapper*/
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)] //working
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //Creating a float Wrapper for a given string
         public static extern IntPtr CreateWrappedData(IntPtr ts, String s);
-
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)] //working
+        //helper method
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //given that wrapper, return it's size
         public static extern int Data_Wrapper_size(IntPtr DW);
-
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]//working
+        //helper method
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //given that wrapper, get a value based on an index
         public static extern float Data_Wrapper_getter(IntPtr DW, int i);
 
 
-        /*Attributes-Wrapper*/
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr CreateWrappedAttributes(IntPtr ts);
+        /*AnomalyDetector */
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //Creates pointer to AnomalyDetector
+        public static extern IntPtr Create_SimpleAnomalyDetector();
+        /*LearnNormal with that Detector
+         writes into a txt file called 'Correlated', the correlated features
+        API- "feature1" "feature2*/
 
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int Attributes_Wrapper_size(IntPtr AW);
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] 
+        public static extern void LearnNormal(IntPtr AD, IntPtr TS);
+        /*Detect using that Detector
+        writes into a txt file called 'Anomalies', the anomalies from the flight
+        API- "feature1" "feature2" "timestamp"*/
 
-        [DllImport("TS_DLL.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern String Attributes_Wrapper_getter(IntPtr AW);
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] 
+        public static extern void Detect(IntPtr AD, IntPtr TS);
+
+
 
         ///////////////////////////////////////////real content of class////////////////////////////////////
 
@@ -63,6 +69,9 @@ namespace EX2
 
         //TimeSeries for the anomaly flight
         private IntPtr TS_anomalyFlight;
+
+        //AnomalyDetector
+        private IntPtr AnomalyDetector;
 
         // Will hold all the data of the regular flight csv. attributes are the keys
         private Dictionary<string, List<float>> regFlightDict;
@@ -149,6 +158,33 @@ namespace EX2
 
             client = new Client();
 
+
+            //test code for AnomalyDetector
+
+            //paths
+            //String Reg_ts_path = "C:\\Users\\USER\\Desktop\\reg_flight.csv"; //with NO features(for beggining of programm)
+            //String Ano_ts_path = "C:\\Users\\USER\\Desktop\\anomaly_flight.csv";
+
+            //part A- learn according to reg CSV file
+            //IntPtr Regular_TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
+            ////List<float> list = getVectorByName(Regular_TS, "aileron");
+            //////test
+            ////foreach(var x in list)
+            ////{
+            ////    Console.WriteLine(x);
+            ////}
+
+            //IntPtr AW = CreateWrappedAttributes(Regular_TS);
+            //Console.WriteLine(Attributes_Wrapper_size(AW));
+
+            //IntPtr AD = Create_SimpleAnomalyDetector(); //AnomalyDetector
+            //LearnNormal(AD, Regular_TS); //test - LearnNormal by the initial CSV file
+
+
+            //Part B- Detect anomalies based on anomalies CSV file
+            //IntPtr Anomalies_TS = Create_Regular_TS(Ano_ts_path, attributes, attributes.Length);
+            //Detect(AD, Anomalies_TS);
+
             playTimer.Elapsed += (s, e) =>
             {
                 if (playTimer.Enabled)
@@ -157,6 +193,7 @@ namespace EX2
                 }
             };
         }
+
 
         public void NotifyPropertyChanged(string propName)
         {

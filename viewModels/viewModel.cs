@@ -86,9 +86,8 @@ namespace EX2
             {
                 return this.model.Variables;
             }
-        }*/
+        }
 
-        /*
         /// <summary>
         /// current time passed in 'XX:XX:XX' format.
         /// </summary>
@@ -98,17 +97,17 @@ namespace EX2
             {
                 return this.model.Time;
             }
-        }*/
-        /*
+        }
+        
         public void updateTime(double value)
         {
             this.model.updateTime(value);
         }
-        */
+
         public void variableSelected(string name)
         {
             model.variableSelected(name);
         }
-        
+        */
     }
 }
