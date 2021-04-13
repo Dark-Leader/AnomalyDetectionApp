@@ -80,13 +80,15 @@ namespace EX2
         private IntPtr TS_anomalyFlight;
 
         //AnomalyDetector
-        private IntPtr AnomalyDetector;
+        private IntPtr AnomalyDetector = Create_SimpleAnomalyDetector();
 
         // Will hold all the data of the regular flight csv. attributes are the keys
         private Dictionary<string, List<float>> regFlightDict;
 
         // Will hold all the data of the anomaly flight csv. attributes are the keys
         private Dictionary<string, List<float>> anomalyFlightDict;
+
+        private Dictionary<string, string> correlatedFeatures = new Dictionary<string, string>();
 
         private int sliderMax = 2000;
 
@@ -103,6 +105,17 @@ namespace EX2
             }
         }
 
+        public Dictionary<string, string> Correlated
+        {
+            get
+            {
+                return correlatedFeatures;
+            }
+            set
+            {
+                correlatedFeatures = value;
+            }
+        }
 
         // List of attributes as read from XML
         List<string> attributesList;
@@ -403,6 +416,18 @@ namespace EX2
             playTimer.Stop();
         }
 
+        private void parse_correlatedFeatures()
+        {
+            string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+            filePath += "\\Correlated.txt";
+            string[] lines = System.IO.File.ReadAllLines(filePath);
+            foreach (string line in lines)
+            {
+                string[] vars = line.Split(' ');
+                Correlated.Add(vars[0], vars[1]);
+            }
+        }
+
         // Holds the path to regular flight CSV file
         private string regFlightCSV;
 
@@ -423,7 +448,8 @@ namespace EX2
                     {
                         regFlightDict.Add(item, getVectorByName(TS_regFlight, item));
                     }
-                    //readCSV(this.regFlightCSV);
+                    LearnNormal(AnomalyDetector, TS_regFlight);
+                    parse_correlatedFeatures();
                 }
             }
         }
@@ -449,6 +475,7 @@ namespace EX2
                     {
                         anomalyFlightDict.Add(item, getVectorByName(TS_anomalyFlight, item));
                     }
+                    Detect(AnomalyDetector, TS_anomalyFlight);
                 }
             }
         }

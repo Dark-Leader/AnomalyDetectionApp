@@ -178,11 +178,21 @@ namespace EX2
             }
         }
 
+        public string CorrelatedFeature
+        {
+            get
+            {
+                return this.sim.Correlated[(string)selectedItem];
+            } 
+            
+        }
+
         //here  we bind all the features(graphs,clocks etc),
         //and they are being notified when certain change occured.
         private void DataPropertyChanged()
         {
             OnPropertyChanged(nameof(CurrentDataSet));
+            OnPropertyChanged(nameof(CorrelatedDataSet));
             OnPropertyChanged(nameof(TopGraphImageSource));
             OnPropertyChanged(nameof(TopGraphImageSource2));
             OnPropertyChanged(nameof(BottomGraphImageSource));
@@ -196,7 +206,7 @@ namespace EX2
             OnPropertyChanged(nameof(FlightDirection));
             OnPropertyChanged(nameof(Pitch));
             OnPropertyChanged(nameof(Yaw));
-            OnPropertyChanged(nameof(Roll)); // Lola - TODO ADD
+            OnPropertyChanged(nameof(Roll));
         }
 
         //the current 10 lines or whatever value we chose.
@@ -208,6 +218,21 @@ namespace EX2
                 {
                     //return model[(string)SelectedProperty].Skip(currentFrame + 1).Take(BUFFER_SIZE).ToArray();
                     return sim.GetDataOfTheLastSecondByFeature((string)SelectedProperty);
+                }
+                catch
+                {
+                    return new float[0];
+                }
+            }
+        }
+
+        public float[] CorrelatedDataSet
+        {
+            get
+            {
+                try
+                {
+                    return sim.GetDataOfTheLastSecondByFeature(CorrelatedFeature);
                 }
                 catch
                 {
@@ -251,9 +276,10 @@ namespace EX2
         {
             get
             {
-                var ds = CurrentDataSet;
+                var ds = CorrelatedDataSet;
+                Console.WriteLine(ds);
 
-                return new DrawingImage(GetGraphGroup(ds, false, 10, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CurrentDataSet.Min()), Math.Abs(CurrentDataSet.Max()))) : 1));
+                return new DrawingImage(GetGraphGroup(ds, false, 10, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CorrelatedDataSet.Min()), Math.Abs(CorrelatedDataSet.Max()))) : 1));
             }
         }
         //bottom graph.
