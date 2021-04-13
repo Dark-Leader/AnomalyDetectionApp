@@ -58,7 +58,16 @@ namespace EX2
         [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] 
         public static extern void Detect(IntPtr AD, IntPtr TS);
 
-
+        /*Line*/
+        //API - get A pointer to Line based on feature name 
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr GetLineByFeature(IntPtr AD, String s);
+         //get that line's a
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern float Geta(IntPtr Line);
+        //get that line's b
+        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern float Getb(IntPtr Line);
 
         ///////////////////////////////////////////real content of class////////////////////////////////////
 
@@ -162,11 +171,11 @@ namespace EX2
             //test code for AnomalyDetector
 
             //paths
-            //String Reg_ts_path = "C:\\Users\\USER\\Desktop\\reg_flight.csv"; //with NO features(for beggining of programm)
+            String Reg_ts_path = "C:\\Users\\USER\\Desktop\\reg_flight.csv"; //with NO features(for beggining of programm)
             //String Ano_ts_path = "C:\\Users\\USER\\Desktop\\anomaly_flight.csv";
 
             //part A- learn according to reg CSV file
-            //IntPtr Regular_TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
+            IntPtr Regular_TS = Create_Regular_TS(Reg_ts_path, attributesArray, attributesArray.Length);// time-series, created by XML
             ////List<float> list = getVectorByName(Regular_TS, "aileron");
             //////test
             ////foreach(var x in list)
@@ -177,12 +186,21 @@ namespace EX2
             //IntPtr AW = CreateWrappedAttributes(Regular_TS);
             //Console.WriteLine(Attributes_Wrapper_size(AW));
 
+            /*Exmaple for using line functions*/
+
             //IntPtr AD = Create_SimpleAnomalyDetector(); //AnomalyDetector
-            //LearnNormal(AD, Regular_TS); //test - LearnNormal by the initial CSV file
+            //LearnNormal(AD, Regular_TS); 
+            //IntPtr Line = GetLineByFeature(AD, "engine-pump1"); //test
+            //float a = Geta(Line);
+            //float b = Getb(Line);
+            //Console.WriteLine(a);
+            //Console.WriteLine(b);
+
+            //engine-pump1 aileron
 
 
             //Part B- Detect anomalies based on anomalies CSV file
-            //IntPtr Anomalies_TS = Create_Regular_TS(Ano_ts_path, attributes, attributes.Length);
+            //IntPtr Anomalies_TS = Create_Regular_TS(Ano_ts_path, attributesArray, attributesArray.Length);
             //Detect(AD, Anomalies_TS);
 
             playTimer.Elapsed += (s, e) =>
