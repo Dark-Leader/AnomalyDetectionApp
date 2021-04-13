@@ -405,7 +405,7 @@ namespace EX2
                 {
                     this.anomalyFlightCSV = value;
 
-                    TS_anomalyFlight = Create_Anomalies_TS(anomalyFlightCSV);
+                    TS_anomalyFlight = Create_Regular_TS(this.anomalyFlightCSV, attributes, attributes.Length);
                     anomalyFlightDict = new Dictionary<string, List<float>>();
                     foreach (var item in attributes)
                     {
