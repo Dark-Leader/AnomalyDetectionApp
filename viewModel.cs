@@ -36,6 +36,7 @@ namespace EX2
         private const int BUFFER_SIZE = 10;
         private const int BASE_FRAMERATE_PER_SECOND = 10;
         private FlightSimulator sim;
+        
 
 
 
@@ -99,6 +100,7 @@ namespace EX2
                 OnPropertyChanged(nameof(CurrentFrame));
                 OnPropertyChanged(nameof(CurrentTime));
                 DataPropertyChanged();
+                this.sim.CurrentLinePlaying = currentFrame;
             }
         }
 
@@ -287,10 +289,6 @@ namespace EX2
 
                 if(newStateIsPlaying)
                 {
-                    if (CurrentFrame == SliderMaximum)
-                    {
-                        CurrentFrame = 0;
-                    }
 
                     playTimer.Start();
                 }
@@ -317,7 +315,7 @@ namespace EX2
                         //If timer is still enabled (fixes behavior when elapsed task appears in threadpool earlier when stop-command)
                         if (playTimer.Enabled)
                         {
-                            if (CurrentFrame != SliderMaximum)
+                            if (CurrentFrame != SliderMax)
                             {
                                 CurrentFrame++;
                             }
@@ -451,6 +449,18 @@ namespace EX2
             return aDrawingGroup;
         }
 
+        private double sliderMax = 2000;
+        public double SliderMax
+        {
+            get
+            {
+                return sliderMax;
+            } set
+            {
+                sliderMax = (model?.Count - 1 - BUFFER_SIZE) ?? 0;
+                Console.WriteLine(sliderMax);
+            }
+        }
 
         public void set_train_csv(string name)
         {
@@ -467,6 +477,8 @@ namespace EX2
             {
                 data[var] = frames[var];
             }
+            SliderMax = frames["throttle"].Count;
+
 
         }
         public void set_test_csv(string name)

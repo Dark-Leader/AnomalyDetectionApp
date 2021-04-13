@@ -226,7 +226,19 @@ namespace EX2
             }
         }
 
-        public int CurrentLinePlaying { get; private set; }
+        public int CurrentLinePlaying { 
+            get
+            {
+                return currentLinePlaying;
+            }
+            set
+            {
+                if (value != currentLinePlaying)
+                {
+                    currentLinePlaying = value;
+                }
+            }
+        }
 
         public List<string> Variables
         {

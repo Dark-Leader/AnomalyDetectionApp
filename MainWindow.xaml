@@ -129,13 +129,8 @@
 
             </StackPanel>
 
-            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" TickFrequency="1" IsSnapToTickEnabled="True" Minimum="0" Maximum="2300" Value="{Binding CurrentFrame}"/>
+            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" TickFrequency="1" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding SliderMax}" Value="{Binding CurrentFrame}"/>
         </StackPanel>
 
-
-        <Grid x:Name="BottomControls" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Row="1">
-
-
-        </Grid>
     </Grid>
 </Window>
