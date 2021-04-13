@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="15*"/>
                 <ColumnDefinition Width="85*"/>
             </Grid.ColumnDefinitions>
-            <ListBox ItemsSource="{Binding FrameStackProperties}" SelectedItem="{Binding SelectedProperty, Mode=OneWayToSource}" Margin="10" SelectedIndex="0"/>
+            <ListBox ItemsSource="{Binding VM_AttributesList}" SelectedItem="{Binding SelectedProperty, Mode=OneWayToSource}" Margin="10" SelectedIndex="0"/>
             <!--<Label Content="{Binding CurrentDataTest, Mode=OneWay, FallbackValue=TestData}" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1"/>-->
 
             <Grid Grid.Column="1">
@@ -119,12 +119,12 @@
 
                 <StackPanel Orientation="Vertical" Margin="10, 0, 0, 0">
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" Text="Play speed:"/>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" Text="{Binding CurrentFrameRate, Mode=OneWay, FallbackValue=0}"/>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" Text="{Binding VM_Playback_speed, Mode=OneWay, FallbackValue=0}"/>
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" Margin="10, 0, 0, 0">
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" FontSize="20" Text="Time:"/>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="20" Text="{Binding CurrentTime}"/>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"  FontSize="20" Text="{Binding VM_Time, Mode=OneWay}"/>
                 </StackPanel>
 
             </StackPanel>
