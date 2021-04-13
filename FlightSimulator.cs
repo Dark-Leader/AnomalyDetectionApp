@@ -249,7 +249,6 @@ namespace EX2
             private set
             {
                 time = value;
-                Console.WriteLine("going to notify");
                 NotifyPropertyChanged("Time");
             }
         }
@@ -276,8 +275,8 @@ namespace EX2
         /// <param name="e"></param>
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            Console.WriteLine(currentLinePlaying * playTimer.Interval * 10);
-            Time = TimeSpan.FromMilliseconds(currentLinePlaying * playTimer.Interval);
+
+            Time = TimeSpan.FromMilliseconds(currentLinePlaying * 100);
             Console.WriteLine(this.time);
         }
 

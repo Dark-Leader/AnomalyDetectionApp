@@ -280,18 +280,18 @@ namespace EX2
 
         //public double Altimeter => model["altimeter_indicated-altitude-ft"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double Altimeter => sim.GetLastDataOfFeature("altimeter_indicated-altitude-ft");
-        public double AltimeterMin = -100;
-        public double AltimeterMax = 1000;
+        public double AltimeterMin = -20;
+        public double AltimeterMax = 700;
 
         //public double Airspeed => model["airspeed-indicator_indicated-speed-kt"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double Airspeed => sim.GetLastDataOfFeature("airspeed-indicator_indicated-speed-kt");
-        public double AirspeedMin = 0;
+        public double AirspeedMin = -1;
         public double AirspeedMax => 100;
 
         //public double FlightDirection => model["indicated-heading-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double FlightDirection => sim.GetLastDataOfFeature("indicated-heading-deg");
         public double FlightDirectionMin => 0;
-        public double FlightDirectionMax => 400;
+        public double FlightDirectionMax => 370;
 
         //public double Pitch => model["pitch-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double Pitch => sim.GetLastDataOfFeature("pitch-deg");
@@ -301,10 +301,10 @@ namespace EX2
         //public double Yaw => model["side-slip-deg"].Skip(currentFrame + 1).Take(BUFFER_SIZE).First();
         public double Yaw => sim.GetLastDataOfFeature("side-slip-deg");
         public double YawMin => -30;
-        public double YawMax => 100;
+        public double YawMax => 90;
 
         public double Roll => sim.GetLastDataOfFeature("roll-deg");
-        public double RollMin => -50;
+        public double RollMin => -40;
         public double RollMax => 20;
 
         #endregion
