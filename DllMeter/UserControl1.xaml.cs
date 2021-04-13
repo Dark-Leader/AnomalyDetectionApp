@@ -455,8 +455,8 @@ namespace DllMeter
 
                 // Compute middle value
                 double middle = (maximum + minimum) / 2;
-                double premiddle = (maximum) / 4;
-                double postmiddle = (maximum) / 4 * 3;
+                double premiddle = minimum + Math.Abs(minimum - maximum) / 4;
+                double postmiddle = minimum + Math.Abs(minimum - maximum) / 4 * 3;
 
                 // If middle has no fractions
                 if ((int)middle == middle && (int)premiddle == premiddle && (int)postmiddle == postmiddle)

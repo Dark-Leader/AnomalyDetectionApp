@@ -150,16 +150,18 @@ namespace EX2
             }
         }
 
-        /*
-        //resposible for the slider's value.
-        public int SliderMaximum
+        public int VM_SliderMax
         {
             get
             {
                 //return (model?.Count - 1 - BUFFER_SIZE) ?? 0;
-                return (sim?.NumberOfFlighSamples() - 1) ?? 0;
+                return sim.SliderMax;
             }
-        }*/
+            set 
+            {
+                this.sim.SliderMax = value;
+            }
+        }
 
         private object selectedItem;
         public object SelectedProperty
@@ -307,6 +309,18 @@ namespace EX2
         public double RollMin => -40;
         public double RollMax => 20;
 
+        public int VM_CurrentLinePlaying
+        {
+            get
+            {
+                return sim.CurrentLinePlaying;
+            }
+            set
+            {
+                this.sim.CurrentLinePlaying = value;
+            }
+        }
+
         #endregion
 
         public RelayCommand StopCommand { get; private set; } 
@@ -437,7 +451,9 @@ namespace EX2
         public void set_train_csv(string name)
         {
             sim.RegFlightCSV = name;
-            //update_data();
+            VM_SliderMax = this.sim.RegFlightDict["elevator"].Count;
+            Console.WriteLine(VM_SliderMax);
+            Console.WriteLine(VM_CurrentLinePlaying);
 
         }
 

@@ -70,6 +70,21 @@ namespace EX2
         // Will hold all the data of the anomaly flight csv. attributes are the keys
         private Dictionary<string, List<float>> anomalyFlightDict;
 
+        private int sliderMax = 2000;
+
+        public int SliderMax
+        {
+            get
+            {
+                return sliderMax;
+            }
+            set
+            {
+                sliderMax = value;
+                NotifyPropertyChanged("SilderMax");
+            }
+        }
+
 
         // List of attributes as read from XML
         List<string> attributesList;
@@ -156,6 +171,17 @@ namespace EX2
             get
             {
                 return regFlightDict;
+            }
+        }
+
+        public int CurrentLinePlaying
+        {
+            get
+            {
+                return currentLinePlaying;
+            } set
+            {
+                currentLinePlaying = value;
             }
         }
 
@@ -261,7 +287,7 @@ namespace EX2
             }
             set
             {
-                if (value != selectedFeature)
+                if (value != correlatedFeature)
                 {
                     correlatedFeature = value;
                     //notifyPropertyChanged("CorrelatedFeature");

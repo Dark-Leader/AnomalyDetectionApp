@@ -37,7 +37,7 @@
 
                 <Image Grid.Row="0" Grid.Column="0" Source="{Binding TopGraphImageSource}"/>
                 <Image Grid.Row="0" Grid.Column="1" Source="{Binding TopGraphImageSource2}"/>
-                <Image Grid.Row="1" Grid.Column="0" Source="{Binding BottomGraphImageSource}" Grid.ColumnSpan="2" Margin="0,0,36,0"/>
+                <Image Grid.Row="1" Grid.Column="0" Source="{Binding BottomGraphImageSource}" Grid.ColumnSpan="2" Margin="0,0,17,-15"/>
                 <Grid Grid.Row="0" Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="15*"/>
@@ -129,7 +129,7 @@
 
             </StackPanel>
 
-            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" TickFrequency="1" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding SliderMax}" Value="{Binding CurrentFrame}"/>
+            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding VM_SliderMax}" Value="{Binding VM_CurrentLinePlaying}"/>
         </StackPanel>
 
     </Grid>
