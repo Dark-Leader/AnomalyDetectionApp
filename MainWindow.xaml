@@ -7,7 +7,7 @@
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" xmlns:meter="clr-namespace:DllMeter;assembly=DllMeter" xmlns:ex2="clr-namespace:EX2"
         x:Class="EX2.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1050">
+        Title="MainWindow" Height="450" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70*"/>
@@ -19,13 +19,14 @@
                 <ColumnDefinition Width="15*"/>
                 <ColumnDefinition Width="85*"/>
             </Grid.ColumnDefinitions>
-            <ListBox ItemsSource="{Binding VM_AttributesList}" SelectedItem="{Binding SelectedProperty, Mode=OneWayToSource}" Margin="10" SelectedIndex="0"/>
+            <ListBox ItemsSource="{Binding VM_AttributesList}" SelectedItem="{Binding SelectedProperty, Mode=OneWayToSource}" Margin="-13,10,28,10" SelectedIndex="0"/>
             <!--<Label Content="{Binding CurrentDataTest, Mode=OneWay, FallbackValue=TestData}" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1"/>-->
 
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
+                    <RowDefinition Height="127*"/>
+                    <RowDefinition Height="0*"/>
+                    <RowDefinition Height="126*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -35,24 +36,11 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <Image Grid.Row="0" Grid.Column="0" Source="{Binding TopGraphImageSource}"/>
-                <Image Grid.Row="0" Grid.Column="1" Source="{Binding TopGraphImageSource2}"/>
-                <!--<Image Grid.Row="1" Grid.Column="0" Source="{Binding BottomGraphImageSource}" Grid.ColumnSpan="2" Margin="0,0,17,-15"/>-->
-                <DVC:Chart x:Name="selectedFeature" VerticalAlignment="Top" RenderTransformOrigin="0.524,0.249" Margin="-10,82,18,-24" Height="195" BorderBrush="Transparent" BorderThickness="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                    <DVC:Chart.LegendStyle>
-                        <Style TargetType="Control">
-                            <Setter Property="Width" Value="0"/>
-                            <Setter Property="Height" Value="0"/>
-                        </Style>
-                    </DVC:Chart.LegendStyle>
-                    <DVC:LineSeries x:Name="lin_reg" Width="208" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522,-0.172" HorizontalAlignment="Left" Margin="0,0,-34,1"/>
-                    <DVC:ScatterSeries x:Name="regular" Width="208" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522, -0.172" HorizontalAlignment="Left" Margin="0,0,-34,1">
-                        
-                    </DVC:ScatterSeries>
-                    <DVC:ScatterSeries x:Name="anomalies" Width="208" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522, -0.172" HorizontalAlignment="Left" Margin="0,0,-34,1">
+                <Image Grid.Row="0" Grid.Column="0" Source="{Binding TopGraphImageSource}" Margin="0,0,0,0"/>
+                <Image Grid.Row="0" Source="{Binding TopGraphImageSource2}" Margin="195,0,0,0" Grid.ColumnSpan="2"/>
 
-                    </DVC:ScatterSeries>
-                </DVC:Chart>
+                <!--<Image Grid.Row="1" Grid.Column="0" Source="{Binding BottomGraphImageSource}" Grid.ColumnSpan="2" Margin="0,0,17,-15"/>-->
+                <Grid x:Name="ThirdGraph" Margin="-10,0,0,0" Grid.ColumnSpan="4" Grid.Row="2"/>
                 <Grid Grid.Row="0" Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="15*"/>
@@ -79,27 +67,58 @@
                     <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Violet" ClipToBounds="False" Width="250"
                               SM_Foreground1="Red" SM_Description="Airspeed" SM_Minimum="0" SM_Maximum="200" SM_MeterValue="{Binding Airspeed}"/>
                 </Viewbox>
-                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="104,5,67,-5">
-                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Green" ClipToBounds="False" Width="250"
-                              SM_Foreground1="Red" SM_Description="FlightDirection" SM_Minimum="0" SM_Maximum="360" SM_MeterValue="{Binding FlightDirection}"/>
+                <Viewbox Stretch="Uniform" Grid.Column="2" Margin="147,19,113,-7" Grid.Row="2" Grid.ColumnSpan="2">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Green" ClipToBounds="False" Width="205"
+                              SM_Foreground1="Red" SM_Description="FlightDirection" SM_Minimum="0" SM_Maximum="360" SM_MeterValue="{Binding FlightDirection}" Height="144" RenderTransformOrigin="0.5,0.5" Click="SmartMeter_Click_2">
+                        <meter:SmartMeter.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform AngleY="-0.338"/>
+                                <RotateTransform/>
+                                <TranslateTransform Y="-1.155"/>
+                            </TransformGroup>
+                        </meter:SmartMeter.RenderTransform>
+                    </meter:SmartMeter>
                 </Viewbox>
-                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Margin="67,5,103,-5">
+                <Viewbox Stretch="Uniform" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Margin="69,12,162,-12">
                     <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Brown" ClipToBounds="False" Width="250"
-                              SM_Foreground1="Red" SM_Description="Pitch" SM_Minimum="-90" SM_Maximum="90" SM_MeterValue="{Binding Pitch}"/>
+                              SM_Foreground1="Red" SM_Description="Pitch" SM_Minimum="-90" SM_Maximum="90" SM_MeterValue="{Binding Pitch}" Height="127"/>
                 </Viewbox>
-                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="4" Margin="31,5,-31,-5">
+                <Viewbox Stretch="Uniform" Grid.Row="2" Grid.Column="4" Margin="16,10,15,-10">
                     <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Blue" ClipToBounds="False" Width="250"
-                              SM_Foreground1="Red" SM_Description="Yaw" SM_Minimum="-180" SM_Maximum="180" SM_MeterValue="{Binding Yaw}"/>
+                              SM_Foreground1="Red" SM_Description="Yaw" SM_Minimum="-180" SM_Maximum="180" SM_MeterValue="{Binding Yaw}" Click="SmartMeter_Click_1"/>
                 </Viewbox>
-                <Viewbox Stretch="Uniform" Grid.Row="1" Grid.Column="1" Margin="134,4,31,-4" Grid.ColumnSpan="2">
-                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Blue" ClipToBounds="False" Width="250"
-                              SM_Foreground1="Red" SM_Description="Roll" SM_Minimum="-90" SM_Maximum="90" SM_MeterValue="{Binding Roll}"/>
+                <Viewbox Stretch="Uniform" Grid.Row="2" Grid.Column="2" Margin="0,25,26,3">
+                    <meter:SmartMeter SM_Background1="White" SM_Background2="Bisque" SM_Background3="Blue" ClipToBounds="False" Width="251"
+                              SM_Foreground1="Red" SM_Description="Roll" SM_Minimum="-90" SM_Maximum="90" SM_MeterValue="{Binding Roll}" Click="SmartMeter_Click_1"/>
                 </Viewbox>
+                <DVC:Chart x:Name="Final" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Margin="-9,83,0,-30" Height="200" BorderBrush="Transparent" BorderThickness="0" HorizontalAlignment="Left" Width="410" Grid.ColumnSpan="3" Grid.RowSpan="3">
+                    <DVC:Chart.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform AngleY="-0.181"/>
+                            <RotateTransform/>
+                            <TranslateTransform Y="-0.329"/>
+                        </TransformGroup>
+                    </DVC:Chart.RenderTransform>
+                    <DVC:Chart.LegendStyle>
+                        <Style TargetType="{x:Type Control}">
+                            <Setter Property="Width" Value="0"/>
+                            <Setter Property="Height" Value="0"/>
+                        </Style>
+                    </DVC:Chart.LegendStyle>
+                    <DVC:LineSeries x:Name="lin_reg" Width="403" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522,-0.172" HorizontalAlignment="Left" Margin="0,0,-34,1"/>
+                    <DVC:ScatterSeries x:Name="regular" Width="403" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522, -0.172" HorizontalAlignment="Left" Margin="0,0,-34,1"/>
+                    <DVC:ScatterSeries x:Name="anomalies" Width="403" Height="auto" DependentValuePath="Value" IndependentValuePath="Key" ItemsSource="{Binding}" IsSelectionEnabled="True" RenderTransformOrigin="0.522, -0.172" HorizontalAlignment="Left" Margin="0,0,-2,1"/>
+                </DVC:Chart>
             </Grid>
         </Grid>
 
         <StackPanel Orientation="Vertical" Grid.Row="1" Margin="49,0,0,0">
             <StackPanel Orientation="Horizontal"  Height="60" Margin="-54,0,0,0">
+                <Button x:Name="Choose_DLL" Width="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Click="btnOpen_Click">
+                    <TextBlock Text="Choose Algorithm" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button>
                 <Button x:Name="Open_train_csv" Width="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Click="btnOpen_Click">
                     <TextBlock Text="Open Train CSV" TextWrapping="Wrap" TextAlignment="Center"/>
                 </Button>
@@ -113,20 +132,20 @@
                 <Button x:Name="Slower" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.5" Click="change_speed">
                     <Image x:Name="Slowerimg" Source="resources/min.png" Margin="0"/>
                 </Button>
-                <Button x:Name="Stop" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="False" Click="change_speed">
+                <Button x:Name="Slow" Width="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.1" Click="change_speed">
+                    <Image x:Name="Slowimg" Source="resources/dec.png"/>
+                </Button>
+                <Button x:Name="Stop" Width="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="False" Click="change_speed">
                     <Image x:Name="stopimg" VerticalAlignment="Top" Width="40" Source="resources/stop.png"  />
                 </Button>
-                <Button x:Name="Faster" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.5" Click="change_speed">
-                    <Image x:Name="Fasterimg" Source="resources/max.png"/>
+                <Button x:Name="Start" Width="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="True" Click="change_speed">
+                    <Image x:Name="startImg" Source="resources/start.png"/>
                 </Button>
                 <Button x:Name="Fast" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.1" Click="change_speed">
                     <Image x:Name="Fastimg" Source="resources/inc.png"/>
                 </Button>
-                <Button x:Name="Slow" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="-0.1" Click="change_speed">
-                    <Image x:Name="Slowimg" Source="resources/dec.png"/>
-                </Button>
-                <Button x:Name="Start" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding PauseCommand}" CommandParameter="True" Click="change_speed">
-                    <Image x:Name="startImg" Source="resources/start.png"/>
+                <Button x:Name="Faster" Width="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type StackPanel}, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding ChangeSpeedCommand}" CommandParameter="0.5" Click="change_speed">
+                    <Image x:Name="Fasterimg" Source="resources/max.png"/>
                 </Button>
                 <Button x:Name="Restart" Width="{Binding Path=Height, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}" Margin="10, 0, 0, 0" Command="{Binding StopCommand}" Click="change_speed">
                     <Image x:Name="restartImg" Source="resources/restart.png"/>

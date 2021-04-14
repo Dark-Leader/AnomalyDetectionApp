@@ -13,8 +13,7 @@ using System.Xml;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Timers;
-
-
+using System.Collections.ObjectModel;
 
 namespace EX2
 {
@@ -113,6 +112,9 @@ namespace EX2
 
         IntPtr DW;
         private string FGPath;
+        private ObservableCollection<KeyValuePair<float, float>> regularPoint = new ObservableCollection<KeyValuePair<float, float>>();
+        private ObservableCollection<KeyValuePair<float, float>> anomalyPoint = new ObservableCollection<KeyValuePair<float, float>>();
+        private ObservableCollection<KeyValuePair<float, float>> linearReg = new ObservableCollection<KeyValuePair<float, float>>();
 
         // how many lines are there in the received flight data csv
         private int totalLines;
@@ -171,6 +173,21 @@ namespace EX2
 
             client = new Client();
 
+            linearReg.Add(new KeyValuePair<float, float>(0, 0));
+            linearReg.Add(new KeyValuePair<float, float>(90, 90));
+
+            regularPoint.Add(new KeyValuePair<float, float>(5, 3));
+            regularPoint.Add(new KeyValuePair<float, float>(20, 30));
+            regularPoint.Add(new KeyValuePair<float, float>(40, 40));
+            regularPoint.Add(new KeyValuePair<float, float>(70, 70));
+
+            anomalyPoint.Add(new KeyValuePair<float, float>(-40, 3));
+            anomalyPoint.Add(new KeyValuePair<float, float>(50, 100));
+            anomalyPoint.Add(new KeyValuePair<float, float>(2, 70));
+            anomalyPoint.Add(new KeyValuePair<float, float>(15, 25));
+            anomalyPoint.Add(new KeyValuePair<float, float>(100, 70));
+            anomalyPoint.Add(new KeyValuePair<float, float>(80, 50));
+
 
             //test code for AnomalyDetector
 
@@ -207,7 +224,10 @@ namespace EX2
             };
         }
 
-
+        public void setAlgo(string path)
+        {
+            return;
+        }
         public void NotifyPropertyChanged(string propName)
         {
             if (this.PropertyChanged != null)
@@ -274,6 +294,42 @@ namespace EX2
                     playTimer.Interval = this.ticks;
                     NotifyPropertyChanged("Playback_speed");
                 }
+            }
+        }
+
+        public ObservableCollection<KeyValuePair<float,float>> RegularPoints
+        {
+            get
+            {
+                return regularPoint;
+            }
+            set
+            {
+                regularPoint = value;
+            }
+        }
+
+        public ObservableCollection<KeyValuePair<float, float>> AnomalyPoints
+        {
+            get
+            {
+                return anomalyPoint;
+            }
+            set
+            {
+                anomalyPoint = value;
+            }
+        }
+
+        public ObservableCollection<KeyValuePair<float, float>> LinReg
+        {
+            get
+            {
+                return linearReg;
+            }
+            set
+            {
+                linearReg = value;
             }
         }
 
@@ -490,8 +546,6 @@ namespace EX2
                 }
             }
         }
-
-       
 
         /*
         public void setCSVFile(string name)

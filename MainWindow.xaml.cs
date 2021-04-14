@@ -27,6 +27,7 @@ namespace EX2
             this.DataContext = vm;
 
             InitializeComponent();
+            LoadThirdGraph();
         }
 
         /// <summary>
@@ -59,7 +60,10 @@ namespace EX2
                 {
                     vm.set_test_csv(fileNames);
                 }
-                else
+                else if (b.Name == "Choose_DLL")
+                {
+                    vm.ChooseAlgorithm(fileNames);
+                } else
                 {
                     vm.set_flight_gear(fileNames);
                 }
@@ -98,6 +102,22 @@ namespace EX2
         }
 
         private void SmartMeter_Click(object sender, RoutedEventArgs e)
+        {
+            return;
+        }
+
+        private void LoadThirdGraph()
+        {
+            lin_reg.DataContext = this.vm.VM_LinearReg;
+            regular.DataContext = this.vm.VM_RegularPoints;
+            anomalies.DataContext = this.vm.VM_AnomalyPoints;
+        }
+
+        private void SmartMeter_Click_1(object sender, RoutedEventArgs e)
+        {
+            return;
+        }
+        private void SmartMeter_Click_2(object sender, RoutedEventArgs e)
         {
             return;
         }

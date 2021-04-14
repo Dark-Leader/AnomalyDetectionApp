@@ -17,6 +17,7 @@ using System.ComponentModel;
 using Helpers.MVVM;
 using System.Timers;
 using System.Globalization;
+using System.Collections.ObjectModel;
 
 namespace EX2
 {
@@ -125,6 +126,11 @@ namespace EX2
             */
         }
 
+
+        public void ChooseAlgorithm(string path)
+        {
+            this.sim.setAlgo(path);
+        }
 
         //INotifyPropertyChanged 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -280,6 +286,29 @@ namespace EX2
                 //Console.WriteLine(ds);
 
                 return new DrawingImage(GetGraphGroup(ds, false, 10, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CorrelatedDataSet.Min()), Math.Abs(CorrelatedDataSet.Max()))) : 1));
+            }
+        }
+
+        public ObservableCollection<KeyValuePair<float, float>> VM_RegularPoints {
+            get
+            {
+                return sim.RegularPoints;
+            }
+        }
+
+        public ObservableCollection<KeyValuePair<float, float>> VM_AnomalyPoints
+        {
+            get
+            {
+                return sim.AnomalyPoints;
+            }
+        }
+
+        public ObservableCollection<KeyValuePair<float, float>> VM_LinearReg
+        {
+            get
+            {
+                return sim.LinReg;
             }
         }
         //bottom graph.
