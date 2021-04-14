@@ -238,6 +238,41 @@ namespace EX2
             };
         }
 
+        /*
+       public ObservableCollection<KeyValuePair<float, float>> GetNormalPointsByFeature(string feature)
+       {
+           ObservableCollection<KeyValuePair<float, float>> temp = new ObservableCollection<KeyValuePair<float, float>>();
+
+           //regularPoint.Add(new KeyValuePair<float, float>(5, 3));
+           //anomalyFlightDict[feauture].GetRange(lastData, 10).ToArray();
+           if (correlatedFeatures != null)
+           {
+               string cor = correlatedFeatures[feature];
+               int lastData = CurrentLinePlaying - 300;
+
+               if (lastData > 0)
+               {
+                   Dictionary<int, KeyValuePair<float, float>> good;
+                   Tuple<string, string> t1 = new Tuple<string, string>(feature, cor);
+                   Tuple<string, string> t2 = new Tuple<string, string>(cor, feature);
+                   try
+                   {
+                       good = regular[t1];
+                   }
+                   catch (KeyNotFoundException e)
+                   {
+                       good = regular[t2];
+                   }
+                   for (int i=lastData; i < CurrentLinePlaying; i++)
+                   {
+                       temp
+                   }
+
+               }
+
+           }
+           return temp;
+       }*/
         public void setAlgo(string path)
         {
             return;
