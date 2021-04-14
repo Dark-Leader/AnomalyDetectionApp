@@ -112,6 +112,7 @@ namespace EX2
             lin_reg.DataContext = this.vm.VM_LinearReg;
             regular.DataContext = this.vm.VM_RegularPoints;
             anomalies.DataContext = this.vm.VM_AnomalyPoints;
+            CorrelatedFeature.DataContext = this.vm.CorrelatedFeature;
         }
 
         private void SmartMeter_Click_1(object sender, RoutedEventArgs e)

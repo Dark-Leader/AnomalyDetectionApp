@@ -184,15 +184,15 @@ namespace EX2
                 this.sim.Selected = (string)value;
             }
         }
-
         public string CorrelatedFeature
         {
             get
             {
                 return this.sim.Correlated[(string)selectedItem];
-            } 
-            
+            }
         }
+
+        
 
         public void CloseAll()
         {
