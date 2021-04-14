@@ -82,6 +82,20 @@ namespace EX2
 
         private int sliderMax = 2000;
 
+        private string selected;
+
+        public string Selected
+        {
+            get
+            {
+                return selected;
+            }
+            set
+            {
+                selected = value;
+            }
+        }
+
         public int SliderMax
         {
             get
@@ -622,8 +636,8 @@ namespace EX2
                         line += "\r\n";
                                                 
                         Thread.Sleep(ticks);
-
                         currentLinePlaying++;
+
                         if (currentLinePlaying == dataByLines.Count)
                         {
                             StopPlayback();

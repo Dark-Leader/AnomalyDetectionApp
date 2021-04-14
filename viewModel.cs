@@ -181,6 +181,7 @@ namespace EX2
                 selectedItem = (string)value;
                 OnPropertyChanged(nameof(SelectedProperty));
                 DataPropertyChanged();
+                this.sim.Selected = (string)value;
             }
         }
 
