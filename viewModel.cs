@@ -253,7 +253,7 @@ namespace EX2
         {
             get
             {
-                Console.WriteLine("in the VM_TIME in VM updated;");
+                //Console.WriteLine("in the VM_TIME in VM updated;");
                 DataPropertyChanged();
                 return this.sim.Time;
 
@@ -277,7 +277,7 @@ namespace EX2
             get
             {
                 var ds = CorrelatedDataSet;
-                Console.WriteLine(ds);
+                //Console.WriteLine(ds);
 
                 return new DrawingImage(GetGraphGroup(ds, false, 10, 10, ds.Length > 0 ? (int)Math.Ceiling(Math.Max(Math.Abs(CorrelatedDataSet.Min()), Math.Abs(CorrelatedDataSet.Max()))) : 1));
             }
@@ -478,8 +478,6 @@ namespace EX2
         {
             sim.RegFlightCSV = name;
             VM_SliderMax = this.sim.RegFlightDict["elevator"].Count;
-            Console.WriteLine(VM_SliderMax);
-            Console.WriteLine(VM_CurrentLinePlaying);
 
         }
 

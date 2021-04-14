@@ -329,6 +329,8 @@ namespace EX2
             }
         }
 
+        private Dictionary<Tuple<string, string>, List<int>> Anomalys = new Dictionary<Tuple<string, string>, List<int>>();
+
         public List<KeyValuePair<float, float>> CorrelatedFeature
         {
             get
@@ -353,7 +355,7 @@ namespace EX2
         {
 
             Time = TimeSpan.FromMilliseconds(currentLinePlaying * 100);
-            Console.WriteLine(this.time);
+            //Console.WriteLine(this.time);
         }
 
         /// <summary>
@@ -408,6 +410,7 @@ namespace EX2
                 string[] vars = line.Split(' ');
                 Correlated.Add(vars[0], vars[1]);
             }
+
         }
 
         // Holds the path to regular flight CSV file
@@ -458,9 +461,37 @@ namespace EX2
                         anomalyFlightDict.Add(item, getVectorByName(TS_anomalyFlight, item));
                     }
                     Detect(AnomalyDetector, TS_anomalyFlight);
+                    parseAnomalys();
                 }
             }
         }
+
+        public void parseAnomalys()
+        {
+            string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+            filePath += "\\Anomalies.txt";
+            string[] lines = System.IO.File.ReadAllLines(filePath);
+            foreach (string line in lines)
+            {
+                string[] vars = line.Split(' ');
+                string first = vars[0];
+                string second = vars[1];
+                int line_num = Int32.Parse(vars[2]);
+                Tuple<string, string> features = new Tuple<string, string>(vars[0], vars[1]);
+                bool exist = Anomalys.ContainsKey(features);
+
+                if (exist)
+                {
+                    Anomalys[features].Add(line_num);
+                }
+                else
+                {
+                    Anomalys.Add(features, new List<int>(line_num));
+                }
+            }
+        }
+
+       
 
         /*
         public void setCSVFile(string name)
