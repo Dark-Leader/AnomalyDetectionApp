@@ -19,7 +19,7 @@
                 <ColumnDefinition Width="15*"/>
                 <ColumnDefinition Width="85*"/>
             </Grid.ColumnDefinitions>
-            <ListBox ItemsSource="{Binding VM_AttributesList}" SelectedItem="{Binding SelectedProperty, Mode=OneWayToSource}" Margin="-13,10,28,10" SelectedIndex="0"/>
+            <ListBox ItemsSource="{Binding VM_AttributesList}" SelectedItem="{Binding SelectedProperty, Mode=OneWayToSource}" Margin="0,10,15,10" SelectedIndex="0"/>
             <!--<Label Content="{Binding CurrentDataTest, Mode=OneWay, FallbackValue=TestData}" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1"/>-->
 
             <Grid Grid.Column="1">

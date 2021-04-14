@@ -757,7 +757,10 @@ namespace EX2
 
         public void CloseAll()
         {
-            this.playingThread.Abort();
+            if (this.playingThread != null)
+            {
+                this.playingThread.Abort();
+            }
         }
 
 

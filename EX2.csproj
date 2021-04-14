@@ -96,7 +96,6 @@
     <Compile Include="BindableUserControl.cs" />
     <Compile Include="IFlightSimulator.cs" />
     <Compile Include="ITelnetClient.cs" />
-    <Compile Include="viewModels\viewModel.cs" />
     <Compile Include="JoystickControl.xaml.cs">
       <DependentUpon>JoystickControl.xaml</DependentUpon>
     </Compile>

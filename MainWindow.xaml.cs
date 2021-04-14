@@ -112,7 +112,6 @@ namespace EX2
             lin_reg.DataContext = this.vm.VM_LinearReg;
             regular.DataContext = this.vm.VM_RegularPoints;
             anomalies.DataContext = this.vm.VM_AnomalyPoints;
-            CorrelatedFeature.DataContext = this.vm.CorrelatedFeature;
         }
 
         private void SmartMeter_Click_1(object sender, RoutedEventArgs e)
@@ -153,6 +152,14 @@ namespace EX2
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this.vm.CloseAll();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            this.vm.CloseAll();
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
         }
     }
 }
