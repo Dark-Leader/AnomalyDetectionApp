@@ -194,6 +194,11 @@ namespace EX2
             
         }
 
+        public void CloseAll()
+        {
+            this.sim.CloseAll();
+        }
+
         //here  we bind all the features(graphs,clocks etc),
         //and they are being notified when certain change occured.
         private void DataPropertyChanged()

@@ -148,5 +148,10 @@ namespace EX2
         {
             this.isDragging = true;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.vm.CloseAll();
+        }
     }
 }

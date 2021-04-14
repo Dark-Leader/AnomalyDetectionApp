@@ -400,7 +400,16 @@ namespace EX2
             }
         }
 
-        private Dictionary<Tuple<string, string>, List<int>> Anomalys = new Dictionary<Tuple<string, string>, List<int>>();
+        private Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float,float>>> anomalys = new Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>>();
+
+        public Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>> Anomalys
+        {
+            get
+            {
+                return anomalys;
+            }
+        }
+
 
         public List<KeyValuePair<float, float>> CorrelatedFeature
         {
@@ -553,11 +562,13 @@ namespace EX2
 
                 if (exist)
                 {
-                    Anomalys[features].Add(line_num);
+                    Anomalys[features][line_num] = new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, first)[line_num], getVectorByName(TS_anomalyFlight, second)[line_num]);
                 }
                 else
                 {
-                    Anomalys.Add(features, new List<int>(line_num));
+                    Dictionary<int, KeyValuePair<float, float>> value = new Dictionary<int, KeyValuePair<float, float>>();
+                    value.Add(line_num, new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, first)[line_num], getVectorByName(TS_anomalyFlight, second)[line_num]));
+                    Anomalys.Add(features, value);
                 }
             }
         }
@@ -639,7 +650,6 @@ namespace EX2
                         Thread.Sleep(ticks);
                         currentLinePlaying++;
 
-                        CurrentLinePlaying++;
                         if (CurrentLinePlaying == dataByLines.Count)
                         {
                             StopPlayback();
@@ -707,6 +717,13 @@ namespace EX2
                 }
             }
         }
+
+
+        public void CloseAll()
+        {
+            this.playingThread.Abort();
+        }
+
 
         /// <summary>
         /// This methods gets the feautures stated in the XML file 
