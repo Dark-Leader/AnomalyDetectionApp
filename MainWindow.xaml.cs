@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Controls.DataVisualization.Charting;
+using System.Windows.Controls.Primitives;
 
 namespace EX2
 {
@@ -120,6 +121,32 @@ namespace EX2
         private void SmartMeter_Click_2(object sender, RoutedEventArgs e)
         {
             return;
+        }
+
+        private bool isDragging = false;
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            // if (!dragStarted)
+            //DoWork(e.NewValue);
+            Console.WriteLine("in the code behind slider");
+            // Console.WriteLine(e.NewValue);
+            //e.NewValue
+
+            vm.VM_CurrentLinePlaying = (int)((Slider)sender).Value;
+
+        }
+
+        private void Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            //DoWork(((Slider)sender).Value);
+            this.isDragging = false;
+            //Slider_ValueChanged(sender, e);
+        }
+
+        private void Slider_DragStarted(object sender, DragStartedEventArgs e)
+        {
+            this.isDragging = true;
         }
     }
 }
