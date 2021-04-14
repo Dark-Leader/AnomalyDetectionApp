@@ -169,7 +169,7 @@ namespace EX2
             // starting to play the data 10 lines in a second
             ticks = 100;
             playTimer.Interval = 100;
-            currentLinePlaying = 0;
+            CurrentLinePlaying = 0;
 
             client = new Client();
 
@@ -252,6 +252,7 @@ namespace EX2
             } set
             {
                 currentLinePlaying = value;
+                NotifyPropertyChanged("CurrentLinePlaying");
             }
         }
 
@@ -410,7 +411,7 @@ namespace EX2
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
 
-            Time = TimeSpan.FromMilliseconds(currentLinePlaying * 100);
+            Time = TimeSpan.FromMilliseconds(CurrentLinePlaying * 100);
             //Console.WriteLine(this.time);
         }
 
@@ -423,12 +424,12 @@ namespace EX2
         {
             if (anomalyFlightDict != null)
             {
-                int lastData = currentLinePlaying - 10;
+                int lastData = CurrentLinePlaying - 10;
                 if (lastData > 0)
                 {
                     return anomalyFlightDict[feauture].GetRange(lastData, 10).ToArray();
                 }
-                return anomalyFlightDict[feauture].GetRange(0, currentLinePlaying).ToArray();
+                return anomalyFlightDict[feauture].GetRange(0, CurrentLinePlaying).ToArray();
             }
             return new float[0];
         }
@@ -437,7 +438,7 @@ namespace EX2
         {
             if (anomalyFlightDict != null)
             {
-                return anomalyFlightDict[feauture][currentLinePlaying];
+                return anomalyFlightDict[feauture][CurrentLinePlaying];
             }
             return 0;
         }
@@ -446,7 +447,7 @@ namespace EX2
         {
             stop = true;
             playTimer.Stop();
-            currentLinePlaying = 0;
+            CurrentLinePlaying = 0;
         }
 
         public void PausePlayback()
@@ -608,23 +609,23 @@ namespace EX2
                     try
                     {
                         /* This is working just want to test if the speed changes correctly
-                        line = getLine(this.currentLinePlaying);
+                        line = getLine(this.CurrentLinePlaying);
                         line += "\r\n";
                         this.client.write(line);
                         Console.WriteLine(line);
-                        currentLinePlaying++;
+                        CurrentLinePlaying++;
                         Console.WriteLine("The line index current is:");
-                        Console.WriteLine(currentLinePlaying);
+                        Console.WriteLine(CurrentLinePlaying);
 
                         Thread.Sleep(ticks);
                         */
-                        line = getLine(this.currentLinePlaying);
+                        line = getLine(this.CurrentLinePlaying);
                         line += "\r\n";
                                                 
                         Thread.Sleep(ticks);
 
-                        currentLinePlaying++;
-                        if (currentLinePlaying == dataByLines.Count)
+                        CurrentLinePlaying++;
+                        if (CurrentLinePlaying == dataByLines.Count)
                         {
                             StopPlayback();
                         }

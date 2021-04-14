@@ -163,7 +163,7 @@
 
             </StackPanel>
 
-            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding VM_SliderMax}" Value="{Binding VM_CurrentLinePlaying}"/>
+            <Slider x:Name="SliderValue" Margin="-41,10,10,10" Height="24" IsSnapToTickEnabled="True" Minimum="0" Maximum="{Binding VM_SliderMax}" Value="{Binding VM_CurrentLinePlaying, Mode=TwoWay}"/>
         </StackPanel>
 
     </Grid>
