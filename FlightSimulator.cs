@@ -601,13 +601,16 @@ namespace EX2
             if (!Switched)
             {
                 linearReg.Clear();
-                Tuple<float, float> current = lin_reg_eq[p];
-                float a = current.Item1;
-                float b = current.Item2;
-                float y_min = a * x_min + b;
-                float y_max = a * x_max + b;
-                linearReg.Add(new KeyValuePair<float, float>(x_min, y_min));
-                linearReg.Add(new KeyValuePair<float, float>(x_max, y_max));
+                if (lin_reg_eq.ContainsKey(p))
+                {
+                    Tuple<float, float> current = lin_reg_eq[p];
+                    float a = current.Item1;
+                    float b = current.Item2;
+                    float y_min = a * x_min + b;
+                    float y_max = a * x_max + b;
+                    linearReg.Add(new KeyValuePair<float, float>(x_min, y_min));
+                    linearReg.Add(new KeyValuePair<float, float>(x_max, y_max));
+                }
             }
         }
 
