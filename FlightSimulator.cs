@@ -190,7 +190,7 @@ namespace EX2
         {
             dllPath = Directory.GetParent(dllPath).FullName;
             dllPath = Directory.GetParent(dllPath).FullName;
-            dllPath += "\\resources\\LinearRegression.dll";
+            dllPath += "\\Plugins\\LinearRegression.dll";
             pDll = NativeMethods.LoadLibrary(@dllPath); //load dll address
 
             ///now - this pDLL holds the dll's path
@@ -217,48 +217,6 @@ namespace EX2
             CurrentLinePlaying = 0;
 
             client = new Client();
-
-            //linearReg.Add(new KeyValuePair<float, float>(0, 0));
-            //linearReg.Add(new KeyValuePair<float, float>(90, 90));
-
-            //regularPoint.Add(new KeyValuePair<float, float>(5, 3));
-            //regularPoint.Add(new KeyValuePair<float, float>(20, 30));
-            //regularPoint.Add(new KeyValuePair<float, float>(40, 40));
-            //regularPoint.Add(new KeyValuePair<float, float>(70, 70));
-
-            //anomalyPoint.Add(new KeyValuePair<float, float>(-40, 3));
-            //anomalyPoint.Add(new KeyValuePair<float, float>(50, 100));
-            //anomalyPoint.Add(new KeyValuePair<float, float>(2, 70));
-            //anomalyPoint.Add(new KeyValuePair<float, float>(15, 25));
-            //anomalyPoint.Add(new KeyValuePair<float, float>(100, 70));
-            //anomalyPoint.Add(new KeyValuePair<float, float>(80, 50));
-
-
-            //test code for AnomalyDetector
-
-            //paths
-            //String Reg_ts_path = "C:\\Users\\USER\\Desktop\\reg_flight.csv"; //with NO features(for beggining of programm)
-            //String Ano_ts_path = "C:\\Users\\USER\\Desktop\\anomaly_flight.csv";
-
-            //part A- learn according to reg CSV file
-            //IntPtr Regular_TS = Create_Regular_TS(Reg_ts_path, attributes, attributes.Length);// time-series, created by XML
-            ////List<float> list = getVectorByName(Regular_TS, "aileron");
-            //////test
-            ////foreach(var x in list)
-            ////{
-            ////    Console.WriteLine(x);
-            ////}
-
-            //IntPtr AW = CreateWrappedAttributes(Regular_TS);
-            //Console.WriteLine(Attributes_Wrapper_size(AW));
-
-            //IntPtr AD = Create_SimpleAnomalyDetector(); //AnomalyDetector
-            //LearnNormal(AD, Regular_TS); //test - LearnNormal by the initial CSV file
-
-
-            //Part B- Detect anomalies based on anomalies CSV file
-            //IntPtr Anomalies_TS = Create_Regular_TS(Ano_ts_path, attributes, attributes.Length);
-            //Detect(AD, Anomalies_TS);
 
             playTimer.Elapsed += (s, e) =>
             {
