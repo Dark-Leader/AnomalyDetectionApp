@@ -219,6 +219,7 @@ namespace EX2
             OnPropertyChanged(nameof(Pitch));
             OnPropertyChanged(nameof(Yaw));
             OnPropertyChanged(nameof(Roll));
+            this.sim.getAllPoints();
         }
 
         //the current 10 lines or whatever value we chose.

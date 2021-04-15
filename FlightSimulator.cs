@@ -218,20 +218,20 @@ namespace EX2
 
             client = new Client();
 
-            linearReg.Add(new KeyValuePair<float, float>(0, 0));
-            linearReg.Add(new KeyValuePair<float, float>(90, 90));
+            //linearReg.Add(new KeyValuePair<float, float>(0, 0));
+            //linearReg.Add(new KeyValuePair<float, float>(90, 90));
 
-            regularPoint.Add(new KeyValuePair<float, float>(5, 3));
-            regularPoint.Add(new KeyValuePair<float, float>(20, 30));
-            regularPoint.Add(new KeyValuePair<float, float>(40, 40));
-            regularPoint.Add(new KeyValuePair<float, float>(70, 70));
+            //regularPoint.Add(new KeyValuePair<float, float>(5, 3));
+            //regularPoint.Add(new KeyValuePair<float, float>(20, 30));
+            //regularPoint.Add(new KeyValuePair<float, float>(40, 40));
+            //regularPoint.Add(new KeyValuePair<float, float>(70, 70));
 
-            anomalyPoint.Add(new KeyValuePair<float, float>(-40, 3));
-            anomalyPoint.Add(new KeyValuePair<float, float>(50, 100));
-            anomalyPoint.Add(new KeyValuePair<float, float>(2, 70));
-            anomalyPoint.Add(new KeyValuePair<float, float>(15, 25));
-            anomalyPoint.Add(new KeyValuePair<float, float>(100, 70));
-            anomalyPoint.Add(new KeyValuePair<float, float>(80, 50));
+            //anomalyPoint.Add(new KeyValuePair<float, float>(-40, 3));
+            //anomalyPoint.Add(new KeyValuePair<float, float>(50, 100));
+            //anomalyPoint.Add(new KeyValuePair<float, float>(2, 70));
+            //anomalyPoint.Add(new KeyValuePair<float, float>(15, 25));
+            //anomalyPoint.Add(new KeyValuePair<float, float>(100, 70));
+            //anomalyPoint.Add(new KeyValuePair<float, float>(80, 50));
 
 
             //test code for AnomalyDetector
@@ -464,6 +464,17 @@ namespace EX2
 
         }
 
+        private bool initialize = false;
+        public bool Initialized
+        {
+            get
+            {
+                return initialize;
+            } set
+            {
+                initialize = value;
+            }
+        }
 
         /// <summary>
         /// getVectorByName func. given a feeature, return it's values
@@ -548,18 +559,15 @@ namespace EX2
 
         public void getAllPoints()
         {
-            this.regularPoint.Clear();
+            if (!Initialized)
+            {
+                return;
+            }
             List<float> x = getVectorByName(TS_anomalyFlight, Selected);
             List<float> y = getVectorByName(TS_anomalyFlight, Correlated[Selected]);
-            if (currentLinePlaying < 300)
+            if (currentLinePlaying % 300 == 0)
             {
-                for (int i = 0; i < currentLinePlaying + 300; i++)
-                {
-                    KeyValuePair<float, float> point = new KeyValuePair<float, float>(x[i], y[i]);
-                    regularPoint.Add(point);
-                }
-            } else
-            {
+                this.regularPoint.Clear();
                 for (int i = currentLinePlaying - 300; i < currentLinePlaying; i++)
                 {
                     KeyValuePair<float, float> point = new KeyValuePair<float, float>(x[i], y[i]);
@@ -630,6 +638,7 @@ namespace EX2
                     LearnNormal LearnNormal_Creator = (LearnNormal)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(LearnNormal));
                     LearnNormal_Creator(AnomalyDetector, TS_regFlight);
                     parse_correlatedFeatures();
+                    Initialized = true;
                 }
             }
         }
@@ -672,7 +681,7 @@ namespace EX2
             string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
             filePath += "\\Anomalies.txt";
             string[] lines = System.IO.File.ReadAllLines(filePath);
-            getAllPoints();
+            //getAllPoints();
         }
 
 
