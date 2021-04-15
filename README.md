@@ -32,3 +32,6 @@ Next, click the "Open Flight Gear" button and navigate to the exe file of flight
 Next, you can click the "Choose Algorithm" button and navigate to your anomaly detection dll. if this button is not selected then the default is linear regression based algorithm.
 Next, click on the play button and the program will begin to display the data in real time, open flight gear and simulate the entire flight.
 Once the playback has begun you can increase/decrease playback speed, jump to a specific time and inspect whichever feature you wish.
+
+**For More Information:**
+Please watch our short premiere for our app at Youtube - https://youtu.be/ANCKJaKj-6w
