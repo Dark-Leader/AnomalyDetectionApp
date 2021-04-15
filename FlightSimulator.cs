@@ -719,7 +719,7 @@ namespace EX2
                         line += "\r\n";
                                                 
                         Thread.Sleep(ticks);
-                        currentLinePlaying++;
+                        CurrentLinePlaying++;
 
                         if (CurrentLinePlaying == dataByLines.Count)
                         {
