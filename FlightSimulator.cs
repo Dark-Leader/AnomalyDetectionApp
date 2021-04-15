@@ -735,6 +735,7 @@ namespace EX2
                 if (this.anomalyFlightCSV != value)
                 {
                     this.anomalyFlightCSV = value;
+                    readCSV(value);
                     ///now - this pDLL holds the dll's path
                     ///here- load enter the desired function name:
                     pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Create_Regular_TS"); //get address of function
@@ -821,13 +822,12 @@ namespace EX2
 
         public void play()
         {
-            Console.WriteLine("in the play method in fs");
             if (!pause && !stop)
             {
                 // meaning it's the 1st time we play data to fg
                 // so we need to establish connection
-                //this.client.connect("127.0.0.1", 5400);
-                Console.WriteLine("Connected");
+                this.client.connect("127.0.0.1", 5400);
+                Console.WriteLine("connected");
             }
             else if (pause)
             {
@@ -864,19 +864,9 @@ namespace EX2
                 {
                     try
                     {
-                        /* This is working just want to test if the speed changes correctly
                         line = getLine(this.CurrentLinePlaying);
                         line += "\r\n";
-                        this.client.write(line);
-                        Console.WriteLine(line);
-                        CurrentLinePlaying++;
-                        Console.WriteLine("The line index current is:");
-                        Console.WriteLine(CurrentLinePlaying);
-
-                        Thread.Sleep(ticks);
-                        */
-                        line = getLine(this.CurrentLinePlaying);
-                        line += "\r\n";
+                        client.write(line);
 
                         Thread.Sleep(ticks);
                         CurrentLinePlaying++;
