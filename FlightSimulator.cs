@@ -397,6 +397,7 @@ namespace EX2
             set
             {
                 regularPoint = value;
+                NotifyPropertyChanged("RegularPoints");
             }
         }
 
@@ -545,6 +546,28 @@ namespace EX2
             return new float[0];
         }
 
+        public void getAllPoints()
+        {
+            this.regularPoint.Clear();
+            List<float> x = getVectorByName(TS_anomalyFlight, Selected);
+            List<float> y = getVectorByName(TS_anomalyFlight, Correlated[Selected]);
+            if (currentLinePlaying < 300)
+            {
+                for (int i = 0; i < currentLinePlaying + 300; i++)
+                {
+                    KeyValuePair<float, float> point = new KeyValuePair<float, float>(x[i], y[i]);
+                    regularPoint.Add(point);
+                }
+            } else
+            {
+                for (int i = currentLinePlaying - 300; i < currentLinePlaying; i++)
+                {
+                    KeyValuePair<float, float> point = new KeyValuePair<float, float>(x[i], y[i]);
+                    regularPoint.Add(point);
+                }
+            }
+        }
+
         public float GetLastDataOfFeature(string feauture)
         {
             if (anomalyFlightDict != null)
@@ -649,44 +672,7 @@ namespace EX2
             string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
             filePath += "\\Anomalies.txt";
             string[] lines = System.IO.File.ReadAllLines(filePath);
-            int size = getVectorByName(TS_anomalyFlight, "rudder").Count;
-
-            foreach (KeyValuePair<string, string> entry in Correlated) // initialize both dicts
-            {
-                Tuple<string, string> pair = new Tuple<string, string>(entry.Key, entry.Value);
-                Anomalys.Add(pair, new List<KeyValuePair<float, float>>(new KeyValuePair<float,float>[size]));
-                Regular.Add(pair, new List<KeyValuePair<float, float>>(new KeyValuePair<float, float>[size]));
-                for (int i = 0; i < size; i++)
-                {
-                    Anomalys[pair][i] = new KeyValuePair<float, float>(int.MaxValue, int.MaxValue);
-                    Regular[pair][i] = new KeyValuePair<float, float>(int.MaxValue, int.MaxValue);
-                }
-            }                                                                    // size
-
-            foreach (string line in lines) // add anomalys
-            {
-                string[] vars = line.Split(' ');
-                string first = vars[0];
-                string second = vars[1];
-                int line_num = Int32.Parse(vars[2]);
-                Tuple<string, string> features = new Tuple<string, string>(vars[0], vars[1]);
-                Anomalys[features][line_num] = new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, first)[line_num], getVectorByName(TS_anomalyFlight, second)[line_num]); // add anomaly to dict.
-            }
-
-            foreach (KeyValuePair<Tuple<string,string>, List<KeyValuePair<float,float>>> entry in Regular)
-            {
-                Tuple<string, string> pair = entry.Key;
-                List<KeyValuePair<float, float>> values = entry.Value;
-                for (int i = 0; i < size; i++)
-                {
-                    KeyValuePair<float, float> point = Anomalys[pair][i];
-                    if (point.Key == int.MaxValue && point.Value == int.MaxValue) {
-                        string first = pair.Item1;
-                        string second = pair.Item2;
-                        Regular[pair][i] = new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, first)[i], getVectorByName(TS_anomalyFlight, second)[i]);
-                    }
-                }
-            }
+            getAllPoints();
         }
 
 
