@@ -581,11 +581,11 @@ namespace EX2
             if (currentLinePlaying % 300 == 0 && currentLinePlaying != 0)
             {
                 this.regularPoint.Clear();
-                this.anomalys.Clear();
+                this.AnomalyPoints.Clear();
                 for (int i = currentLinePlaying - 300; i < currentLinePlaying; i++)
                 {
                     KeyValuePair<float, float> point = new KeyValuePair<float, float>(x[i], y[i]);
-                    if (Anomalys.ContainsKey(p))
+                    if (Anomalys.ContainsKey(p) && Anomalys[p].Contains(i))
                     {
                         AnomalyPoints.Add(point);
                     } else
