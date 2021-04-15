@@ -17,6 +17,19 @@ using System.Collections.ObjectModel;
 
 namespace EX2
 {
+    //////////////////////////DYNAMIC - LINKING//////////////////////////////////
+    static class NativeMethods
+    {
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr LoadLibrary(string dllToLoad);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool FreeLibrary(IntPtr hModule);
+    }
+
     public class FlightSimulator : IFlightSimulator
     {
 
@@ -24,40 +37,42 @@ namespace EX2
 
         /*TS*/
 
-        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //Creating pointer to anomalies TimeSeries
-        public static extern IntPtr Create_Regular_TS(String fileName, String[] atts, int size);
+        //[DllImport("minCircle.dll", CallingConvention = CallingConvention.Cdecl)] //Creating pointer to anomalies TimeSeries
+        //public static extern IntPtr Create_Regular_TS(String fileName, String[] atts, int size);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] //Creating pointer to anomalies TimeSeries
+        private delegate IntPtr Create_Regular_TS(String fileName, String[] atts, int size);
 
-        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //creating a pointer for the RowSize
-        public static extern IntPtr Extern_getRowSize(IntPtr ts);
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] //creating a pointer for the RowSize
+        private delegate IntPtr Extern_getRowSize(IntPtr ts);
 
         /*Data-Wrapper*/
-        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //Creating a float Wrapper for a given string
-        public static extern IntPtr CreateWrappedData(IntPtr ts, String s);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] //Creating a float Wrapper for a given string
+        private delegate IntPtr CreateWrappedData(IntPtr ts, String s);
         //helper method
-        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //given that wrapper, return it's size
-        public static extern int Data_Wrapper_size(IntPtr DW);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] //given that wrapper, return it's size
+        private delegate int Data_Wrapper_size(IntPtr DW);
         //helper method
-        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //given that wrapper, get a value based on an index
-        public static extern float Data_Wrapper_getter(IntPtr DW, int i);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] //given that wrapper, get a value based on an index
+        private delegate float Data_Wrapper_getter(IntPtr DW, int i);
 
-
-        /*AnomalyDetector */
-        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] //Creates pointer to AnomalyDetector
-        public static extern IntPtr Create_SimpleAnomalyDetector();
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)] //Creates pointer to AnomalyDetector
+        private delegate IntPtr CreateDetector();
         /*LearnNormal with that Detector
          writes into a txt file called 'Correlated', the correlated features
         API- "feature1" "feature2*/
 
-        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] 
-        public static extern void LearnNormal(IntPtr AD, IntPtr TS);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr LearnNormal(IntPtr AD, IntPtr TS);
         /*Detect using that Detector
         writes into a txt file called 'Anomalies', the anomalies from the flight
         API- "feature1" "feature2" "timestamp"*/
 
-        [DllImport("LinearRegression.dll", CallingConvention = CallingConvention.Cdecl)] 
-        public static extern void Detect(IntPtr AD, IntPtr TS);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr Detect(IntPtr AD, IntPtr TS);
 
-
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr GetEquation(IntPtr AD, String s);
 
         ///////////////////////////////////////////real content of class////////////////////////////////////
 
@@ -69,8 +84,13 @@ namespace EX2
         //TimeSeries for the anomaly flight
         private IntPtr TS_anomalyFlight;
 
+        private String dllPath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);//path do dll
+        private IntPtr pDll; //holds address of the dll
+        private IntPtr pAddressOfFunctionToCall; //holds the address of the desired function
+
+
         //AnomalyDetector
-        private IntPtr AnomalyDetector = Create_SimpleAnomalyDetector();
+        static private IntPtr AnomalyDetector;
 
         // Will hold all the data of the regular flight csv. attributes are the keys
         private Dictionary<string, List<float>> regFlightDict;
@@ -155,7 +175,7 @@ namespace EX2
         // socket that is connected to the application
         private Client client;
 
-        // This is a temp feauture untill we have the TS. Holds the data in CSV 
+        // This is a temp feauture untill we have the TS. Holds the data in CSV
         private List<string> dataByLines = new List<string>();
 
         // The last line sent to fg
@@ -170,7 +190,20 @@ namespace EX2
 
         public FlightSimulator()
         {
+            dllPath = Directory.GetParent(dllPath).FullName;
+            dllPath = Directory.GetParent(dllPath).FullName;
+            dllPath += "\\resources\\LinearRegression.dll";
+            pDll = NativeMethods.LoadLibrary(@dllPath); //load dll address
 
+            ///now - this pDLL holds the dll's path
+            ///here- load enter the desired function name:
+            pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "CreateDetector"); //get address of function
+                                                                                             //now 'pAddressOfFunctionToCall' holds the function's address
+            CreateDetector DetectorCreator = (CreateDetector)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(CreateDetector));
+            AnomalyDetector = DetectorCreator();
+
+
+            Console.WriteLine(dllPath);//test
             pathToXML = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
             pathToXML = Directory.GetParent(pathToXML).FullName;
             pathToXML = Directory.GetParent(pathToXML).FullName;
@@ -273,8 +306,16 @@ namespace EX2
            }
            return temp;
        }*/
-        public void setAlgo(string path)
+        public void setAlgo(String path)
         {
+            dllPath = path;
+            pDll = NativeMethods.LoadLibrary(@dllPath); //load dll address
+            ///now - this pDLL holds the dll's path
+            ///here- load enter the desired function name:
+            pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "CreateDetector"); //get address of function
+            CreateDetector DetectorCreator = (CreateDetector)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(CreateDetector));
+            AnomalyDetector = DetectorCreator();
+            Console.WriteLine("hello");
             return;
         }
         public void NotifyPropertyChanged(string propName)
@@ -286,7 +327,8 @@ namespace EX2
             //PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-        public Dictionary<string, List<float>> RegFlightDict {
+        public Dictionary<string, List<float>> RegFlightDict
+        {
             get
             {
                 return regFlightDict;
@@ -298,7 +340,8 @@ namespace EX2
             get
             {
                 return currentLinePlaying;
-            } set
+            }
+            set
             {
                 currentLinePlaying = value;
                 NotifyPropertyChanged("CurrentLinePlaying");
@@ -328,7 +371,7 @@ namespace EX2
                         // The minimal playbackSpeed is 1 row per second
                         this.playbackSpeed = 1;
                     }
-                    else if (30 < value )
+                    else if (30 < value)
                     {
                         // The maximal playbackSpeed is 30 row per second
                         this.playbackSpeed = 30;
@@ -347,7 +390,7 @@ namespace EX2
             }
         }
 
-        public ObservableCollection<KeyValuePair<float,float>> RegularPoints
+        public ObservableCollection<KeyValuePair<float, float>> RegularPoints
         {
             get
             {
@@ -397,31 +440,48 @@ namespace EX2
 
         /*FvectorToList func.
          creates a list out of a given float-vector wrapper*/
-        static public List<float> FvectorToList(IntPtr DW)
+        public List<float> FvectorToList(IntPtr DW)
         {
+            ///now - this pDLL holds the dll's path
+            ///here- load enter the desired function name:
+            ///IntPtr pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Data_Wrapper_size"); //get address of function
+            pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Data_Wrapper_size");                                                                                            //now 'pAddressOfFunctionToCall' holds the function's address
+            ///now - this pDLL holds the dll's path
+            ///here- load enter the desired function name:
+            //get address of function
+            //now 'pAddressOfFunctionToCall' holds the function's address
+            Data_Wrapper_size wrapper_Size_Creator = (Data_Wrapper_size)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(Data_Wrapper_size));
             List<float> list = new List<float>();
-            int size = Data_Wrapper_size(DW);
+            int size = wrapper_Size_Creator(DW);
+
+            pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Data_Wrapper_getter");
+            Data_Wrapper_getter wrapper_Size_getter_Creator = (Data_Wrapper_getter)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(Data_Wrapper_getter));
+
             for (int i = 0; i < size; i++)
             {
-                list.Add(Data_Wrapper_getter(DW, i));
+                list.Add(wrapper_Size_getter_Creator(DW, i));
             }
             return list;
+
         }
 
 
         /// <summary>
-        /// getVectorByName func. given a feeature, return it's values 
+        /// getVectorByName func. given a feeature, return it's values
         /// </summary>
         /// <param name="TS"></pointer to TimeSeries>
         /// <param name="name"><name of a feature>
         /// <returns></returns>
-        static public List<float> getVectorByName(IntPtr TS, String name)
+        public List<float> getVectorByName(IntPtr TS, String name)
         {
-            IntPtr DW = CreateWrappedData(TS, name); //create wrapper
+            pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "CreateWrappedData");
+            CreateWrappedData Wrapped_Data_Creator = (CreateWrappedData)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(CreateWrappedData));
+            IntPtr DW = Wrapped_Data_Creator(TS, name); //create wrapper
             return FvectorToList(DW); //create a vector with it and send it away
+
         }
 
-        
+
         public TimeSpan Time
         {
             get
@@ -435,7 +495,7 @@ namespace EX2
             }
         }
 
-        private Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float,float>>> anomalys = new Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>>();
+        private Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>> anomalys = new Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>>();
 
 
         public Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>> Anomalys
@@ -450,8 +510,8 @@ namespace EX2
 
         public Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>> Regular
         {
-            get 
-            { 
+            get
+            {
                 return regular;
             }
         }
@@ -472,7 +532,7 @@ namespace EX2
             }
         }
         /// <summary>
-        /// Happens each time the playTimer "ticks" 
+        /// Happens each time the playTimer "ticks"
         /// </summary>
         /// <param name="source"></param>
         /// <param name="e"></param>
@@ -551,14 +611,18 @@ namespace EX2
             {
                 if (this.regFlightCSV != value)
                 {
+                    pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Create_Regular_TS"); //get address of function
+                    Create_Regular_TS TS_Creator = (Create_Regular_TS)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(Create_Regular_TS));
                     this.regFlightCSV = value;
-                    TS_regFlight = Create_Regular_TS(this.regFlightCSV, attributesArray, attributesArray.Length);
+                    TS_regFlight = TS_Creator(this.regFlightCSV, attributesArray, attributesArray.Length);
                     regFlightDict = new Dictionary<string, List<float>>();
                     foreach (var item in attributesArray)
                     {
                         regFlightDict.Add(item, getVectorByName(TS_regFlight, item));
                     }
-                    LearnNormal(AnomalyDetector, TS_regFlight);
+                    pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "LearnNormal");
+                    LearnNormal LearnNormal_Creator = (LearnNormal)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(LearnNormal));
+                    LearnNormal_Creator(AnomalyDetector, TS_regFlight);
                     parse_correlatedFeatures();
                 }
             }
@@ -578,14 +642,20 @@ namespace EX2
                 if (this.anomalyFlightCSV != value)
                 {
                     this.anomalyFlightCSV = value;
-
-                    TS_anomalyFlight = Create_Regular_TS(this.anomalyFlightCSV, attributesArray, attributesArray.Length);
+                    ///now - this pDLL holds the dll's path
+                    ///here- load enter the desired function name:
+                    pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Create_Regular_TS"); //get address of function
+                    //now 'pAddressOfFunctionToCall' holds the function's address
+                    Create_Regular_TS TS_Creator = (Create_Regular_TS)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(Create_Regular_TS));
+                    TS_anomalyFlight = TS_Creator(this.anomalyFlightCSV, attributesArray, attributesArray.Length);
                     anomalyFlightDict = new Dictionary<string, List<float>>();
                     foreach (var item in attributesArray)
                     {
                         anomalyFlightDict.Add(item, getVectorByName(TS_anomalyFlight, item));
                     }
-                    Detect(AnomalyDetector, TS_anomalyFlight);
+                    pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "Detect");
+                    Detect Detect_Creator = (Detect)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(Detect));
+                    Detect_Creator(AnomalyDetector, TS_anomalyFlight);
                     parseAnomalys();
                 }
             }
@@ -596,7 +666,7 @@ namespace EX2
             string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
             filePath += "\\Anomalies.txt";
             string[] lines = System.IO.File.ReadAllLines(filePath);
-            
+
             foreach (string line in lines)
             {
                 string[] vars = line.Split(' ');
@@ -622,7 +692,7 @@ namespace EX2
             {
                 for (int j = 0; j < attributesList.Count; j++)
                 {
-                    for (int k = j+1; k < attributesList.Count; k++)
+                    for (int k = j + 1; k < attributesList.Count; k++)
                     {
                         string var = attributesList[j];
                         string var2 = attributesList[k];
@@ -656,7 +726,7 @@ namespace EX2
             this.FGPath = name;
             this.fg = new FlightGear(name, pathToXML);
             this.fg.openApplication();
-            
+
         }
 
         public void play()
@@ -687,7 +757,7 @@ namespace EX2
             }
 
             playTimer.Start();
-            //  we now initialize a new thread 
+            //  we now initialize a new thread
             this.playingThread = new Thread(new ThreadStart(this.playback));
             this.playingThread.Start();
         }
@@ -717,7 +787,7 @@ namespace EX2
                         */
                         line = getLine(this.CurrentLinePlaying);
                         line += "\r\n";
-                                                
+
                         Thread.Sleep(ticks);
                         CurrentLinePlaying++;
 
@@ -749,7 +819,7 @@ namespace EX2
         }
 
         /// <summary>
-        /// Temp function untill we have ts, gets the specific line 
+        /// Temp function untill we have ts, gets the specific line
         /// </summary>
         /// <param name="lineNumber">the line number to get</param>
         /// <returns></returns>
@@ -772,7 +842,7 @@ namespace EX2
         }
 
         /// <summary>
-        /// Temp function untill we have ts, gets the specific line 
+        /// Temp function untill we have ts, gets the specific line
         /// </summary>
         /// <param name="csvPath"></param>
         private void readCSV(string path)
@@ -800,7 +870,7 @@ namespace EX2
 
 
         /// <summary>
-        /// This methods gets the feautures stated in the XML file 
+        /// This methods gets the feautures stated in the XML file
         /// </summary>
         public void parseXML()
         {
@@ -818,7 +888,7 @@ namespace EX2
                */
 
 
-            // TODO read from XML the speed and save it as a property. 
+            // TODO read from XML the speed and save it as a property.
             string att;
             reader = XmlReader.Create(pathToXML, settings);
             if (reader.ReadToFollowing("output"))
@@ -844,7 +914,7 @@ namespace EX2
                 }
             }
 
-            
+
             attributesArray = attributesList.ToArray();
             if (reader != null)
                 reader.Close();
@@ -861,3 +931,4 @@ namespace EX2
         }
     }
 }
+
