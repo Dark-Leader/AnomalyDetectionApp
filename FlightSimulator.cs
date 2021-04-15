@@ -72,7 +72,7 @@ namespace EX2
         private delegate IntPtr Detect(IntPtr AD, IntPtr TS);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate IntPtr GetEquation(IntPtr AD);
+        private delegate void GetEquation(IntPtr AD);
 
         ///////////////////////////////////////////real content of class////////////////////////////////////
 
@@ -313,7 +313,7 @@ namespace EX2
             pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "CreateDetector"); //get address of function
             CreateDetector DetectorCreator = (CreateDetector)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(CreateDetector));
             AnomalyDetector = DetectorCreator();
-            Console.WriteLine("hello");
+            Switched = true;
             return;
         }
         public void NotifyPropertyChanged(string propName)
@@ -525,7 +525,17 @@ namespace EX2
             }
         }
 
-        
+        private Dictionary<Tuple<string, string>, Tuple<float, float>> lin_reg_eq = new Dictionary<Tuple<string, string>, Tuple<float, float>>();
+
+        public Dictionary<Tuple<string, string>, Tuple<float, float>> Lin_reg_eq
+        {
+            get
+            {
+                return lin_reg_eq;
+            } 
+        }
+
+
         /// <summary>
         /// Happens each time the playTimer "ticks"
         /// </summary>
@@ -566,6 +576,8 @@ namespace EX2
             List<float> x = getVectorByName(TS_anomalyFlight, Selected);
             List<float> y = getVectorByName(TS_anomalyFlight, Correlated[Selected]);
             Tuple<string, string> p = new Tuple<string, string>(Selected, Correlated[Selected]);
+            float x_min = x.Min();
+            float x_max = x.Max();
             if (currentLinePlaying % 300 == 0 && currentLinePlaying != 0)
             {
                 this.regularPoint.Clear();
@@ -573,6 +585,7 @@ namespace EX2
                 for (int i = currentLinePlaying - 300; i < currentLinePlaying; i++)
                 {
                     KeyValuePair<float, float> point = new KeyValuePair<float, float>(x[i], y[i]);
+                    
                     RegularPoints.Add(point);
                     if (Anomalys.ContainsKey(p))
                     {
@@ -583,7 +596,18 @@ namespace EX2
                         }
                     }
                 }
-
+            }
+            // add linear reg line:
+            if (!Switched)
+            {
+                linearReg.Clear();
+                Tuple<float, float> current = lin_reg_eq[p];
+                float a = current.Item1;
+                float b = current.Item2;
+                float y_min = a * x_min + b;
+                float y_max = a * x_max + b;
+                linearReg.Add(new KeyValuePair<float, float>(x_min, y_min));
+                linearReg.Add(new KeyValuePair<float, float>(x_max, y_max));
             }
         }
 
@@ -610,15 +634,52 @@ namespace EX2
             playTimer.Stop();
         }
 
+        private bool switched = false;
+        public bool Switched
+        {
+            get
+            {
+                return switched;
+            } set
+            {
+                switched = true;
+            }
+        }
+
         private void parse_correlatedFeatures()
         {
             string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
             filePath += "\\Correlated.txt";
             string[] lines = System.IO.File.ReadAllLines(filePath);
+            List<string> first = new List<string>();
+            List<string> second = new List<string>();
             foreach (string line in lines)
             {
                 string[] vars = line.Split(' ');
                 Correlated.Add(vars[0], vars[1]);
+                first.Add(vars[0]);
+                second.Add(vars[1]);
+            }
+
+            filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+            filePath += "\\Equation.txt";
+            string[] lines2 = System.IO.File.ReadAllLines(filePath);
+            if (!Switched)
+            {
+                int idx = 0;
+                foreach (string line in lines2)
+                {
+                    string[] vars = line.Split(',');
+                    if (vars[0] != "-nan(ind)")
+                    {
+                        float a = float.Parse(vars[0], CultureInfo.InvariantCulture.NumberFormat);
+                        float b = float.Parse(vars[1], CultureInfo.InvariantCulture.NumberFormat);
+                        Tuple<string, string> current = new Tuple<string, string>(first[idx], second[idx]);
+                        lin_reg_eq[current] = new Tuple<float, float>(a, b);
+                    }
+                    idx++;
+
+                }
             }
 
         }
@@ -648,6 +709,9 @@ namespace EX2
                     pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "LearnNormal");
                     LearnNormal LearnNormal_Creator = (LearnNormal)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(LearnNormal));
                     LearnNormal_Creator(AnomalyDetector, TS_regFlight);
+                    pAddressOfFunctionToCall = NativeMethods.GetProcAddress(pDll, "GetEquation");
+                    GetEquation Equation_creator = (GetEquation)Marshal.GetDelegateForFunctionPointer(pAddressOfFunctionToCall, typeof(GetEquation));
+                    Equation_creator(AnomalyDetector);
                     parse_correlatedFeatures();
                     Initialized = true;
                 }
