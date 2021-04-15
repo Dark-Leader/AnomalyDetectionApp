@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Controls.Primitives;
+using System.Drawing;
 
 namespace EX2
 {

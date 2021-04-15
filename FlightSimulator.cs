@@ -585,16 +585,14 @@ namespace EX2
                 for (int i = currentLinePlaying - 300; i < currentLinePlaying; i++)
                 {
                     KeyValuePair<float, float> point = new KeyValuePair<float, float>(x[i], y[i]);
-                    
-                    RegularPoints.Add(point);
                     if (Anomalys.ContainsKey(p))
                     {
-                        if (Anomalys[p].Contains(i))
-                        {
-                            AnomalyPoints.Add(point);
-                            RegularPoints.Remove(point);
-                        }
+                        AnomalyPoints.Add(point);
+                    } else
+                    {
+                        RegularPoints.Add(point);
                     }
+                    
                 }
             }
             // add linear reg line:
