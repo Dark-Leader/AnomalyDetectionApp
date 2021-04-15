@@ -72,7 +72,7 @@ namespace EX2
         private delegate IntPtr Detect(IntPtr AD, IntPtr TS);
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate IntPtr GetEquation(IntPtr AD, String s);
+        private delegate IntPtr GetEquation(IntPtr AD);
 
         ///////////////////////////////////////////real content of class////////////////////////////////////
 
