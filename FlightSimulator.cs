@@ -505,9 +505,9 @@ namespace EX2
             }
         }
 
-        private Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>> anomalys = new Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>>();
+        private Dictionary<Tuple<string, string>, List<int>> anomalys = new Dictionary<Tuple<string, string>, List<int>>();
 
-        public Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>> Anomalys
+        public Dictionary<Tuple<string, string>, List<int>> Anomalys
         {
             get
             {
@@ -565,14 +565,25 @@ namespace EX2
             }
             List<float> x = getVectorByName(TS_anomalyFlight, Selected);
             List<float> y = getVectorByName(TS_anomalyFlight, Correlated[Selected]);
-            if (currentLinePlaying % 300 == 0)
+            Tuple<string, string> p = new Tuple<string, string>(Selected, Correlated[Selected]);
+            if (currentLinePlaying % 300 == 0 && currentLinePlaying != 0)
             {
                 this.regularPoint.Clear();
+                this.anomalys.Clear();
                 for (int i = currentLinePlaying - 300; i < currentLinePlaying; i++)
                 {
                     KeyValuePair<float, float> point = new KeyValuePair<float, float>(x[i], y[i]);
-                    regularPoint.Add(point);
+                    RegularPoints.Add(point);
+                    if (Anomalys.ContainsKey(p))
+                    {
+                        if (Anomalys[p].Contains(i))
+                        {
+                            AnomalyPoints.Add(point);
+                            RegularPoints.Remove(point);
+                        }
+                    }
                 }
+
             }
         }
 
@@ -676,12 +687,53 @@ namespace EX2
             }
         }
 
+        private float a;
+        private float b;
+
+        public float A
+        {
+            get
+            {
+                return a;
+            } set
+            {
+                a = value;
+            }
+        }
+
+        public float B
+        {
+            get
+            {
+                return b;
+            } set
+            {
+                b = value;
+            }
+        }
+
         public void parseAnomalys()
         {
             string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
             filePath += "\\Anomalies.txt";
             string[] lines = System.IO.File.ReadAllLines(filePath);
-            //getAllPoints();
+            foreach (string line in lines)
+            {
+                string[] vars = line.Split(' ');
+                string f1 = vars[0];
+                string f2 = vars[1];
+                int line_num = Int32.Parse(vars[2]);
+                Tuple<string, string> p = new Tuple<string, string>(f1, f2);
+                if (Anomalys.ContainsKey(p))
+                {
+                    Anomalys[p].Add(line_num);
+
+                } else
+                {
+                    Anomalys.Add(p, new List<int>());
+                    Anomalys[p].Add(line_num);
+                }
+            }
         }
 
 
