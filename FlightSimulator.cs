@@ -153,8 +153,6 @@ namespace EX2
         // how many lines are there in the received flight data csv
         private int totalLines;
 
-        private List<KeyValuePair<float, float>> selectedFeature = new List<KeyValuePair<float, float>>();
-        private List<KeyValuePair<float, float>> correlatedFeature;
         private List<string> variables = new List<string>();
         private int playbackSpeed = 10;
 
@@ -495,10 +493,9 @@ namespace EX2
             }
         }
 
-        private Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>> anomalys = new Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>>();
+        private Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>> anomalys = new Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>>();
 
-
-        public Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>> Anomalys
+        public Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>> Anomalys
         {
             get
             {
@@ -506,9 +503,9 @@ namespace EX2
             }
         }
 
-        private Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>> regular = new Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>>();
+        private Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>> regular = new Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>>();
 
-        public Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>> Regular
+        public Dictionary<Tuple<string, string>, List<KeyValuePair<float, float>>> Regular
         {
             get
             {
@@ -516,21 +513,7 @@ namespace EX2
             }
         }
 
-        public List<KeyValuePair<float, float>> CorrelatedFeature
-        {
-            get
-            {
-                return correlatedFeature;
-            }
-            set
-            {
-                if (value != correlatedFeature)
-                {
-                    correlatedFeature = value;
-                    //notifyPropertyChanged("CorrelatedFeature");
-                }
-            }
-        }
+        
         /// <summary>
         /// Happens each time the playTimer "ticks"
         /// </summary>
@@ -666,52 +649,45 @@ namespace EX2
             string filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
             filePath += "\\Anomalies.txt";
             string[] lines = System.IO.File.ReadAllLines(filePath);
+            int size = getVectorByName(TS_anomalyFlight, "rudder").Count;
 
-            foreach (string line in lines)
+            foreach (KeyValuePair<string, string> entry in Correlated) // initialize both dicts
+            {
+                Tuple<string, string> pair = new Tuple<string, string>(entry.Key, entry.Value);
+                Anomalys.Add(pair, new List<KeyValuePair<float, float>>(new KeyValuePair<float,float>[size]));
+                Regular.Add(pair, new List<KeyValuePair<float, float>>(new KeyValuePair<float, float>[size]));
+                for (int i = 0; i < size; i++)
+                {
+                    Anomalys[pair][i] = new KeyValuePair<float, float>(int.MaxValue, int.MaxValue);
+                    Regular[pair][i] = new KeyValuePair<float, float>(int.MaxValue, int.MaxValue);
+                }
+            }                                                                    // size
+
+            foreach (string line in lines) // add anomalys
             {
                 string[] vars = line.Split(' ');
                 string first = vars[0];
                 string second = vars[1];
                 int line_num = Int32.Parse(vars[2]);
                 Tuple<string, string> features = new Tuple<string, string>(vars[0], vars[1]);
-                bool exist = Anomalys.ContainsKey(features);
-
-                if (exist)
-                {
-                    Anomalys[features][line_num] = new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, first)[line_num], getVectorByName(TS_anomalyFlight, second)[line_num]);
-                }
-                else
-                {
-                    Dictionary<int, KeyValuePair<float, float>> value = new Dictionary<int, KeyValuePair<float, float>>();
-                    value.Add(line_num, new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, first)[line_num], getVectorByName(TS_anomalyFlight, second)[line_num]));
-                    Anomalys.Add(features, value);
-                }
+                Anomalys[features][line_num] = new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, first)[line_num], getVectorByName(TS_anomalyFlight, second)[line_num]); // add anomaly to dict.
             }
-            int size = getVectorByName(TS_anomalyFlight, "rudder").Count;
-            for (int i = 0; i < size; i++)
+
+            foreach (KeyValuePair<Tuple<string,string>, List<KeyValuePair<float,float>>> entry in Regular)
             {
-                for (int j = 0; j < attributesList.Count; j++)
+                Tuple<string, string> pair = entry.Key;
+                List<KeyValuePair<float, float>> values = entry.Value;
+                for (int i = 0; i < size; i++)
                 {
-                    for (int k = j + 1; k < attributesList.Count; k++)
-                    {
-                        string var = attributesList[j];
-                        string var2 = attributesList[k];
-                        Tuple<string, string> features = new Tuple<string, string>(var, var2);
-                        if (Regular.ContainsKey(features))
-                        {
-                            Dictionary<int, KeyValuePair<float, float>> value = Regular[features];
-                            if (!anomalys[features].ContainsKey(i))
-                            {
-                                KeyValuePair<float, float> newPoint = new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, var)[i], getVectorByName(TS_anomalyFlight, var2)[i]);
-                                value.Add(i, newPoint);
-                            }
-                        }
+                    KeyValuePair<float, float> point = Anomalys[pair][i];
+                    if (point.Key == int.MaxValue && point.Value == int.MaxValue) {
+                        string first = pair.Item1;
+                        string second = pair.Item2;
+                        Regular[pair][i] = new KeyValuePair<float, float>(getVectorByName(TS_anomalyFlight, first)[i], getVectorByName(TS_anomalyFlight, second)[i]);
                     }
                 }
             }
         }
-
-        //   Dictionary<Tuple<string, string>, Dictionary<int, KeyValuePair<float, float>>>
 
 
         /*
